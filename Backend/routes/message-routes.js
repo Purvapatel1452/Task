@@ -2,7 +2,7 @@ const express=require('express')
 
 
 const { messages, userDetails, chatMessages } = require('../controllers/message-controller');
-const Message=require('../models/message');
+
 
 const msgRouter=express.Router();
 

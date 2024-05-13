@@ -5,13 +5,18 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const bcrypt=require('bcrypt')
 
 const router=require('./routes/user-routes')
 const msgRouter=require('./routes/message-routes')
+const paymentRouter=require('./routes/payment-routes')
+const groupRouter=require('./routes/group-routes')
 
 const User=require("./models/user");
 const Message=require("./models/message");
+const Group=require('./models/group')
 const { register } = require("./routes/user-routes");
+const  Stripe  = require("stripe");
 
 
 const PORT = 8000;
@@ -22,6 +27,7 @@ const app = express();
 
 
 app.use(cors());
+ const stripe=new Stripe('sk_test_51P6pcYSCdNlkqtTKEbkko3R7u9AU05pNEw9TKpeAtiEze3NmZlsWaun94sEQehiPPdlUouvIJ5d2thhp2527uaaJ00WSnKy45N')
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -33,6 +39,10 @@ app.use('/chat/user',cors(),router)
 
 app.use('/chat/message',cors(),msgRouter)
 
+app.use('/chat/payments',paymentRouter)
+
+app.use('/chat/group',groupRouter)
+
 
 
 app.listen(PORT,()=>{
@@ -40,7 +50,7 @@ app.listen(PORT,()=>{
 })
 
 mongoose
-.connect("mongodb+srv://purvaptl1452:Patel@try1.akekdhm.mongodb.net/")
+.connect("mongodb+srv://purvaptl1452:Purva%401452@try1.akekdhm.mongodb.net/")
 .then(()=>{
     console.log("Connected to MongoDB . . . ")
 })

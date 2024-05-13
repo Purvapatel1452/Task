@@ -1,6 +1,6 @@
 const Message=require('../models/message');
+const OTPData = require('../models/otpData');
 const User = require('../models/user');
-
 
 
 
@@ -9,7 +9,7 @@ const User = require('../models/user');
 const messages=async(req,res)=>{
 
     try{
-
+console.log('d')
         const {senderId,recepientId,messageType,messageText}=req.body
 
         const newMessage= new Message({

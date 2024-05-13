@@ -1,14 +1,18 @@
 const express=require('express')
 
-const { registerUser, loginUser, getUsers, friendRequest, friendRequestList, acceptFriendRequest, friends } = require('../controllers/user-controller')
+const { registerUser, loginUser, getUsers, friendRequest, friendRequestList, acceptFriendRequest, friends, sendOtp, verifyOtp } = require('../controllers/user-controller')
 
-const User=require('../models/user')
+
 
 
 const router=express.Router()
 
 
 router.post('/register',registerUser)
+
+router.post('/send-otp',sendOtp)
+
+router.post('/verify-otp',verifyOtp)
 
 router.post("/login",loginUser)
 
