@@ -1,0 +1,116 @@
+import React from 'react';
+
+import {View, Text, StyleSheet} from 'react-native';
+
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
+
+// import {COLORS} from '../theme/theme';
+// import CustomIcon from '../components/CustomIcon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
+import {BlurView} from '@react-native-community/blur';
+import StackNavigator from './StackNavigator';
+import PaymentScreen from '../screens/GroupScreen';
+import ActivityScreen from '../screens/ActivityScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import GroupScreen from '../screens/GroupScreen';
+import GroupNavigator from './GroupNavigator';
+
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => {
+
+  const userId=useSelector(state=>state.userId)
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarHideOnKeyboard: true,
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: styles.tabBar,
+        tabBarBackground: () => (
+          <BlurView
+            overlayColor=""
+            
+            blurAmount={15}
+            style={styles.tabBackground}
+          />
+        ),
+      }}>
+      
+
+      <Tab.Screen
+        name="Group"
+        component={GroupNavigator}
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <MaterialIcons
+              name="groups"
+              size={27}
+              color={focused ? '#D77702' : '#52555A'}
+            />
+          ),
+        }}></Tab.Screen>
+        <Tab.Screen
+        name="Stack"
+        component={StackNavigator}
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <MaterialIcons
+              name="person"
+              size={30}
+              color={focused ? '#D77702' : '#52555A'}
+            />
+          ),
+        }}></Tab.Screen>
+
+      <Tab.Screen
+        name="Favorite"
+        component={ActivityScreen}
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <FontAwesome
+              name="chart-line"
+              size={25}
+              color={focused ? '#D77702' : '#52555A'}
+            />
+          ),
+        }}></Tab.Screen>
+
+      <Tab.Screen
+        name="History"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <MaterialIcons
+              name="chat"
+              size={25}
+              color={focused ? '#D77702' : '#52555A'}
+            />
+          ),
+        }}></Tab.Screen>
+    </Tab.Navigator>
+  );
+};
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: 'rgba(12,15,20,0.5)',
+    height: 65,
+    position: 'absolute',
+    borderTopWidth: 0,
+    elevation: 0,
+    borderTopColor: 'transparent',
+  },
+  tabBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+});
+
+export default TabNavigator;
