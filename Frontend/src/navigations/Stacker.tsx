@@ -16,7 +16,7 @@ const Stack=createNativeStackNavigator()
 
 const Stacker = () => {
 
-  const userId=useSelector(state=>state.userId)
+  const userId=useSelector((state:any)=>state.userId)
 
   return (
     <NavigationContainer>

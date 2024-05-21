@@ -3,6 +3,7 @@ import React, { useContext, useEffect,useState } from 'react'
 import { UserType } from '../../UserContext'
 import axios from 'axios'
 import FriendRequest from '../components/FriendRequest'
+import HeaderBar from './HeaderBar'
 
 const FriendsScreen = () => {
 
@@ -48,6 +49,8 @@ console.log(userId)
 
   return (
     <View>
+      
+      {/* <HeaderBar title={'AddFriend'} /> */}
       {
         friendRequest.length>0 && <Text>Your Friend Requests!</Text>
       }

@@ -5939,6 +5939,11 @@ react-native-share@^10.1.0:
   resolved "https://registry.npmjs.org/react-native-share/-/react-native-share-10.1.0.tgz"
   integrity sha512-fKKvwaZe5s3HW0tcRKyR5AWvAfXvkk0FgTw1nYWYjI4gNqntXbMjRqWZed8Hmd1MvIJS17K/ELPges0tsxbp3g==
 
+react-native-upi-payment@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/react-native-upi-payment/-/react-native-upi-payment-1.0.5.tgz"
+  integrity sha512-5pouPlgFgucu04nuipi2R8Mc2K5uakmoa/QJJMmsfFCjEX06SJrA8WW7t2IeGKj/qpSjXeMhUlg6GHr76tQ7bg==
+
 react-native-vector-icons@^10.0.3:
   version "10.0.3"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.0.3.tgz"

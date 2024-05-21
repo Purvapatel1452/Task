@@ -29,7 +29,7 @@ import axios from 'axios';
 
 import User from '../components/User';
 
-import {useStripe} from '@stripe/stripe-react-native';
+// import {useStripe} from '@stripe/stripe-react-native';
 import HeaderBar from './HeaderBar';
 
 // import ChatBox from '../components/GroupIcon'
@@ -44,97 +44,68 @@ const HomeScreen = () => {
 
   const user = useSelector(state => state.home.user);
 
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const [paymentIntentClientSecret, setPaymentIntentClientSecret] =
-    useState('');
+  // const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  // const [paymentIntentClientSecret, setPaymentIntentClientSecret] =
+  //   useState('');
 
-  // const onPaytmCheckout = async () => {
+
+
+  // const onCheckout = async () => {
+  //   // 1. Create a payment intent
+
   //   try {
-  //     const response = await axios.post(
-  //       'http://10.0.2.2:8000/chat/payments/paytm/intent',
+  //     console.log('RE');
+  //     const response = await fetch(
+  //       'http://10.0.2.2:8000/chat/payments/intents',
   //       {
-  //         amount: 1000, // Amount in paise
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'appplication/json',
+  //         },
+  //         body: JSON.stringify({amount: 100}),
   //       },
   //     );
+  //     console.log('RE', response);
+  //     const responseData = await response.json();
 
-  //     const {client_secret} = response.data;
+  //     console.log(response);
 
-  //     const {error} = await initPaymentSheet({
-  //       paymentIntentClientSecret: client_secret,
-  //       merchantDisplayName: '',
+  //     if (!response.ok) {
+  //       throw new Error('failed to create payment intent');
+  //     }
+
+  //     if (responseData.error) {
+  //       Alert.alert('Something went wrong', responseData.error);
+  //       return;
+  //     }
+  //     setPaymentIntentClientSecret(responseData.paymentIntent);
+
+  //     // 2. Initialize the Payment sheet
+
+  //     const {error: paymentSheetError} = await initPaymentSheet({
+  //       merchantDisplayName: 'PATEL.PURVA',
+  //       paymentIntentClientSecret: responseData.paymentIntent,
+  //       defaultBillingDetails: {
+  //         name: 'purva',
+  //       },
   //     });
 
-  //     if (error) {
-  //       throw new Error(error.message);
+  //     if (paymentSheetError) {
+  //       throw new Error(paymentSheetError.message);
   //     }
 
-  //     const {error: presentError} = await presentPaymentSheet();
+  //     // 3. Present the Payment Sheet from Stripe
+  //     const {error: paymentError} = await presentPaymentSheet();
 
-  //     if (presentError) {
-  //       throw new Error(presentError.message);
+  //     if (paymentError) {
+  //       throw new Error(paymentError.message);
   //     }
-  //   } catch (error) {
-  //     console.error('Error:', error.message);
-  //     Alert.alert('Error', error.message);
+  //   } catch (err) {
+  //     console.error('Error:', err.message);
+  //     Alert.alert('error', err.message);
   //   }
+  //   // 4. If payment ok -> create the order
   // };
-
-  const onCheckout = async () => {
-    // 1. Create a payment intent
-
-    try {
-      console.log('RE');
-      const response = await fetch(
-        'http://10.0.2.2:8000/chat/payments/intents',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'appplication/json',
-          },
-          body: JSON.stringify({amount: 100}),
-        },
-      );
-      console.log('RE', response);
-      const responseData = await response.json();
-
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error('failed to create payment intent');
-      }
-
-      if (responseData.error) {
-        Alert.alert('Something went wrong', responseData.error);
-        return;
-      }
-      setPaymentIntentClientSecret(responseData.paymentIntent);
-
-      // 2. Initialize the Payment sheet
-
-      const {error: paymentSheetError} = await initPaymentSheet({
-        merchantDisplayName: 'PATEL.PURVA',
-        paymentIntentClientSecret: responseData.paymentIntent,
-        defaultBillingDetails: {
-          name: 'purva',
-        },
-      });
-
-      if (paymentSheetError) {
-        throw new Error(paymentSheetError.message);
-      }
-
-      // 3. Present the Payment Sheet from Stripe
-      const {error: paymentError} = await presentPaymentSheet();
-
-      if (paymentError) {
-        throw new Error(paymentError.message);
-      }
-    } catch (err) {
-      console.error('Error:', err.message);
-      Alert.alert('error', err.message);
-    }
-    // 4. If payment ok -> create the order
-  };
 
   const navigation = useNavigation();
   const {userId, setUserId} = useContext(UserType);
@@ -166,6 +137,7 @@ const HomeScreen = () => {
       ),
     });
   }, []);
+
   //   const handlePress = async () => {
   //     // Checking if the link is supported
   //     console.log("PREss")
@@ -257,6 +229,8 @@ const HomeScreen = () => {
     fetchUsers();
   }, []);
 
+ 
+
   return (
     <View>
       <HeaderBar title={'AddFriend'} />
@@ -265,9 +239,7 @@ const HomeScreen = () => {
           <User key={index} item={item} />
         ))}
       </View>
-      <View>
-        <Button title="PAY" onPress={onCheckout} />
-      </View>
+    
 
   
     </View>

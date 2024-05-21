@@ -18,6 +18,7 @@ import {useRoute} from '@react-navigation/native';
 import {UserType} from '../../UserContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
+import HeaderBar from './HeaderBar';
 
 const ChatMessageScreen = ({navigation}: any) => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -210,6 +211,8 @@ const ChatMessageScreen = ({navigation}: any) => {
 
   return (
     <KeyboardAvoidingView style={styles.keyboardContainer}>
+      
+      <HeaderBar title={'AddFriend'} />
       <ScrollView>
         {messages.map((item: any, index) => {
           if (item.messageType == 'text') {

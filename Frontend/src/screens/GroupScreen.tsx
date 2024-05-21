@@ -383,6 +383,8 @@ import { UserType } from '../../UserContext'
 import GroupBox from '../components/GroupBox'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderBar from './HeaderBar'
@@ -422,6 +424,9 @@ const navigation=useNavigation()
         description:groupDescription,
         members:[...selectedFriends,userId]
       }
+      if(!groupName || !selectedFriends){
+        return Alert.alert("Please enter Mandatory details !!!")
+       }
 
       const response=await axios.post('http://10.0.2.2:8000/chat/group/createGroup',groupData)
       console.log("FF")
@@ -452,30 +457,32 @@ const navigation=useNavigation()
   const handleModel = async () => {
     setShowModal(true);
     try {
-      // const response = await fetch(`http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`);
-      // const data = await response.json();
-      // if (response.ok) {
-      //   dispatch({
-      //     type:USERID,
-      //     payload:data
-      //   })
-      //   console.log("++",UserId,"__")
+      const response = await fetch(`http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`);
+      const data = await response.json();
+      console.log(data,"{{}}")
+      if (response.ok) {
+
+        // dispatch({
+        //   type:USERID,
+        //   payload:data
+        // })
+        // console.log("++",UserId,"__")
         
-      //   setFriendList(UserId);
+        setFriendList(data);
     //    useEffect(()=>{
     //  console.log("DISPATCH")
     //     dispatch(friend_List(userId))
     //    })
     
-console.log(data,"__")
-      if(loading){
-        console.log("1")
-        return <View><Text>Loading...</Text></View>
-      }
-      if(error){
-        console.log("2")
-        return <View><Text>Error:{error}</Text></View>
-      }
+// console.log(data,"__")
+//       if(loading){
+//         console.log("1")
+//         return (<View><Text>Loading...</Text></View>)
+//       }
+//       if(error){
+//         console.log("2")
+//         return (<View><Text>Error:{error}</Text></View>)
+//       }
 
     
       // return (
@@ -496,6 +503,7 @@ console.log(data,"__")
       // )
         
       }
+    }
      catch(error) {
       console.log("internal server problem", error);
     }
@@ -561,6 +569,15 @@ console.log(data,"__")
        </View>
      
        </ScrollView>
+       <TouchableOpacity 
+       style={{position:'relative'}}
+       onPress={()=>navigation.navigate('Qr')} 
+       >
+        <View style={styles.buttonContainer2}>
+         <MaterialCommunityIcon name='qrcode-scan' size={23} color={'white'} />
+         </View>
+       </TouchableOpacity>
+
        <TouchableOpacity style={{position:'relative'}}>
         <View style={styles.buttonContainer1}>
          <MaterialIcons name='notes' size={22} color={'white'} />
@@ -578,7 +595,7 @@ console.log(data,"__")
              <TextInput style={[styles.input, styles.textArea]} placeholder='Group Description' multiline numberOfLines={4} value={groupDescription} onChangeText={setGroupDescription} />
              <Text style={styles.label}>Select Friends:</Text>
              <FlatList
-              data={data}
+              data={friendList}
               renderItem={({ item }) => (
                 <TouchableOpacity style={styles.friendItem} onPress={() => handleSelection(item._id)}>
                   <View style={styles.pressableContainer}>
@@ -635,7 +652,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 5,
-    marginVertical: 20,
+    marginBottom: 100,
     flexDirection: 'row',
     width: 230,
   },
@@ -652,6 +669,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowColor: 'black',
     shadowOpacity: 0.2,
+    elevation: 8,
+
+  },
+  buttonContainer2: {
+    position: 'absolute',
+    bottom: 80,
+    left:20,
+    backgroundColor: '#D77702',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOpacity: 1,
     elevation: 8,
 
   },

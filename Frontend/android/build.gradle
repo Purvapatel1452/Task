@@ -15,6 +15,7 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        
     }
 }
 
@@ -23,7 +24,7 @@ allprojects {
       mavenLocal()
       jcenter()
       maven { url "$rootDir/../node_modules/react-native/android" }
-        
+         mavenCentral()
 
       google()
       // ADD THIS

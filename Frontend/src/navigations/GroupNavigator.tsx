@@ -11,6 +11,7 @@ import GroupScreen from '../screens/GroupScreen'
 import ExpenseScreen from '../screens/ExpenseScreen'
 import GroupChatScreen from '../screens/GroupChatScreen'
 import GroupBox from '../components/GroupBox'
+import QrScreen from '../screens/QrScreen'
 
 const Stack=createNativeStackNavigator()
 
@@ -31,6 +32,10 @@ const GroupNavigator = () => {
              <Stack.Screen 
             name='Groups' 
             component={GroupScreen}
+             />
+             <Stack.Screen 
+            name='Qr' 
+            component={QrScreen}
              />
             {/* <Stack.Screen 
             name='GroupBox' 

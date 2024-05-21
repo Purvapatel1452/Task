@@ -54,7 +54,7 @@ const LoginScreen:React.FC<LoginScreenProps>= ({navigation}) => {
             email:email,
             password:password
         }
-console.log(user)
+    console.log(user)
     
        await axios.post("http://192.168.2.122:8000/chat/user/login", user)
         .then((response)=>{

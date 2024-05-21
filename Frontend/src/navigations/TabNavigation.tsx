@@ -11,8 +11,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import {BlurView} from '@react-native-community/blur';
 import StackNavigator from './StackNavigator';
-import PaymentScreen from '../screens/GroupScreen';
-import ActivityScreen from '../screens/ActivityScreen';
+import PaymentScreen from '../screens/PaymentScreen';
+import ActivityScreen from '../screens/PaymentScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GroupScreen from '../screens/GroupScreen';
 import GroupNavigator from './GroupNavigator';
@@ -67,12 +67,12 @@ const TabNavigator = () => {
         }}></Tab.Screen>
 
       <Tab.Screen
-        name="Favorite"
-        component={ActivityScreen}
+        name="Payment"
+        component={PaymentScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <FontAwesome
-              name="chart-line"
+            <MaterialIcons
+              name = "payment"
               size={25}
               color={focused ? '#D77702' : '#52555A'}
             />

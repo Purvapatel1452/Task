@@ -15,6 +15,7 @@ export const setUsers = (users: any) => ({
 
 
 export const friend_List=(userId)=>{
+  console.log("RED1",userId)
   return async (dispatch)=>{
     dispatch({type:FRIEND_LIST});
     try{
