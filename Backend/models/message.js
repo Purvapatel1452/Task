@@ -6,15 +6,21 @@ const messageSchema=new mongoose.Schema({
    
     senderId:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
+            ref:"User",
+            required:true
     },
     recepientId:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
     },
+    groupId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Group"
+},
     messageType:{
         type:String,
-        enum:['text','image']
+        enum:['text','image'],
+        required:true
     },
     message:String,
     imageUrl:String,

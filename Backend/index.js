@@ -11,12 +11,12 @@ const router=require('./routes/user-routes')
 const msgRouter=require('./routes/message-routes')
 const paymentRouter=require('./routes/payment-routes')
 const groupRouter=require('./routes/group-routes')
+const expenseRouter = require("./routes/expense-routes");
 
-const User=require("./models/user");
-const Message=require("./models/message");
-const Group=require('./models/group')
-const { register } = require("./routes/user-routes");
+
 const  Stripe  = require("stripe");
+
+
 
 
 const PORT = 8000;
@@ -42,6 +42,8 @@ app.use('/chat/message',cors(),msgRouter)
 app.use('/chat/payments',paymentRouter)
 
 app.use('/chat/group',groupRouter)
+
+app.use('/chat/expense',expenseRouter)
 
 
 

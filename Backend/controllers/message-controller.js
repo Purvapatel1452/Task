@@ -1,6 +1,7 @@
+const Group = require('../models/group');
 const Message=require('../models/message');
-const OTPData = require('../models/otpData');
 const User = require('../models/user');
+
 
 
 
@@ -9,23 +10,23 @@ const User = require('../models/user');
 const messages=async(req,res)=>{
 
     try{
-console.log('d')
-        const {senderId,recepientId,messageType,messageText}=req.body
-
+console.log('d',req.body)
+        const {senderId,recepientId,groupId,messageType,messageText}=req.body
+console.log(senderId,recepientId,messageType,messageText,"???")
         const newMessage= new Message({
             senderId,
             recepientId,
+            groupId,
             messageType,
             message:messageText,
             timestamp:new Date(),
             imageUrl:messageType=='image'?req.file.path:null
         })
-
-    
-console.log(newMessage)
+ 
+        console.log(newMessage,"NUU")
         await newMessage.save();
       
-
+        console.log("GGG")
         res.status(200).json({message:"message sent successfully"})
 
     }catch(err){
@@ -46,10 +47,11 @@ const userDetails=async(req,res)=>{
     try{
 
         const {userId}=req.params
+        console.log("user",userId)
 
-        const recepientId=await User.findById(userId);
+        const user=await User.findById(userId);
 
-        res.json(recepientId);
+        res.json(user);
 
 
     }catch(err){
@@ -62,23 +64,73 @@ const userDetails=async(req,res)=>{
 }
 
 
+
+//endpoints to get group details in chat header bar
+
+const groupDetails=async(req,res)=>{
+    try{
+
+        const {groupId}=req.params
+        console.log("user",groupId)
+
+        const group=await Group.findById(groupId);
+
+        console.log("GOrup",group)
+
+        res.json(group);
+
+
+    }catch(err){
+
+        console.log("error in retrieving user details",err)
+
+        res.status(500).json({message:"internal server error"})
+
+    }
+}
+
+
+
+
+
+
 //endpoints to fetch messages between the users in chatroom
 
 
 const chatMessages=async(req,res)=>{
     try{
+console.log("qq")
+        const {senderId,recepientId,groupId}=req.body
+console.log(senderId, recepientId,groupId)
 
-        const {senderId,recepientId}=req.params
-console.log(senderId, recepientId)
-        const messages=await Message.find({
-            $or:[
-                {senderId:senderId,recepientId:recepientId},
-                {senderId:recepientId,recepientId:senderId},
-            ],
-        }).populate("senderId","_id name")
+let messages;
+
+        if(groupId){
+console.log("G")
+            messages=await Message.find({groupId}).populate("senderId","_id name")
+
+        }
+        else if(senderId && recepientId){
+            console.log("R")
+
+            messages=await Message.find({
+                $or:[
+                    {senderId:senderId,recepientId:recepientId},
+                    {senderId:recepientId,recepientId:senderId},
+                ],
+            }).populate("senderId","_id name")
+
+        }else{
+
+            return res.status(400).json({ message: "Either groupId or senderId and recepientId must be provided" });
+
+        }
+        
+        
 
         console.log("ff",messages)
         res.json(messages)
+        console.log("s",messages)
 
     }catch(err){
         console.log("error in retrieving messages",err)
@@ -94,5 +146,6 @@ console.log(senderId, recepientId)
 module.exports={
     messages,
     userDetails,
+    groupDetails,
     chatMessages
 }
