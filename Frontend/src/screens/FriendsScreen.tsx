@@ -9,6 +9,7 @@ const FriendsScreen = () => {
 
     const {userId,setUserId}=useContext(UserType)
     const [friendRequest,setFriendRequest]=useState([])
+    
 
     useEffect(()=>{
 

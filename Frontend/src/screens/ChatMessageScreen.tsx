@@ -39,8 +39,19 @@ const ChatMessageScreen = ({navigation}: any) => {
       console.log('p');
       console.log(userId,recepientId)
 
+      const msgData={
+        senderId:userId,
+        recepientId:recepientId
+      }
+      console.log(msgData,":;;")
       const response = await fetch(
-        `http://10.0.2.2:8000/chat/message/messages/${userId}/${recepientId}`,
+        `http://10.0.2.2:8000/chat/message/messages`,{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify(msgData)
+        }
       );
       console.log('DRRR', response);
       const data = await response.json();
@@ -99,9 +110,9 @@ const ChatMessageScreen = ({navigation}: any) => {
         formData.append('messageType', 'text');
         formData.append('messageText', message);
       }
-
+console.log("FORM",formData,"[[")
       const response = await fetch(
-        'http://10.0.2.2:8000/chat/message/messages',
+        'http://10.0.2.2:8000/chat/message/sendMessages',
         {
           method: 'POST',
           body: formData,

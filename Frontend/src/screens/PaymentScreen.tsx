@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import HeaderBar from './HeaderBar'
 import { PlatformPay, PlatformPayButton, confirmPlatformPayPayment, useStripe } from '@stripe/stripe-react-native';
@@ -13,6 +13,8 @@ const PaymentScreen = () => {
   
 const {initPaymentSheet, presentPaymentSheet} = useStripe();
 const [paymentIntentClientSecret, setPaymentIntentClientSecret] = useState('');
+
+const [url,setUrl]=useState('')
 
 const onCheckout = async () => {
   // 1. Create a payment intent
@@ -32,7 +34,7 @@ const onCheckout = async () => {
     console.log('RE', response);
     const responseData = await response.json();
 
-    console.log(response);
+    console.log("))",responseData,"((||||");
 
     if (!response.ok) {
       throw new Error('failed to create payment intent');
@@ -120,6 +122,19 @@ const pay = async () => {
     };
 
 
+    const openURL = (url: string) => {
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (supported) {
+            Linking.openURL(url);
+          } else {
+            console.log(`Don't know how to open URI: ${url}`);
+          }
+        })
+        .catch((err) => console.error('An error occurred', err));
+    };
+
+
   return (
     <View>
     <View>
@@ -136,6 +151,10 @@ const pay = async () => {
           height: 50,
         }}
       />
+
+<View>
+      <Button title="Open URL" onPress={() => openURL('https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xUDZwY1lTQ2RObGtxdFRLKPi6trIGMgZz7cl9ITU6LBatqi5fCbFmNmdYjD0UeD67NHA8giszINUztDY-UBIdjqIyP-58naK3BCOc')} />
+    </View>
    </View>
   )
 }

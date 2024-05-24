@@ -9,7 +9,7 @@ const GroupBox = ({item}) => {
 
   return (
     <Pressable
-    onPress={()=>navigation.navigate("GroupChat")}
+    onPress={()=>navigation.navigate("GroupChat",{groupId:item._id})}
     style={styles.pressableContainer}
     >
         <Image source={{uri:item.image}} style={styles.image} />

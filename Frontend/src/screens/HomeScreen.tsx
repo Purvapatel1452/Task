@@ -239,8 +239,11 @@ const HomeScreen = () => {
           <User key={index} item={item} />
         ))}
       </View>
+      <View>
+        <Button title="requests" onPress={()=>navigation.navigate('Friends')} />
+      </View>
     
-
+ 
   
     </View>
   );

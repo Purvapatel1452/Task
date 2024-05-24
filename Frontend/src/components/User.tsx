@@ -1,6 +1,6 @@
 import React, { useContext,useState } from 'react'
 
-import { Pressable, StyleSheet, Text, View,Image } from 'react-native'
+import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
 
 import  {UserType}  from '../../UserContext'
 import axios from 'axios'
@@ -67,13 +67,29 @@ const User = ({item}:any) => {
 
     </View>
 
-    <Pressable 
-    style={styles.pressAddFrnd}
-    onPress={()=>{
-        console.log("request sent",userId)
-        sendFriendRequest(userId,item._id)}}> 
-        <Text style={styles.textAdd} >Add Friend</Text>
-    </Pressable>
+    {
+
+        requestSent?
+        <Pressable 
+        style={styles.pressAddFrnd1}
+        onPress={()=>{
+            console.log("request sent",userId)
+            Alert.alert('Request Already Sent !!!')}}>
+            <Text style={styles.textAdd1} >Request Sent</Text>
+        </Pressable>
+        :
+        <Pressable 
+        style={styles.pressAddFrnd}
+        onPress={()=>{
+            console.log("request sent",userId)
+            sendFriendRequest(userId,item._id)}}>
+            <Text style={styles.textAdd} >Add Friend</Text>
+        </Pressable>
+
+
+    }
+
+   
     </Pressable>
   )
 }
@@ -115,7 +131,20 @@ const styles = StyleSheet.create({
         width:105
 
     },
+    pressAddFrnd1:{
+
+        backgroundColor:"#8BC34A",
+        padding:10,
+        borderRadius:8,
+        width:105
+
+    },
     textAdd:{
+        color:"white",
+        textAlign:"center",
+        fontSize:13
+    },
+    textAdd1:{
         color:"white",
         textAlign:"center",
         fontSize:13
