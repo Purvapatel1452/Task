@@ -223,15 +223,16 @@ const  getUsers=async(req, res) => {
     console.log("select",selectedUserId)
 
     try{
+
         const currentUser=await User.findById(currentUserId);
 
         if(currentUser.sentFriendRequests.includes(selectedUserId)){
-            console.log("ALredy")
-            return res.status(400).json({message:'Friend Request already sent'})
+            console.log("ALredy sent")
+            return res.status(400).send({message:'Friend Request already sent'})
         }
         else if(currentUser.friends.includes(selectedUserId)){
-            console.log("ALredy")
-            return res.status(400).json({message:'Already a Friend !!!'})
+            console.log("ALredy friend")
+            return res.status(400).send({message:'Already a Friend !!!'})
 
             
         }
