@@ -8,10 +8,11 @@ import { useSelector } from 'react-redux'
 
 
 import GroupScreen from '../screens/GroupScreen'
-import ExpenseScreen from '../screens/ExpenseScreen'
+import ExpensesScreen from '../screens/ExpensesScreen'
 import GroupChatScreen from '../screens/GroupChatScreen'
-import GroupBox from '../components/GroupBox'
+
 import QrScreen from '../screens/QrScreen'
+import ExpenseScreen from '../screens/ExpenseScreen'
 
 const Stack=createNativeStackNavigator()
 
@@ -47,9 +48,15 @@ const GroupNavigator = () => {
             component={GroupChatScreen}
              />
             <Stack.Screen 
+            name='Expenses' 
+            component={ExpensesScreen}
+             />
+              <Stack.Screen 
             name='Expense' 
             component={ExpenseScreen}
              />
+             
+
              
           
 

@@ -153,31 +153,31 @@ console.log(formData,"!!!!!!y")
   };
   console.log('messages', messages);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: '',
-      headerLeft: () => (
-        <View style={styles.headerContainer}>
-          <Icon
-            onPress={() => navigation.goBack()}
-            name="arrow-back"
-            size={24}
-            color="black"
-          />
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: '',
+  //     headerLeft: () => (
+  //       <View style={styles.headerContainer}>
+  //         <Icon
+  //           onPress={() => navigation.goBack()}
+  //           name="arrow-back"
+  //           size={24}
+  //           color="black"
+  //         />
 
-          <View style={styles.profileContainer}>
-            <Image
-              style={styles.headerProfilePic}
-              source={{uri: groupData.image}}
-            />
+  //         <View style={styles.profileContainer}>
+  //           <Image
+  //             style={styles.headerProfilePic}
+  //             source={{uri: groupData.image}}
+  //           />
 
-            <Text style={styles.nameText}>{groupData.name}</Text>
-          </View>
-        </View>
-      )
-      // tabBarVisible:false
-    });
-  }, [groupData]);
+  //           <Text style={styles.nameText}>{groupData.name}</Text>
+  //         </View>
+  //       </View>
+  //     )
+  //     // tabBarVisible:false
+  //   });
+  // }, [groupData]);
 
   const formatTime = (time: any) => {
     const options = {hour: 'numeric', minute: 'numeric'};

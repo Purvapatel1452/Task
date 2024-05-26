@@ -44,69 +44,10 @@ const HomeScreen = () => {
 
   const user = useSelector(state => state.home.user);
 
-  // const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  // const [paymentIntentClientSecret, setPaymentIntentClientSecret] =
-  //   useState('');
 
 
 
-  // const onCheckout = async () => {
-  //   // 1. Create a payment intent
-
-  //   try {
-  //     console.log('RE');
-  //     const response = await fetch(
-  //       'http://10.0.2.2:8000/chat/payments/intents',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'appplication/json',
-  //         },
-  //         body: JSON.stringify({amount: 100}),
-  //       },
-  //     );
-  //     console.log('RE', response);
-  //     const responseData = await response.json();
-
-  //     console.log(response);
-
-  //     if (!response.ok) {
-  //       throw new Error('failed to create payment intent');
-  //     }
-
-  //     if (responseData.error) {
-  //       Alert.alert('Something went wrong', responseData.error);
-  //       return;
-  //     }
-  //     setPaymentIntentClientSecret(responseData.paymentIntent);
-
-  //     // 2. Initialize the Payment sheet
-
-  //     const {error: paymentSheetError} = await initPaymentSheet({
-  //       merchantDisplayName: 'PATEL.PURVA',
-  //       paymentIntentClientSecret: responseData.paymentIntent,
-  //       defaultBillingDetails: {
-  //         name: 'purva',
-  //       },
-  //     });
-
-  //     if (paymentSheetError) {
-  //       throw new Error(paymentSheetError.message);
-  //     }
-
-  //     // 3. Present the Payment Sheet from Stripe
-  //     const {error: paymentError} = await presentPaymentSheet();
-
-  //     if (paymentError) {
-  //       throw new Error(paymentError.message);
-  //     }
-  //   } catch (err) {
-  //     console.error('Error:', err.message);
-  //     Alert.alert('error', err.message);
-  //   }
-  //   // 4. If payment ok -> create the order
-  // };
-
+  
   const navigation = useNavigation();
   const {userId, setUserId} = useContext(UserType);
 
@@ -211,8 +152,9 @@ const HomeScreen = () => {
           await axios
             .get(`http://10.0.2.2:8000/chat/user/users/${userId}`)
             .then(response => {
-              //  console.log("RESPONSE",response.data)
+               console.log("RESPONSE",response.data)
               setUsers(response.data);
+              
             })
             .catch(err => {
               console.log('retreiving error', err);

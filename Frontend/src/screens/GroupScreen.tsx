@@ -15,6 +15,7 @@ import Background from '../components/Background'
 import { useDispatch, useSelector } from 'react-redux'
 import { GROUP_DATA, friend_List} from '../redux/actions/homeActions'
 import User from '../components/User'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 const GroupScreen = () => {
@@ -79,7 +80,7 @@ const navigation=useNavigation()
 
   const handleModel = async () => {
     setShowModal(true);
-    try {
+   try {
       const response = await fetch(`http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`);
       const data = await response.json();
       console.log(data,"{{}}")
@@ -143,7 +144,7 @@ const navigation=useNavigation()
     try {
       const response = await fetch(`http://10.0.2.2:8000/chat/group/groups/${userId}`);
       const data = await response.json();
-      
+  
       if (response.ok) {
         dispatch({
           type:GROUP_DATA,
@@ -175,7 +176,7 @@ const navigation=useNavigation()
     
 
       
-     
+
   
      <ScrollView style={styles.scrollContainer}>
      
@@ -214,8 +215,14 @@ const navigation=useNavigation()
        <Modal animationType='fade' transparent={true} visible={showModal}>
          <View style={styles.modalContainer}>
            <View style={styles.modalContent}>
-             <TextInput style={styles.input} placeholder='Group Name' value={groupName} onChangeText={setGroupName} />
-             <TextInput style={[styles.input, styles.textArea]} placeholder='Group Description' multiline numberOfLines={4} value={groupDescription} onChangeText={setGroupDescription} />
+           <View style={styles.inputContainer}>
+           <MaterialIcons name='edit-note' size={50} style={{borderWidth:0.5,borderBottomWidth:3,borderRadius:10,borderColor:'gray'}} color={'#D77702'} />
+           <TextInput style={styles.input} placeholder='Group Name' value={groupName} onChangeText={setGroupName} />
+             </View>
+             <View style={styles.inputContainer}>
+           <MaterialCommunityIcons name='cash' size={45} style={{padding:3,borderWidth:0.5,borderBottomWidth:3,borderRadius:10,borderColor:'gray'}} color={'#D77702'} />
+           <TextInput style={[styles.input, styles.textArea]} placeholder='Group Description' multiline numberOfLines={4} value={groupDescription} onChangeText={setGroupDescription} />
+             </View>
              <Text style={styles.label}>Select Friends:</Text>
              <FlatList
               data={friendList}
@@ -248,10 +255,6 @@ const navigation=useNavigation()
           </View>
         </View>
       </Modal>
-      
-  
-     
-      
     </View>
   
    
@@ -278,6 +281,7 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     flexDirection: 'row',
     width: 230,
+    marginTop:10
   },
   buttonContainer1: {
     position: 'absolute',
@@ -342,15 +346,23 @@ const styles = StyleSheet.create({
     borderWidth:2,
     borderColor:'gray'
   },
+  inputContainer:{
+        
+    flexDirection:'row',
+    marginVertical:10
+
+  },
   input: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    width:250,
+    marginLeft:2
   },
   textArea: {
-    height: 100,
+    height:41,
   },
   label: {
     fontSize: 16,
@@ -445,3 +457,6 @@ const styles = StyleSheet.create({
 });
 
 export default GroupScreen;
+
+
+// how to add nav bar in modal box in react native

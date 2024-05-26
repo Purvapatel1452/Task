@@ -13,9 +13,11 @@ import {BlurView} from '@react-native-community/blur';
 import StackNavigator from './StackNavigator';
 import PaymentScreen from '../screens/PaymentScreen';
 import ActivityScreen from '../screens/PaymentScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/';
 import GroupScreen from '../screens/GroupScreen';
 import GroupNavigator from './GroupNavigator';
+import ExpenseScreen from '../screens/ExpensesScreen';
+import ExpenseNavigator from './ExpenseNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -80,8 +82,8 @@ const TabNavigator = () => {
         }}></Tab.Screen>
 
       <Tab.Screen
-        name="History"
-        component={ProfileScreen}
+        name="ExpenseNavigator"
+        component={ExpenseNavigator}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <MaterialIcons

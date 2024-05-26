@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import HeaderBar from './HeaderBar'
 
 const ProfileScreen = () => {
   return (
     <View>
-      <Text>ProfileScreen</Text>
+          <StatusBar backgroundColor={'#D77702'} />
+
+          <HeaderBar title={"HomeScreen"} />
     </View>
   )
 }

@@ -9,6 +9,7 @@ import HomeScreen from '../screens/HomeScreen'
 import FriendsScreen from '../screens/FriendsScreen'
 import ChatScreen from '../screens/ChatScreen'
 import ChatMessageScreen from '../screens/ChatMessageScreen'
+import ExpenseScreen from '../screens/ExpenseScreen'
 
 const Stack=createNativeStackNavigator()
 
@@ -46,6 +47,11 @@ const StackNavigator = () => {
               tabBarVisible: route.state?.index === undefined || route.state.index === 0,
             })}
              />
+             <Stack.Screen 
+            name='Expense' 
+            component={ExpenseScreen}
+             />
+             
 
         </Stack.Navigator>
        
