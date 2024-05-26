@@ -50,6 +50,14 @@ const userSchema=new mongoose.Schema({
             ref:"Group"
         }
     ],
+    expenses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Expense'
+    }],
+    balance:{
+        type:Number,
+        default:0
+    }
 
 
 })

@@ -30,7 +30,7 @@ const expenseSchema=new mongoose.Schema({
     },
     type: { 
         type: String, 
-        enum: ['group', 'one-to-one'], 
+        enum: ['group', 'non-group'], 
         required: true 
     },
     settled: { 
