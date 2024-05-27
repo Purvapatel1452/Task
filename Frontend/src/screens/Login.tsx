@@ -49,7 +49,7 @@ const Login = ({props}: any) => {
           // console.log("loginId",UserId)
           setUserId(userid);
 
-          navigation.navigate('Tab');
+          navigation.navigate('stack');
         } else {
           navigation.navigate('Login');
         }
@@ -76,7 +76,7 @@ const Login = ({props}: any) => {
 
           AsyncStorage.setItem('authToken', token);
 
-          navigation.navigate('Tab');
+          navigation.navigate('stack');
         })
         .catch(err => {
           console.log('j', JSON.stringify(err.response.data.message));

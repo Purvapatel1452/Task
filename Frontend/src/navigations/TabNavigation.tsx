@@ -18,6 +18,8 @@ import GroupScreen from '../screens/GroupScreen';
 import GroupNavigator from './GroupNavigator';
 import ExpenseScreen from '../screens/ExpensesScreen';
 import ExpenseNavigator from './ExpenseNavigator';
+import ChatScreen from '../screens/ChatScreen';
+import ExpensesScreen from '../screens/ExpensesScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,11 +43,13 @@ const TabNavigator = () => {
           />
         ),
       }}>
+
+        
       
 
       <Tab.Screen
         name="Group"
-        component={GroupNavigator}
+        component={GroupScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <MaterialIcons
@@ -57,7 +61,7 @@ const TabNavigator = () => {
         }}></Tab.Screen>
         <Tab.Screen
         name="Stack"
-        component={StackNavigator}
+        component={ChatScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <MaterialIcons
@@ -83,7 +87,7 @@ const TabNavigator = () => {
 
       <Tab.Screen
         name="ExpenseNavigator"
-        component={ExpenseNavigator}
+        component={ExpensesScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <MaterialIcons

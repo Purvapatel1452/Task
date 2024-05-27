@@ -1,148 +1,5 @@
-// import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-// import React, { useEffect, useState } from 'react'
-// import { useRoute } from '@react-navigation/native';
-// import HeaderBar from './HeaderBar';
-// import axios from 'axios';
-
-// const ExpenseScreen = ({navigation}:any) => {
-// const route=useRoute();
-//   const { expenseId }:any = route.params;
-//   const [expense, setExpense] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchExpense = async () => {
-//       try {
-//         const response = await axios.get(`http://10.0.2.2:8000/chat/expense/expense/${expenseId}`);
-//         console.log(response.data,"+==")
-//         setExpense(response.data);
-    
-//       } catch (error) {
-//         setError('Error fetching expense details');
-//         console.error(error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchExpense();
-//   }, []);
-
-//   if (loading) {
-//     return <ActivityIndicator size="large" color="#0000ff" />;
-//   }
-
-//   if (error) {
-//     return (
-//       <View style={styles.container}>
-//         <Text style={styles.error}>{error}</Text>
-//       </View>
-//     );
-//   }
-
-
-
-//   return (
-//     <View>
-       
-//        <HeaderBar title={'AddFriend'} />
-//        <View style={styles.pressableContainer}>
-//           <View style={styles.pressableContainer1}>
-       
-//           <Text  style={{color:'black'}}>{expense.description}</Text>
-        
-//         </View>
-//         <View style={styles.pressableContainer2}>
-         
-//           <Text style={{color:'black'}}>Non-group Expenses:</Text>
-    
-//         </View>
-//           </View>
-//     </View>
-//   )
-// }
-
-// export default ExpenseScreen
-
-// const styles = StyleSheet.create({
-//   pressableContainer:{
-
-//     flexDirection:"row",
-//     alignItems:"center",
-//     gap:10,
-//     borderWidth:0.9,
-//     borderLeftWidth:0,
-//     borderRightWidth:0,
-//     borderBottomWidth:1,
-//     borderColor:"#D0D0D0",
-//     padding:10,
-// justifyContent:'center'
-
-
-
-// },
-// pressableContainer1:{
-// flex:1,
-//   flexDirection:"row",
-//   alignItems:"center",
-//   gap:10,
-//   borderWidth:0,
-//   borderLeftWidth:1,
-//   borderRightWidth:1,
-//   borderBottomWidth:4,
-//   borderColor:"#D77702",
-//   padding:5,
-//   textAlign:'center',
-//   justifyContent:'center',
-  
-//   marginTop:-5,
-//   height:40,
-
-  
-
-
-
-
-// },
-// pressableContainer2:{
-
-//   flex:1,
-//   flexDirection:"row",
-//   alignItems:"center",
-//   gap:10,
-//   borderWidth:0,
-//   borderLeftWidth:1,
-//   borderRightWidth:1,
-//   borderBottomWidth:4,
-//   borderColor:"#D77702",
-//   padding:5,
-//   textAlign:'center',
-//   justifyContent:'center',
-  
-//   marginTop:-5,
-//   height:40,
-
-// },
-
-// container: {
-//   flex: 1,
-//   justifyContent: 'center',
-//   alignItems: 'center',
-//   padding: 16,
-// },
-// error: {
-//   color: 'red',
-//   fontSize: 18,
-// },
-// })
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, Image } from 'react-native';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import HeaderBar from './HeaderBar';
@@ -155,6 +12,7 @@ const ExpenseScreen = ({ navigation }:any) => {
   const [expense, setExpense] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchExpense = async () => {
@@ -189,9 +47,11 @@ const ExpenseScreen = ({ navigation }:any) => {
     <>
     <HeaderBar title={'AddFriend'} />
     <View style={styles.mainContainer}>
-    <Text style={styles.title}>Expense Details</Text>
+      <View style={{borderBottomWidth:2,borderLeftWidth:1,borderRightWidth:0.2,borderColor:'silver'}}>
+    <Text style={styles.title}>Expense </Text>
+    </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
         <View style={{flex:1,flexDirection:'row', gap:15}}>
 
@@ -201,27 +61,40 @@ const ExpenseScreen = ({ navigation }:any) => {
             :
             <FontAwesome6Icon name='money-bills' size={40} color={'#D77702'} />
         }
+     
         <Text style={styles.value1}>{expense.description}</Text>
+       
         </View>
+        <View style={{flex:1,flexDirection:'row',gap:8}}>
         <Text style={styles.value2}>₹{expense.amount}</Text>
-
-        <Text style={styles.label}>Added by {expense.type}</Text>
-        <Text style={styles.value}>{new Date(expense.date).toLocaleDateString()}</Text>
-
-
-        <Text style={styles.label}>Type:</Text>
+      
+        <View style={{elevation:20,shadowColor:'red',shadowOpacity:10}}>      
         <Text style={styles.value}>{expense.type}</Text>
+        </View>
+        
+        </View>
+        <View style={{flex:1,flexDirection:'row'}}>
 
-        <Text style={styles.label}>Payer:</Text>
-        <Text style={styles.value}>{expense.payerId.name}</Text>
+        <Text style={styles.label}>Paid by {expense.payerId.name} on </Text>
+        <Text style={styles.label}>{new Date(expense.date).toLocaleDateString()} at {new Date(expense.date).toLocaleTimeString()} </Text>
+        </View>
 
-        <Text style={styles.label}>Participants:</Text>
-        {expense.participants.map(participant => (
-          <Text key={participant._id} style={styles.value}>{participant.name}</Text>
+        <View style={{flex:1,flexDirection:'row',gap:20,marginTop:20}}>
+       
+              <Image source={{ uri: expense.payerId.image }} style={styles.image} />
+            
+             <Text style={styles.paid}>{expense.payerId.name} paid ₹{expense.amount}</Text>
+         
+        </View>
+        {expense.payments.map(payment => (
+          <View key={payment.participant._id} style={{flexDirection:'row'}}>
+          <Text  style={styles.paid2}>{payment.participant.name} owes ₹{payment.amount}</Text>
+          <Text style={styles.paid3}> ({payment.paid?'Paid':'Not Paid'})</Text>
+          </View>
         ))}
 
-        <Text style={styles.label}>Settled:</Text>
-        <Text style={styles.value}>{expense.settled ? 'Yes' : 'No'}</Text>
+        <Text style={styles.label4}>Status:</Text>
+        <Text style={styles.value}>{expense.settled ? 'Settled' : 'Not Settled'}</Text>
       </ScrollView>
     </View>
     </>
@@ -232,7 +105,10 @@ export default ExpenseScreen;
 
 const styles = StyleSheet.create({
   mainContainer:{
-    marginBottom:220
+    marginBottom:220,
+  
+    
+
 
 
 
@@ -252,21 +128,97 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   label: {
-    fontSize: 30,
-    fontWeight: 'bold',
+    fontSize: 13,
+    marginTop: -26,
+    marginBottom:5,
+    fontWeight:'400',
+    color:'gray'
+  },
+  label2: {
+    fontSize: 13,
     marginTop: 10,
+    marginBottom:5,
+    fontWeight:'400',
+    
+    color:'gray'
+  },
+  label4: {
+    fontSize: 18,
+    marginTop: 10,
+    marginBottom:5,
+    fontWeight:'400',
+    color:'gray'
   },
   value: {
     fontSize: 16,
-    marginBottom: 10,
+    borderWidth:1,
+    borderColor:'#D77702',
+    marginBottom:40,
+    borderRadius:15,
+    paddingHorizontal:5,
+    marginTop:5,
+    fontWeight:'bold',
+    color:'gray',
+    borderLeftWidth:1,
+    borderRightWidth:1.6,
+    borderBottomWidth:3
+    
+
+
+  
+
+  },
+  value3: {
+    fontSize: 16,
+    borderColor:'#D77702',
+    marginBottom:40,
+    paddingHorizontal:5,
+    marginTop:5,
+    fontWeight:'bold',
+    color:'gray',
+  
+  },
+  image:{
+    height:50,
+    width:50,
+    borderRadius:40,
+    borderWidth:1,
+    borderColor:'gray',
+  
+  },
+  paid:{
+    fontSize:20,
+    color:'black',
+    marginTop:10,
+    fontWeight:'600'
+
+  },
+  paid2:{
+    fontSize:20,
+    color:'gray',
+    marginTop:8,
+    marginLeft:70
+
+  },
+  paid3:{
+    fontSize:12,
+    color:'black',
+    marginTop:12,
+    borderBottomWidth:3,
+    borderWidth:1,
+    borderColor:'gray',
+    borderRadius:6,
+    height:17,
+    marginLeft:3
+
   },
   value1: {
     fontSize: 40,
     marginBottom: 10,
     marginTop:-6.5,
-    fontWeight: '500',
-    color:'gray',
-    fontFamily:'sans-serif'
+    
+    color:'black',
+
   },
   value2: {
     fontSize: 40,
