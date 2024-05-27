@@ -145,7 +145,33 @@ const expense=async(req,res)=>{
 
   console.log("ID",expenseId)
 
-  const expense=await Expense.findById(expenseId);
+  const expense=await Expense.findById(expenseId).populate('participants').populate('payments.participant')
+
+  const perParticipantAmount=(expense.amount/expense.participants.length).toFixed(2);
+
+  expense.participants.forEach(participant=>{
+    
+    const payment=expense.payments.find(p=>p.participant._id.toString()===participant._id.toString())
+  
+    if(!payment){
+      expense.payments.push({
+        participant:participant._id,
+        amount:perParticipantAmount,
+        paid:false
+      });
+    }
+    else{
+      payment.amount=perParticipantAmount
+    }
+  })
+
+    const allPaid=expense.payments.every(payment=>payment.paid);
+    expense.settled=allPaid
+  
+    
+await expense.save();
+
+ 
 
   res.status(200).json(expense)
 }
@@ -157,8 +183,39 @@ catch(error){
 
 }
 
+const updatePaymentStatus=async(req,res)=>{
+
+ try{console.log("BACK") 
+  const {expenseId,participantId,paid}=req.body;
+
+  console.log(expenseId,participantId,paid);
+  
+
+  const expense=await Expense.findById(expenseId);
+  console.log(expense.payments[0])
+
+  const payment=expense.payments.find(p=>p.participant._id.toString()===participantId)
+console.log(payment,"__")
+  payment.paid=paid;
+  console.log(payment,"__")
+
+  const allPaid = expense.payments.every(payment => payment.paid);
+    expense.settled = allPaid;
+
+    await expense.save();
+    res.status(200).json(expense)
+}
+catch(error){
+  console.log('Error in internal server',error);
+  res.status(404).json({message:"Internal server Error"})
+}
+
+}
+
+
 module.exports = {
   addExpense,
   expenses,
-  expense
+  expense,
+  updatePaymentStatus
 };

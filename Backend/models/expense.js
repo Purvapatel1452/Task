@@ -1,5 +1,11 @@
 const mongoose=require('mongoose')
 
+const paymentSchema = new mongoose.Schema({
+    participant: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    amount: { type: Number, required: true },
+    paid: { type: Boolean, default: false },
+  });
+
 const expenseSchema=new mongoose.Schema({
     description: { 
         type: String, 
@@ -19,6 +25,7 @@ const expenseSchema=new mongoose.Schema({
         ref: 'User', 
         required: true 
     }],
+    payments:[paymentSchema],
     groupId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Group', 
@@ -43,15 +50,17 @@ const expenseSchema=new mongoose.Schema({
 
 expenseSchema.pre('find',function(){
   
-    this.populate('payerId','_id name')
-    .populate('participants','_id name')
+    this.populate('payerId','_id name image')
+    .populate('participants','_id name image')
+    .populate('payments.participant','_id name image')
 
 })
 
 expenseSchema.pre('findOne',function(){
 
-    this.populate('payerId','_id name')
-    .populate('participants','_id name')
+    this.populate('payerId','_id name image')
+    .populate('participants','_id name image')
+    .populate('payments.participant','_id name image')
 
 })
 
