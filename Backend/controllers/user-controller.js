@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt=require('bcryptjs')
 const nodemailer=require('nodemailer');
 const OTPData = require("../models/otpData");
+const Expense = require("../models/expense");
 
 function generateOtp(){
 
@@ -350,8 +351,8 @@ console.log("E")
         )
 
         const acceptedFriends=user.friends;
-        console.log(acceptedFriends)
-        res.json(acceptedFriends)
+       
+        res.status(200).json(acceptedFriends);
 
     }
     catch(err){
@@ -361,6 +362,71 @@ console.log("E")
     }
 }
 
+
+const friendsPaymentStatus=async(req,res)=>{
+
+    try{
+
+        const {userId}=req.params;
+        const user=await User.findById(userId).populate("friends")
+
+        const acceptedFriends=user.friends
+        const friendsWithPendingPaytmets=[];
+
+        for(const friend of acceptedFriends){
+            const expenses=await Expense.find({
+                $or:[
+                    {payerId:userId,'payments.participant':friend._id,'payments.paid':false},
+                    {payerId:friend._id,'payments.participant':userId,'payments.paid':false}
+                ]
+            });
+    
+            let friendOwesMe=0;
+            let iOweFriend=0;
+
+         
+    
+            expenses.forEach(expense=>{
+               
+                expense.payments.forEach(payment=>{
+                    console.log(expense.payerId,")")
+                  
+                    if(payment.participant._id.toString()===friend._id.toString() && expense.payerId._id.toString()===userId && !payment.paid){
+    
+                        friendOwesMe+=payment.amount
+                        console.log("fo",friendOwesMe)
+    
+                    }
+                    else if(payment.participant._id.toString()===userId && expense.payerId._id.toString()===friend._id && !payment.paid){
+                       
+                        iOweFriend+=payment.amount
+                        console.log("IO",iOwesMe)
+    
+                       }
+                })
+            })
+    
+            friendsWithPendingPaytmets.push({
+                friendId:friend._id,
+                friendOwesMe,
+                iOweFriend
+            })
+    
+    
+        }
+
+        res.status(200).json(friendsWithPendingPaytmets);
+
+    }
+    catch(error){
+        console.log('Error in internal server',error);
+        res.status(500).json({error:"internal server error"})
+    }
+
+
+   
+
+}
 
 
 
@@ -374,6 +440,7 @@ module.exports={
     friendRequestList,
     acceptFriendRequest,
     friends,
+    friendsPaymentStatus,
     sendOtp,
     verifyOtp
    

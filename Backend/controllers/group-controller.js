@@ -47,7 +47,6 @@ console.log("all",{$al:memberIds})
         }
       ]);
 
-console.log("EXIX",existingGroup)
 
     if(existingGroup.length!==0){
         console.log("exixts")
@@ -87,7 +86,7 @@ const getAllGroups=async(req,res)=>{
         console.log(userId)
 
         const user=await User.findById(userId).populate('groups')
-        console.log(user)
+      
         // const groups=await Group.find()
         res.status(200).json(user.groups);
 
