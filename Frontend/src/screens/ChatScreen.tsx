@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {
   Alert,
@@ -17,7 +17,7 @@ import {
 import {UserType} from '../../UserContext';
 import UserChat from '../components/UserChat';
 import HeaderBar from './HeaderBar';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation,useFocusEffect} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,9 +34,11 @@ const ChatScreen = () => {
   const [selectGroup, setSelectGroup] = useState('');
   const [select, setSelect] = useState([]);
   const [type,setType]=useState([])
+  const [paymentStatus,setPaymentStatus]=useState([])
   const [groupId, setGroupId] = useState('');
 
   const navigation = useNavigation();
+  const [refresh, setRefresh] = useState(false);
 
   const handleFriends = async () => {
     setSelect([]);
@@ -106,7 +108,7 @@ const ChatScreen = () => {
       if (response.ok) {
         setFriendList(data);
 
-        console.log(friendList, '+++++');
+    
       }
     } catch (error) {
       console.log('Error in internal sever', error);
@@ -175,8 +177,7 @@ if(isGroup){
   };
 
   const handleSelection = item => {
-    console.log(item.members, '+++');
-    console.log('GRPOOI', isGroup);
+ 
     if (isGroup) {
       setSelectedFriends(item.members);
       setSelectGroup(item._id);
@@ -194,35 +195,116 @@ if(isGroup){
     }
   };
 
-  useEffect(() => {
-    const acceptedFriendsList = async () => {
-      try {
-        const response = await fetch(
-          `http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`,
-        );
-        console.log('RP', response);
-        const data = await response.json();
-        console.log('DATA', data);
 
-        if (response.ok) {
-          setAcceptedfriends(data);
-        }
-      } catch (err) {
-        console.log('Error in frontend', err);
+  const acceptedFriendsList = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`,
+      );
+      
+      const data = await response.json();
+     console.log(data,"++")
+
+    
+
+      if (response.ok) {
+        setAcceptedfriends(data);
       }
+    } catch (err) {
+      console.log('Error in frontend', err);
+    }
+  },[userId])
+
+  const fetchFriendsPaymentStatus =useCallback(async () => {
+    try {
+      const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
+      const friendsPaymentStatus = await response.json();
+  
+      if (response.ok) {
+        console.log(friendsPaymentStatus, "--");
+        // Assuming setFriendsPaymentStatus is a state setter function
+        setPaymentStatus(friendsPaymentStatus); 
+      } else {
+        console.error('Failed to fetch friends payment status');
+      }
+    } catch (err) {
+      console.error('Error in frontend', err);
+    }
+  },[userId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAllData = async () => {
+        await acceptedFriendsList();
+        await fetchFriendsPaymentStatus();
+      };
+      fetchAllData();
+      const unsubscribe = navigation.addListener('tabPress', e => {
+        e.preventDefault();
+        setRefresh(!refresh);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }, [refresh, acceptedFriendsList, fetchFriendsPaymentStatus])
+  );
+
+  useEffect(() => {
+
+    const fetchAllData=async()=>{
+      
+    await fetchFriendsPaymentStatus();
+    await acceptedFriendsList();
+
     };
+    fetchAllData();
+  
+  }, [refresh,fetchFriendsPaymentStatus,acceptedFriendsList]);
 
-    acceptedFriendsList();
-  }, []);
+  const combineData = () => {
+    return acceptedFriends.map(friend => {
+      const paymentStatusForFriend = paymentStatus.find(
+        status => status.friendId === friend._id,
+      );
+      return {
+        ...friend,
+        friendOwesMe: paymentStatusForFriend
+          ? paymentStatusForFriend.friendOwesMe
+          : 0,
+        iOweFriend: paymentStatusForFriend
+          ? paymentStatusForFriend.iOweFriend
+          : 0,
+      };
+    });
+  }
 
-  console.log('ACCEPTED FRIENDS', acceptedFriends);
+  const combinedData=combineData();
+  console.log(combinedData,"||||")
+
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const unsubscribe = navigation.addListener('tabPress', e => {
+  //       // Prevent default behavior
+  //       e.preventDefault();
+  //       // Perform any custom action
+  //       setRefresh(!refresh);
+  //     });
+
+  //     return unsubscribe;
+  //   }, [refresh])
+  // );
+
+ 
+
 
   return (
     <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
       <HeaderBar title={'ChatHomeScreen'} />
       <ScrollView>
         <Pressable>
-          {acceptedFriends.map((item, index) => (
+          {combinedData.map((item, index) => (
             <UserChat key={index} item={item} />
           ))}
         </Pressable>

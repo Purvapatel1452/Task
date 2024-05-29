@@ -5,6 +5,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 
+
 // import {COLORS} from '../theme/theme';
 // import CustomIcon from '../components/CustomIcon';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';

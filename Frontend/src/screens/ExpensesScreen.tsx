@@ -12,15 +12,6 @@ const ExpensesScreen = () => {
   const [expenseType,setExpenseType]=useState('')
 
 
-  const handleGroupExpense=()=>{
-    setExpenseType('group')
-    expenses()
-  }
-
-  const handleNonGroupExpense=()=>{
-    setExpenseType('non-group')
-    expenses()
-  }
 
 
 

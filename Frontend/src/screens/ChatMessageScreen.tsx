@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -19,6 +20,8 @@ import {UserType} from '../../UserContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import HeaderBar from './HeaderBar';
+import axios from 'axios';
+import ExpenseBox from '../components/ExpenseBox';
 
 const ChatMessageScreen = ({navigation}: any) => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -29,21 +32,54 @@ const ChatMessageScreen = ({navigation}: any) => {
   const [message, setMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [recepientData, setRecepientData] = useState<any>('');
+  const [isExpense,setIsExpense]=useState(true);
+  const [expenseList,setExpenseList]=useState([])
 
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
 
+
+  const isexpense=()=>{
+    setIsExpense(true);
+  }
+
+  const isChat=()=>{
+    setIsExpense(false)
+  }
+
+ 
+  const userExpenses=async()=>{
+    console.log("+++++++++++++++++++++++++++++++")
+    try{
+console.log(recepientId,"0000;;;;")
+      const response= await axios.get(`http://10.0.2.2:8000/chat/expense/userExpenses/${userId}/${recepientId}`);
+
+      console.log(response.data,")))")
+
+      setExpenseList(response.data)
+
+      
+
+    }
+    catch(error){
+      console.log("internal server error",error);
+
+    }
+  }
+
+  
+
+
   const fetchMessages = async () => {
     try {
-      console.log('p');
-      console.log(userId,recepientId)
+     
 
       const msgData={
         senderId:userId,
         recepientId:recepientId
       }
-      console.log(msgData,":;;")
+    
       const response = await fetch(
         `http://10.0.2.2:8000/chat/message/messages`,{
           method:"POST",
@@ -53,10 +89,9 @@ const ChatMessageScreen = ({navigation}: any) => {
           body:JSON.stringify(msgData)
         }
       );
-      console.log('DRRR', response);
+  
       const data = await response.json();
 
-      console.log('FFFF', data);
 
       if (response.ok) {
         setMessages(data);
@@ -70,6 +105,7 @@ const ChatMessageScreen = ({navigation}: any) => {
 
   useEffect(() => {
     fetchMessages();
+    userExpenses();
   }, []);
 
   useEffect(() => {
@@ -98,7 +134,7 @@ const ChatMessageScreen = ({navigation}: any) => {
       formData.append('recepientId', recepientId);
 
       //check msg type image or text
-      console.log('IIIII', imageUri);
+  
       if (messageType == 'image') {
         formData.append('messageType', 'image');
         formData.append('imageFile', {
@@ -110,7 +146,7 @@ const ChatMessageScreen = ({navigation}: any) => {
         formData.append('messageType', 'text');
         formData.append('messageText', message);
       }
-console.log("FORM",formData,"[[")
+
       const response = await fetch(
         'http://10.0.2.2:8000/chat/message/sendMessages',
         {
@@ -129,7 +165,7 @@ console.log("FORM",formData,"[[")
       console.log('error in sending msg', err);
     }
   };
-  console.log('messages', messages);
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -220,10 +256,36 @@ console.log("FORM",formData,"[[")
     });
   };
 
-  return (
+  return (<>
+
+    <HeaderBar title={'AddFriend'} />
+
+    <View style={styles.pressableContainer}>
+    <View style={styles.pressableContainer1}>
+    <TouchableOpacity onPress={()=>isexpense()}>
+    <Text  style={{color:'black'}}>Expenses</Text>
+  </TouchableOpacity>
+  </View>
+  <View style={styles.pressableContainer2}>
+    <TouchableOpacity onPress={()=>isChat()}>
+    <Text style={{color:'black'}}>Chat</Text>
+  </TouchableOpacity>
+  </View>
+    </View>
+    {
+      isExpense?
+      <ScrollView>
+      <Pressable>
+      {expenseList.map((item, index) => (
+        <ExpenseBox key={index} item={item} />
+      ))}
+    </Pressable>
+    </ScrollView>
+    :
+   
     <KeyboardAvoidingView style={styles.keyboardContainer}>
       
-      <HeaderBar title={'AddFriend'} />
+  
       <ScrollView>
         {messages.map((item: any, index) => {
           if (item.messageType == 'text') {
@@ -270,6 +332,7 @@ console.log("FORM",formData,"[[")
             console.log('SSS', source);
 
             return (
+              
               <Pressable
                 key={index}
                 style={[
@@ -365,6 +428,10 @@ console.log("FORM",formData,"[[")
         />
       )}
     </KeyboardAvoidingView>
+}
+    </>
+    
+    
   );
 };
 
@@ -405,7 +472,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#007bff',
+    backgroundColor: '#D77702',
   },
   sendText: {
     fontWeight: 'bold',
@@ -432,6 +499,70 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginTop: 4,
   },
+  pressableContainer:{
+
+    flexDirection:"row",
+    alignItems:"center",
+    gap:10,
+    borderWidth:0.9,
+    borderLeftWidth:0,
+    borderRightWidth:0,
+    borderBottomWidth:1,
+    borderColor:"#D0D0D0",
+    padding:10,
+justifyContent:'center'
+
+
+
+},
+pressableContainer1:{
+flex:1,
+  flexDirection:"row",
+  alignItems:"center",
+  gap:10,
+  borderWidth:0,
+  borderLeftWidth:1,
+  borderRightWidth:1,
+  borderBottomWidth:4,
+  borderColor:"#D77702",
+  padding:5,
+  textAlign:'center',
+  justifyContent:'center',
+  
+  marginTop:-5,
+  height:40,
+
+  
+
+
+
+
+},
+pressableContainer2:{
+
+  flex:1,
+  flexDirection:"row",
+  alignItems:"center",
+  gap:10,
+  borderWidth:0,
+  borderLeftWidth:1,
+  borderRightWidth:1,
+  borderBottomWidth:4,
+  borderColor:"#D77702",
+  padding:5,
+  textAlign:'center',
+  justifyContent:'center',
+  
+  marginTop:-5,
+  height:40,
+  
+
+
+
+
+
+},
+ 
 });
 
 // import React from 'react';
