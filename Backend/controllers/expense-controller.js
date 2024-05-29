@@ -213,9 +213,55 @@ catch(error){
 }
 
 
+const getGroupExpenses=async(req,res)=>{
+
+  try{
+    const groupId=req.params.groupId;
+
+    const expenses=await  Expense.find({groupId});
+
+    res.status(200).json(expenses)
+
+  }
+  catch(error){
+    console.log("internal server error",error)
+    res.status(500).json({message:'server error'})
+  }
+};
+
+
+const userExpenses=async(req,res)=>{
+
+  try{
+    console.log("uerExpens")
+
+    const {userId,friendId}=req.params;
+    console.log(userId,friendId)
+
+    const expenses=await Expense.find({
+      participants:{$all:[userId,friendId]}
+    })
+
+    console.log(expenses,"??")
+
+    res.status(200).json(expenses);
+
+  }
+  catch(error){
+    console.log("internal server error",error);
+    res.status(500).json({message:"internal server error"})
+  }
+
+}
+
+
 module.exports = {
   addExpense,
   expenses,
   expense,
-  updatePaymentStatus
+  updatePaymentStatus,
+  getGroupExpenses,
+  userExpenses
 };
+
+
