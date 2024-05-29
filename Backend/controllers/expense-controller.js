@@ -109,7 +109,7 @@ const expenses=async(req,res)=>{
 
   try{
 
-    console.log("Expesnees")
+ 
 
     const {userId}=req.params;
     const {expenseType}=req.query
@@ -121,13 +121,13 @@ const expenses=async(req,res)=>{
       match:query
     })
     
-    console.log("Expesnees",user)
+   
 
     if(!user){
       return res.status(404).json({message:'User Not Found !!!'})
     }
 
-    console.log(user,"++")
+ 
 
     res.status(200).json({expenses:user.expenses})
 
@@ -185,19 +185,19 @@ catch(error){
 
 const updatePaymentStatus=async(req,res)=>{
 
- try{console.log("BACK") 
+ try{console.log("BACK");
   const {expenseId,participantId,paid}=req.body;
 
-  console.log(expenseId,participantId,paid);
+  console.log(expenseId,participantId,paid,"+++++++++++");
   
 
   const expense=await Expense.findById(expenseId);
-  console.log(expense.payments[0])
+ 
 
   const payment=expense.payments.find(p=>p.participant._id.toString()===participantId)
-console.log(payment,"__")
+
   payment.paid=paid;
-  console.log(payment,"__")
+ 
 
   const allPaid = expense.payments.every(payment => payment.paid);
     expense.settled = allPaid;

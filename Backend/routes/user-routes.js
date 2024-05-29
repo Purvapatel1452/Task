@@ -1,6 +1,6 @@
 const express=require('express')
 
-const { registerUser, loginUser, getUsers, friendRequest, friendRequestList, acceptFriendRequest, friends, sendOtp, verifyOtp, friendsPaymentStatus } = require('../controllers/user-controller')
+const { registerUser, loginUser, getUsers, friendRequest, friendRequestList, acceptFriendRequest, friends, sendOtp, verifyOtp, friendsPaymentStatus, getUserDetails } = require('../controllers/user-controller')
 
 
 
@@ -15,6 +15,8 @@ router.post('/send-otp',sendOtp)
 router.post('/verify-otp',verifyOtp)
 
 router.post("/login",loginUser)
+
+router.get("/userDetails/:userId",getUserDetails)
 
 router.get('/users/:userId',getUsers)
 

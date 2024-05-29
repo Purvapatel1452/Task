@@ -189,6 +189,23 @@ console.log("hii")
 }
 
 
+const getUserDetails=async(req,res)=>{
+    try{
+console.log("++")
+        const {userId}=req.params
+console.log("++",userId)
+        const details=await User.findById(userId);
+
+        res.status(200).json(details);
+
+    }
+    catch(error){
+        console.log("internal server error",error)
+        res.status(500).json({message:"internal server error"})
+    }
+}
+
+
 //get all users except the user id that is currently logged in
 
 const  getUsers=async(req, res) => {
@@ -435,6 +452,7 @@ const friendsPaymentStatus=async(req,res)=>{
 module.exports={
     registerUser,
     loginUser,
+    getUserDetails,
     getUsers,
     friendRequest,
     friendRequestList,
@@ -443,5 +461,4 @@ module.exports={
     friendsPaymentStatus,
     sendOtp,
     verifyOtp
-   
 }
