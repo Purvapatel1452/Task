@@ -1,12 +1,12 @@
 import { Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import HeaderBar from './HeaderBar'
-import { UserType } from '../../UserContext'
 import ExpenseBox from '../components/ExpenseBox'
+import { useSelector } from 'react-redux'
 
 const ExpensesScreen = () => {
 
-  const {userId,setUserId}=useContext(UserType)
+  const {userId}=useSelector(state=>state.user)
   const [expenseList,setExpenseList]=useState([])
   const [isType,setIsType]=useState(false)
   const [expenseType,setExpenseType]=useState('')

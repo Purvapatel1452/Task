@@ -18,14 +18,13 @@
 
 import React from 'react'
 
-import { UserContext } from './UserContext'
 import { StripeProvider } from '@stripe/stripe-react-native'  
 
 
 
 import Stacker from './src/navigations/Stacker'
 import { StyleSheet } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
+
 
 
 
@@ -34,14 +33,12 @@ const STRIPE_KEY='pk_test_51P6pcYSCdNlkqtTKf1k30wMs98GFCxjtiGa8CfD7qfYqf2CqhA6kt
 
 const App = () => {
   return (
-   <UserContext>
-    <StripeProvider publishableKey={STRIPE_KEY}>
    
+    <StripeProvider publishableKey={STRIPE_KEY}>
       <Stacker />
-      {/* <Pay /> */}
    
     </StripeProvider>
-   </UserContext>
+   
 
   )
 }

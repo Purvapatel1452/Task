@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 
 import {Pressable, StyleSheet, Text, View, Image} from 'react-native';
-import { UserType } from '../../UserContext';
+
 import ChatScreen from '../screens/ChatScreen';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 
 
@@ -17,7 +18,7 @@ interface FriendRequestProps{
 const FriendRequest:React.FC<FriendRequestProps> = ({item, friendRequest, setFriendRequest}) => {
      
     const navigation=useNavigation()
-    const {userId,setUserId}=useContext(UserType)
+    const {userId}=useSelector(state=>state.user)
     const acceptRequest=async(friendRequestId:any)=>{
 
         try{

@@ -8,7 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -16,14 +16,13 @@ import {TextInput} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {UserType} from '../../UserContext';
 
 import {decode} from 'base-64';
 import {useDispatch, useSelector} from 'react-redux';
+import { setUser } from '../redux/actions/authAction';
 
 const Login = ({props}: any) => {
   const navigation = useNavigation();
-  const {userId, setUserId} = useContext(UserType);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(true);
@@ -42,13 +41,8 @@ const Login = ({props}: any) => {
           // console.log("decodedToken" , decodedToken)
           const userid = decodedToken.userId;
           console.log('LOGI', userid);
-          // dispatch({
-          //   type:USER_ID,
-          //   payload:token
-          // })
-          // console.log("loginId",UserId)
-          setUserId(userid);
 
+          dispatch(setUser({userid,token}))
           navigation.navigate('stack');
         } else {
           navigation.navigate('Login');
@@ -73,10 +67,20 @@ const Login = ({props}: any) => {
           // console.log(res.data)
           const token = response.data.data;
           console.log('tokrn', token);
-
+          if (token) {
+            const [_, payloadBase64, __] = token.split('.');
+            const decodedPayload = decode(payloadBase64);
+            const decodedToken = JSON.parse(decodedPayload);
+            // console.log("decodedToken" , decodedToken)
+            const userid = decodedToken.userId;
+  
+           
           AsyncStorage.setItem('authToken', token);
+           dispatch(setUser({userid,token}))
+       
 
           navigation.navigate('stack');
+          }
         })
         .catch(err => {
           console.log('j', JSON.stringify(err.response.data.message));

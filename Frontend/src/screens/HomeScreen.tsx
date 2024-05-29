@@ -16,12 +16,12 @@ import {
   Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {setUsers} from '../redux/actions/homeActions';
+
 
 import {useNavigation} from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import {UserType} from '../../UserContext';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {decode} from 'base-64';
 
@@ -42,14 +42,9 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
-  const user = useSelector(state => state.home.user);
 
-
-
-
-  
   const navigation = useNavigation();
-  const {userId, setUserId} = useContext(UserType);
+const {userId}=useSelector(state=>state.user)
 
   const [users, setUsers] = useState([]);
   useLayoutEffect(() => {

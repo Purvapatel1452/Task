@@ -1,14 +1,9 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import homeReducer from '../reducers/homeReducer';
-import { thunk } from 'redux-thunk';
-// import chatReducer from '../chatRedux/chatReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import userSlice from "../actions/authAction";
 
-
-const rootReducer = combineReducers({
-  home: homeReducer,
- 
+const store=configureStore({
+  reducer:{user:userSlice.reducer}
+  
 });
 
-const store = createStore(rootReducer,applyMiddleware(thunk));
-
-export default store;
+export default store

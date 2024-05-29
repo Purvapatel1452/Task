@@ -14,7 +14,6 @@ import {BlurView} from '@react-native-community/blur';
 import StackNavigator from './StackNavigator';
 import PaymentScreen from '../screens/PaymentScreen';
 import ActivityScreen from '../screens/PaymentScreen';
-import ProfileScreen from '../screens/';
 import GroupScreen from '../screens/GroupScreen';
 import GroupNavigator from './GroupNavigator';
 import ExpenseScreen from '../screens/ExpensesScreen';
@@ -25,6 +24,8 @@ import ExpensesScreen from '../screens/ExpensesScreen';
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+
+  console.log("TAAABBBBBBBBBBBBBBBBBBB")
 
   const userId=useSelector(state=>state.userId)
 

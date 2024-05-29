@@ -16,17 +16,18 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import EmojiSelector from 'react-native-emoji-selector';
 import {useRoute} from '@react-navigation/native';
-import {UserType} from '../../UserContext';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import HeaderBar from './HeaderBar';
 import axios from 'axios';
 import ExpenseBox from '../components/ExpenseBox';
+import { useSelector } from 'react-redux';
 
 const GroupChatScreen = ({navigation}: any) => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [messages, setMessages] = useState([]);
-  const {userId, setUserId} = useContext(UserType);
+  const {userId}=useSelector(state=>state.user)
   const route = useRoute();
   const {groupId}: any = route.params;
   const [message, setMessage] = useState('');
@@ -190,31 +191,7 @@ console.log(formData,"!!!!!!y")
   };
   console.log('messages', messages);
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerTitle: '',
-  //     headerLeft: () => (
-  //       <View style={styles.headerContainer}>
-  //         <Icon
-  //           onPress={() => navigation.goBack()}
-  //           name="arrow-back"
-  //           size={24}
-  //           color="black"
-  //         />
-
-  //         <View style={styles.profileContainer}>
-  //           <Image
-  //             style={styles.headerProfilePic}
-  //             source={{uri: groupData.image}}
-  //           />
-
-  //           <Text style={styles.nameText}>{groupData.name}</Text>
-  //         </View>
-  //       </View>
-  //     )
-  //     // tabBarVisible:false
-  //   });
-  // }, [groupData]);
+ 
 
   const formatTime = (time: any) => {
     const options = {hour: 'numeric', minute: 'numeric'};

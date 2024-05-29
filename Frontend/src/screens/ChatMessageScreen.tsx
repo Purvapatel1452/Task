@@ -16,17 +16,19 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import EmojiSelector from 'react-native-emoji-selector';
 import {useRoute} from '@react-navigation/native';
-import {UserType} from '../../UserContext';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import HeaderBar from './HeaderBar';
 import axios from 'axios';
 import ExpenseBox from '../components/ExpenseBox';
+import { useSelector } from 'react-redux';
 
 const ChatMessageScreen = ({navigation}: any) => {
+  const {userId}=useSelector(state=>state.user)
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [messages, setMessages] = useState([]);
-  const {userId, setUserId} = useContext(UserType);
+  
   const route = useRoute();
   const {recepientId}: any = route.params;
   const [message, setMessage] = useState('');
@@ -564,34 +566,3 @@ pressableContainer2:{
 },
  
 });
-
-// import React from 'react';
-// import { View, Image, StyleSheet } from 'react-native';
-
-// const ImageComponent = () => {
-
-//   const source='file:///D:/react_native/final_demo_copy-chat/Chat-RN_App/Backend/files/ex.jpg'
-//   console.log(source)
-//   return (
-//     <View style={styles.container}>
-//       <Image
-//         source={{uri:source}}
-//         style={styles.image}
-//       />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   image: {
-//     width: 200,
-//     height: 200,
-//   },
-// });
-
-// export default ImageComponent;

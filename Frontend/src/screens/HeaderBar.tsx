@@ -23,7 +23,8 @@ const HeaderBar = ({title}) => {
                 case 'AddFriend':
                 return  ( 
                     <View style={styles.headerContainer}>
-                <GradientBGIcon name="menu" color={'gray'} size={22} /><ProfilePic />
+                <GradientBGIcon name="menu" color={'gray'} size={22} />
+                <ProfilePic />
                 </View>
                 )
         }

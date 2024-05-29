@@ -2,12 +2,12 @@ import React, { useContext,useState } from 'react'
 
 import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
 
-import  {UserType}  from '../../UserContext'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 
 const User = ({item}:any) => {
-    const {userId,setUserId}=useContext(UserType)
+    const {userId}=useSelector(state=>state.user)
     
     console.log("USERIDDDDDD",userId)
     const [requestSent,setRequestSent]=useState(false)

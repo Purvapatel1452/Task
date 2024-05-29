@@ -1,6 +1,9 @@
-import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
-import { View, Text, StyleSheet,Image } from 'react-native'
+import { View, Text, StyleSheet,Image, TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux'
 
 
 
@@ -11,13 +14,50 @@ const ProfilePic = () => {
 //   console.warn('p',i)
 
 //   console.warn('j',k)
-  return (
+
+const navigation=useNavigation();
+const {userId}=useSelector(state=>state.user)
+
+const [details,setDetails]=useState({})
+
+const userDetails=async()=>{
+
+  try{
+console.log(userId)
+    const response=await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`)
+
+    const res=response.data
+
+    setDetails(res)
+
+    console.log(res,"++++++++++++++++")
+
+
+  }
+  catch(error){
+    console.log("internal server error",error);
+  }
+
+}
+
+useEffect(()=>{
+
+  userDetails()
+
+},[1])
+
+
+
+  return (<>
+  <TouchableOpacity onPress={()=>navigation.navigate("Profile",{data:details})} >
     <View style={styles.ImageContainer}>
       <Image 
       source={require('../../assets/bg/bgImg.jpg')} 
       style={styles.Image}
       />
     </View>
+    </TouchableOpacity>
+    </>
   )
 }
 

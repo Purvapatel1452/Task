@@ -1,7 +1,7 @@
 
 import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
-import { UserType } from '../../UserContext'
+
 import GroupBox from '../components/GroupBox'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -13,14 +13,13 @@ import HeaderBar from './HeaderBar'
 import axios from 'axios'
 import Background from '../components/Background'
 import { useDispatch, useSelector } from 'react-redux'
-import { GROUP_DATA, friend_List} from '../redux/actions/homeActions'
+
 import User from '../components/User'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 const GroupScreen = () => {
   const [groupList, setGroupList] = useState([]);
-  const { userId, setUserId } = useContext(UserType);
   const [showModal, setShowModal] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [groupDescription, setGroupDescription] = useState('');
@@ -28,10 +27,12 @@ const GroupScreen = () => {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [msgVisible,setMsgVisible]=useState(false);
   const dispatch = useDispatch();
-  const groupData = useSelector((state:any) => state.home.groupData);
+
 // const UserId=useSelector((state:any)=>state.home.UserId)
-const {data,loading,error}=useSelector(state=>state.home)
+const {userId}=useSelector(state=>state.user)
 const navigation=useNavigation()
+
+
   console.log("groupId", userId);
 
  
@@ -146,10 +147,7 @@ const navigation=useNavigation()
       const data = await response.json();
   
       if (response.ok) {
-        dispatch({
-          type:GROUP_DATA,
-          payload:data,
-        })
+        
         setGroupList(data);
       
       }
@@ -160,8 +158,7 @@ const navigation=useNavigation()
   useEffect(() => {
    
     userGroups();
-    dispatch(friend_List(userId))
-    console.log(data,"___")
+ 
     console.log('use')
   }, []);
 

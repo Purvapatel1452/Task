@@ -14,17 +14,17 @@ import {
   View,
 } from 'react-native';
 
-import {UserType} from '../../UserContext';
 import UserChat from '../components/UserChat';
 import HeaderBar from './HeaderBar';
 import {useNavigation,useFocusEffect} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSelector } from 'react-redux';
 
 const ChatScreen = () => {
   const [acceptedFriends, setAcceptedfriends] = useState([]);
-  const {userId, setUserId} = useContext(UserType);
+  const {userId}=useSelector(state=>state.user)
   const [showModal, setShowModal] = useState(false);
   const [description, setDecription] = useState('');
   const [amount, setAmount] = useState('');
@@ -49,46 +49,12 @@ const ChatScreen = () => {
         `http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`,
       );
       const data = await response.json();
-      console.log(data, '{{}}');
+      
       if (response.ok) {
-        // dispatch({
-        //   type:USERID,
-        //   payload:data
-        // })
-        // console.log("++",UserId,"__")
+       
 
         setFriendList(data);
-        //    useEffect(()=>{
-        //  console.log("DISPATCH")
-        //     dispatch(friend_List(userId))
-        //    })
-
-        // console.log(data,"__")
-        //       if(loading){
-        //         console.log("1")
-        //         return (<View><Text>Loading...</Text></View>)
-        //       }
-        //       if(error){
-        //         console.log("2")
-        //         return (<View><Text>Error:{error}</Text></View>)
-        //       }
-
-        // return (
-        //   <View>
-        //     {
-        //       data.map(item=>(
-
-        //         <View key={item.id}>
-        //           <Text>---</Text>
-        //         <Text>{item.groupName}</Text>
-        //         </View>
-
-        //       ))
-        //     }
-
-        //   </View>
-
-        // )
+        
       }
     } catch (error) {
       console.log('internal server problem', error);
@@ -116,7 +82,7 @@ const ChatScreen = () => {
   };
 
   const handleAddExpense = async () => {
-    console.log('ADDEXPEN  initiated', selectedFriends);
+   
 
     try {
       setDecription('');
@@ -143,7 +109,7 @@ if(isGroup){
       };
 
     }
-      console.log('DAAATTAA', data);
+  
       const response = await fetch(
         'http://10.0.2.2:8000/chat/expense/addExpense',
         {
@@ -156,7 +122,7 @@ if(isGroup){
       );
 
       const expense = await response.json();
-      console.log('EXXPENSE', response);
+      
 
       if (response.ok) {
         Alert.alert('Expense Added !!!');
@@ -203,7 +169,7 @@ if(isGroup){
       );
       
       const data = await response.json();
-     console.log(data,"++")
+  
 
     
 
@@ -217,6 +183,7 @@ if(isGroup){
 
   const fetchFriendsPaymentStatus =useCallback(async () => {
     try {
+      console.log("*******************",userId)
       const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
       const friendsPaymentStatus = await response.json();
   
@@ -280,23 +247,9 @@ if(isGroup){
   }
 
   const combinedData=combineData();
-  console.log(combinedData,"||||")
 
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const unsubscribe = navigation.addListener('tabPress', e => {
-  //       // Prevent default behavior
-  //       e.preventDefault();
-  //       // Perform any custom action
-  //       setRefresh(!refresh);
-  //     });
 
-  //     return unsubscribe;
-  //   }, [refresh])
-  // );
-
- 
 
 
   return (
