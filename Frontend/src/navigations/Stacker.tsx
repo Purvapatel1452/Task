@@ -36,10 +36,7 @@ const Stacker = () => {
             name='stack' 
             component={Nav}
             options={{headerShown:false}} />
-            {/* <Stack.Screen 
-            name='Tab' 
-            component={TabNavigator}
-            options={{headerShown:false}} /> */}
+           
 
 
             

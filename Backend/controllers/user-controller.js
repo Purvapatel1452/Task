@@ -385,6 +385,8 @@ const friendsPaymentStatus=async(req,res)=>{
     try{
 
         const {userId}=req.params;
+        console.log(userId,"********")
+
         const user=await User.findById(userId).populate("friends")
 
         const acceptedFriends=user.friends
@@ -404,20 +406,23 @@ const friendsPaymentStatus=async(req,res)=>{
          
     
             expenses.forEach(expense=>{
+                
                
                 expense.payments.forEach(payment=>{
-                    console.log(expense.payerId,")")
                   
+                    
+                  console.log(payment.participant._id.toString(),userId,"+++++++++++",expense.payerId._id.toString(),friend._id.toString())
                     if(payment.participant._id.toString()===friend._id.toString() && expense.payerId._id.toString()===userId && !payment.paid){
-    
+                       
                         friendOwesMe+=payment.amount
-                        console.log("fo",friendOwesMe)
+                        console.log("ffffffffffff")
     
                     }
-                    else if(payment.participant._id.toString()===userId && expense.payerId._id.toString()===friend._id && !payment.paid){
-                       
+                    else if(payment.participant._id.toString()===userId && expense.payerId._id.toString()===friend._id.toString() && !payment.paid){
+                        console.log("IIIIIII")
                         iOweFriend+=payment.amount
-                        console.log("IO",iOwesMe)
+                      
+                       
     
                        }
                 })

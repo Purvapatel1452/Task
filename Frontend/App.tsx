@@ -32,11 +32,12 @@ import { StyleSheet } from 'react-native'
 const STRIPE_KEY='pk_test_51P6pcYSCdNlkqtTKf1k30wMs98GFCxjtiGa8CfD7qfYqf2CqhA6ktkPi6gavaiaxwmScevN1lZGrIGpw7P57kLwo00H2QrdopU'
 
 const App = () => {
+
+  
   return (
    
     <StripeProvider publishableKey={STRIPE_KEY}>
       <Stacker />
-   
     </StripeProvider>
    
 
