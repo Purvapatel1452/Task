@@ -29,31 +29,31 @@ const Login = ({props}: any) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const token = await AsyncStorage.getItem('authToken');
+  // useEffect(() => {
+  //   const checkLogin = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem('authToken');
 
-        if (token) {
-          const [_, payloadBase64, __] = token.split('.');
-          const decodedPayload = decode(payloadBase64);
-          const decodedToken = JSON.parse(decodedPayload);
-          // console.log("decodedToken" , decodedToken)
-          const userid = decodedToken.userId;
-          console.log('LOGI', userid);
+  //       if (token) {
+  //         const [_, payloadBase64, __] = token.split('.');
+  //         const decodedPayload = decode(payloadBase64);
+  //         const decodedToken = JSON.parse(decodedPayload);
+  //         // console.log("decodedToken" , decodedToken)
+  //         const userid = decodedToken.userId;
+  //         console.log('LOGI', userid);
 
-          dispatch(setUser({userid,token}))
-          navigation.navigate('stack');
-        } else {
-          navigation.navigate('Login');
-        }
-      } catch (err) {
-        console.log('Error:', err);
-      }
-    };
+  //         dispatch(setUser({userid,token}))
+  //         navigation.navigate('stack');
+  //       } else {
+  //         navigation.navigate('Login');
+  //       }
+  //     } catch (err) {
+  //       console.log('Error:', err);
+  //     }
+  //   };
 
-    checkLogin();
-  }, []);
+  //   checkLogin();
+  // }, []);
 
   const handleSubmit = async () => {
     const userData = {

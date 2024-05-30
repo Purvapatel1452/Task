@@ -3,8 +3,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
-
+import {useSelector} from 'react-redux';
 
 // import {COLORS} from '../theme/theme';
 // import CustomIcon from '../components/CustomIcon';
@@ -24,10 +23,9 @@ import ExpensesScreen from '../screens/ExpensesScreen';
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+  console.log('TAAABBBBBBBBBBBBBBBBBBB');
 
-  console.log("TAAABBBBBBBBBBBBBBBBBBB")
-
-  const userId=useSelector(state=>state.userId)
+  const userId = useSelector(state => state.userId);
 
   return (
     <Tab.Navigator
@@ -39,66 +37,63 @@ const TabNavigator = () => {
         tabBarBackground: () => (
           <BlurView
             overlayColor=""
-            
             blurAmount={15}
             style={styles.tabBackground}
           />
         ),
       }}>
-
-        
-      
-
-      <Tab.Screen
-        name="Group"
-        component={GroupScreen}
-        options={{
-          tabBarIcon: ({focused, color, size}) => (
-            <MaterialIcons
-              name="groups"
-              size={27}
-              color={focused ? '#D77702' : '#52555A'}
-            />
-          ),
-        }}></Tab.Screen>
+      <Tab.Group>
         <Tab.Screen
-        name="Stack"
-        component={ChatScreen}
-        options={{
-          tabBarIcon: ({focused, color, size}) => (
-            <MaterialIcons
-              name="person"
-              size={30}
-              color={focused ? '#D77702' : '#52555A'}
-            />
-          ),
-        }}></Tab.Screen>
+          name="Group"
+          component={GroupScreen}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <MaterialIcons
+                name="groups"
+                size={27}
+                color={focused ? '#D77702' : '#52555A'}
+              />
+            ),
+          }}></Tab.Screen>
+        <Tab.Screen
+          name="Stack"
+          component={ChatScreen}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <MaterialIcons
+                name="person"
+                size={30}
+                color={focused ? '#D77702' : '#52555A'}
+              />
+            ),
+          }}></Tab.Screen>
 
-      <Tab.Screen
-        name="Payment"
-        component={PaymentScreen}
-        options={{
-          tabBarIcon: ({focused, color, size}) => (
-            <MaterialIcons
-              name = "payment"
-              size={25}
-              color={focused ? '#D77702' : '#52555A'}
-            />
-          ),
-        }}></Tab.Screen>
+        <Tab.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <MaterialIcons
+                name="payment"
+                size={25}
+                color={focused ? '#D77702' : '#52555A'}
+              />
+            ),
+          }}></Tab.Screen>
 
-      <Tab.Screen
-        name="ExpenseNavigator"
-        component={ExpensesScreen}
-        options={{
-          tabBarIcon: ({focused, color, size}) => (
-            <MaterialIcons
-              name="chat"
-              size={25}
-              color={focused ? '#D77702' : '#52555A'}
-            />
-          ),
-        }}></Tab.Screen>
+        <Tab.Screen
+          name="ExpenseNavigator"
+          component={ExpensesScreen}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <MaterialIcons
+                name="chat"
+                size={25}
+                color={focused ? '#D77702' : '#52555A'}
+              />
+            ),
+          }}></Tab.Screen>
+      </Tab.Group>
     </Tab.Navigator>
   );
 };

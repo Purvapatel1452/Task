@@ -21,7 +21,7 @@ const Stacker = () => {
   const userId=useSelector((state:any)=>state.userId)
 
   return (
-    <NavigationContainer>
+   
   
         <Stack.Navigator >
             <Stack.Screen 
@@ -36,12 +36,8 @@ const Stacker = () => {
             name='stack' 
             component={Nav}
             options={{headerShown:false}} />
-           
-
-
-            
         </Stack.Navigator>
-        </NavigationContainer>
+   
   
        
   

@@ -14,8 +14,12 @@ import GroupChatScreen from '../screens/GroupChatScreen';
 import ExpensesScreen from '../screens/ExpensesScreen';
 import TabNavigator from './TabNavigation';
 import ProfileScreen from '../screens/ProfileScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import GroupScreen from '../screens/GroupScreen';
 
 const Stack = createNativeStackNavigator();
+
+const GroupChat=createNativeStackNavigator()
 
 const Nav = () => {
   const {userId}=useSelector(state=>state.user)
@@ -24,6 +28,7 @@ const Nav = () => {
 
 
   return (
+   
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
@@ -54,6 +59,7 @@ const Nav = () => {
         })}
       />
     </Stack.Navigator>
+   
   );
 };
 

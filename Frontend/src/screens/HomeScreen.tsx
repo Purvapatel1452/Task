@@ -132,17 +132,7 @@ const {userId}=useSelector(state=>state.user)
 
     const fetchUsers = async () => {
       try {
-        const token = await AsyncStorage.getItem('authToken');
-
-        if (token) {
-          const [_, payloadBase64, __] = token.split('.');
-          const decodedPayload = decode(payloadBase64);
-          const decodedToken = JSON.parse(decodedPayload);
-          // console.log("decodedToken" , decodedToken)
-          const userId = decodedToken.userId;
-          
-          setUserId(userId);
-          // console.log("DDFFRR",userId);
+        
 
           await axios
             .get(`http://10.0.2.2:8000/chat/user/users/${userId}`)
@@ -154,9 +144,7 @@ const {userId}=useSelector(state=>state.user)
             .catch(err => {
               console.log('retreiving error', err);
             });
-        } else {
-          // Handle case when token is not available
-        }
+        
       } catch (error) {
         console.error('Error decoding token:', error);
         // Handle error
