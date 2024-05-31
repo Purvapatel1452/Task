@@ -209,23 +209,29 @@ console.log("++",userId)
 //get all users except the user id that is currently logged in
 
 const  getUsers=async(req, res) => {
-    const loggedUserId = req.params.userId;
+    
+    try{
 
-    console.log(loggedUserId)
+        const userId = req.params.userId;
 
+        const currentUser=await User.findById(userId).populate('friends');
 
-    User.find({ _id: { $ne: loggedUserId } })
-        .then((users) => {
-            // if (!users || users.length === 0) {
-            //     return res.status(404).json({ message: 'Users not found' });
-            // }
-            
-            res.status(200).json(users);    
+        const friendIds=currentUser.friends.map(friend=>friend._id);
+
+        const users=await User.find({
+            _id:{$ne:userId,$nin:friendIds}
         })
-        .catch((err) => {
-            console.log("error::", err);
-            res.status(500).json({ message: 'Error retrieving users' });
-        });
+
+        res.status(200).json(users);
+
+    }
+    catch(error){
+
+        console.log("internal server error",error);
+        res.status(500).json({error:"internal server error"})
+
+    }
+
 }
 
 
