@@ -1,32 +1,60 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import GradientBGIcon from '../components/GradientBGIcon'
 import ProfilePic from '../components/ProfilePic'
+import IonIcons from 'react-native-vector-icons/Ionicons'
+import { useNavigation } from '@react-navigation/native'
 
 const HeaderBar = ({title}) => {
+
+    const navigation=useNavigation()
 
     const renderIcon=()=>{
 
         switch(title){
-            case 'HomeScreen':
+            case 'TabScreen':
                 return  ( 
                     <View style={styles.headerContainer}>
-                <GradientBGIcon name="menu" color={'gray'} size={22} /><ProfilePic />
+                <Text></Text><ProfilePic />
                 </View>
                 )
-                case 'ChatHomeScreen':
+                case 'ChatScreen':
                 return  ( 
+                    
                     <View style={styles.headerContainer}>
-                <GradientBGIcon name="menu" color={'gray'} size={22} /><ProfilePic />
-                </View>
-                )
-                case 'AddFriend':
-                return  ( 
-                    <View style={styles.headerContainer}>
-                <GradientBGIcon name="menu" color={'gray'} size={22} />
+                      
+                <IonIcons name='arrow-back-sharp' size={28}  color={'white'} onPress={()=>navigation.goBack()} />
+
+             <View style={{marginRight:300}}>
                 <ProfilePic />
                 </View>
+                </View>
+                
                 )
+                case 'Expense':
+                return  ( 
+                    <View style={styles.headerContainer}>
+               <IonIcons name='arrow-back-sharp' size={28}  color={'white'} onPress={()=>navigation.goBack()} />
+               <Text style={styles.headerText}>Expense</Text>
+               <Text>          </Text>
+                </View>
+                )
+                case 'Friends':
+                    return  ( 
+                        <View style={styles.headerContainer}>
+                   <IonIcons name='arrow-back-sharp' size={28}  color={'white'} onPress={()=>navigation.goBack()} />
+                 
+                   <Text>          </Text>
+                    </View>
+                    )
+
+                    case 'Profile':
+                    return  ( 
+                        <View style={styles.headerContainer}>
+                   <IonIcons name='arrow-back-sharp' size={28}  color={'white'} onPress={()=>navigation.goBack()} />
+                 
+                   <Text>          </Text>
+                    </View>
+                    )
         }
 
     }
@@ -37,9 +65,9 @@ const HeaderBar = ({title}) => {
     
     const styles=StyleSheet.create({
         headerContainer:{
-            backgroundColor:'darkorange',
+            backgroundColor:'#D77702',
 
-            padding:30,
+            padding:20,
             flexDirection:"row",
             alignItems:"center",
             justifyContent:"space-between",
@@ -52,9 +80,9 @@ const HeaderBar = ({title}) => {
             elevation:10
         },
         headerText:{
-            color:"#FFFFFF",
+            color:"white",
             fontSize:30,
-            fontFamily:'poppins_semibold',
+            
         }
     
     })

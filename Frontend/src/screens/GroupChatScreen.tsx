@@ -257,7 +257,7 @@ console.log(formData,"!!!!!!y")
   };
 
   return (<>
-    <HeaderBar title={'AddFriend'} />
+    <HeaderBar title={'ChatScreen'} />
 
     <View style={styles.pressableContainer}>
     <View style={styles.pressableContainer1}>

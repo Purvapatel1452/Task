@@ -52,7 +52,7 @@ console.log(userId)
   return (
     <View>
       
-      <HeaderBar title={'AddFriend'} />
+      <HeaderBar title={'Friends'} />
       {
         friendRequest.length>0 && <Text>Your Friend Requests!</Text>
       }

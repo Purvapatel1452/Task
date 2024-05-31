@@ -254,7 +254,7 @@ if(isGroup){
 
   return (
     <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
-      <HeaderBar title={'ChatHomeScreen'} />
+      <HeaderBar title={'TabScreen'} />
       <ScrollView>
         <Pressable>
           {combinedData.map((item, index) => (
@@ -270,6 +270,8 @@ if(isGroup){
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+     
       <TouchableOpacity style={{position: 'relative'}} onPress={handleModel}>
         <View style={styles.buttonContainer1}>
           <MaterialIcons name="notes" size={22} color={'white'} />
@@ -424,6 +426,22 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 0.2,
     elevation: 8,
+  },
+  buttonContainer2: {
+    position: 'absolute',
+    bottom: 80,
+    left:20,
+    backgroundColor: '#D77702',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 8,
+
   },
   buttonText1: {
     fontSize: 16,

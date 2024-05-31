@@ -18,7 +18,11 @@ import User from '../components/User'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
-const GroupScreen = () => {
+interface GroupScreenProps {
+   navigation:any;
+}
+
+const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const [groupList, setGroupList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [groupName, setGroupName] = useState('');
@@ -30,7 +34,7 @@ const GroupScreen = () => {
 
 // const UserId=useSelector((state:any)=>state.home.UserId)
 const {userId}=useSelector(state=>state.user)
-const navigation=useNavigation()
+//const navigation=useNavigation()
 
 
   console.log("groupId", userId);
@@ -169,7 +173,7 @@ const navigation=useNavigation()
   
       <StatusBar backgroundColor={'#D77702'} />
 
-      <HeaderBar title={"HomeScreen"} />
+      <HeaderBar title={"TabScreen"} />
     
 
       
@@ -180,7 +184,9 @@ const navigation=useNavigation()
        <Pressable>
          {groupList.map((item, index) =>
            <GroupBox key={index} item={item} 
-           />)}
+           />
+           
+           )}
        </Pressable>
        <View style={styles.container}>
          <TouchableOpacity style={styles.buttonContainer} onPress={handleModel}>

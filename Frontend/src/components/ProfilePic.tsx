@@ -80,8 +80,6 @@ const styles=StyleSheet.create({
     Image:{
         height:36,
         width:36
-      
-
     }
 })
 

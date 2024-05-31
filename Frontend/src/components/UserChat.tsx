@@ -9,10 +9,23 @@ const UserChat: React.FC<UserChatprops> = ({item}) => {
   const navigation = useNavigation();
 
   const netBalance = item.friendOwesMe - item.iOweFriend;
-  const paymentStatusMessage =
-    netBalance > 0
-      ? `Owes you ₹${netBalance.toFixed(2)}`
-      : `You owe ₹${Math.abs(netBalance).toFixed(2)}`;
+  let paymentStatusMessage =''
+  if(netBalance>0){
+
+    paymentStatusMessage = `Owes you ₹${netBalance.toFixed(2)}`
+
+    
+
+  }
+  else if(netBalance<0){
+
+    paymentStatusMessage = `You owe ₹${Math.abs(netBalance).toFixed(2)}`
+
+  }
+  else if(netBalance==0){
+    paymentStatusMessage=`Settled !`
+  }
+
 
   return (
     <Pressable
@@ -22,15 +35,13 @@ const UserChat: React.FC<UserChatprops> = ({item}) => {
       <View style={styles.textContainer}>
         <Text style={styles.textName}>{item.name}</Text>
         <Text style={styles.textLast}>Last chat comes here . . . </Text>
-        <View style={styles.paymentStatusContainer}>
-          <Text style={[styles.paymentStatus,{color: netBalance > 0 ? 'green' : 'red'}]}>
+        
+      </View>
+      <View style={styles.paymentStatusContainer}>
+          <Text style={[styles.paymentStatus,{color: netBalance >= 0 ? 'green' : 'red'}]}>
             {paymentStatusMessage}
           </Text>
         </View>
-      </View>
-      <View>
-        <Text style={styles.textTime}>3:00 pm</Text>
-      </View>
     </Pressable>
   );
 };

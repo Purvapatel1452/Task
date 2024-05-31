@@ -260,7 +260,7 @@ console.log(recepientId,"0000;;;;")
 
   return (<>
 
-    <HeaderBar title={'AddFriend'} />
+    <HeaderBar title={'ChatScreen'} />
 
     <View style={styles.pressableContainer}>
     <View style={styles.pressableContainer1}>

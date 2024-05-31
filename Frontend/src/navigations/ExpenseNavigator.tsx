@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useSelector } from 'react-redux'
 import ExpenseScreen from '../screens/ExpenseScreen'
 import ExpensesScreen from '../screens/ExpensesScreen'
+import ProfileScreen from '../screens/ProfileScreen'
 
 
 const Stack=createNativeStackNavigator()
@@ -32,6 +33,11 @@ const ExpenseNavigator = () => {
              <Stack.Screen 
             name='Expense' 
             component={ExpenseScreen}
+             />
+
+            <Stack.Screen 
+            name='Profile' 
+            component={ProfileScreen}
              />
          
              

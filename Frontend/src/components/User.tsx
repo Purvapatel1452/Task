@@ -1,4 +1,4 @@
-import React, { useContext,useState } from 'react'
+import React, { useContext,useEffect,useState } from 'react'
 
 import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
 
@@ -11,6 +11,27 @@ const User = ({item}:any) => {
     
     console.log("USERIDDDDDD",userId)
     const [requestSent,setRequestSent]=useState(false)
+
+
+
+    useEffect(() => {
+        const checkRequest = async () => {
+            try {
+                const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
+                const currentUser = response.data;
+                console.log(currentUser)
+                // Check if the item._id exists in the sentFriendRequests array
+                const isRequestSent = currentUser.sentFriendRequests.includes(item._id);
+                
+                setRequestSent(isRequestSent);
+            } catch (err) {
+                console.log('Error fetching user data', err);
+            }
+        };
+
+        checkRequest();
+    }, []);
+
 
     const sendFriendRequest=async(currentUserId: any,selectedUserId: any)=>{
 
@@ -44,6 +65,7 @@ const User = ({item}:any) => {
             console.log("Error in handling send Request",err)
 
         }
+
 
 
 

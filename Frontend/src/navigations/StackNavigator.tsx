@@ -10,6 +10,7 @@ import FriendsScreen from '../screens/FriendsScreen'
 import ChatScreen from '../screens/ChatScreen'
 import ChatMessageScreen from '../screens/ChatMessageScreen'
 import ExpenseScreen from '../screens/ExpenseScreen'
+import ProfileScreen from '../screens/ProfileScreen'
 
 const Stack=createNativeStackNavigator()
 
@@ -50,6 +51,10 @@ const StackNavigator = () => {
              <Stack.Screen 
             name='Expense' 
             component={ExpenseScreen}
+             />
+             <Stack.Screen 
+            name='Profile' 
+            component={ProfileScreen}
              />
              
 

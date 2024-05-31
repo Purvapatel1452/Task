@@ -3,6 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import HeaderBar from './HeaderBar'
 import ExpenseBox from '../components/ExpenseBox'
 import { useSelector } from 'react-redux'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6'
+import { useNavigation } from '@react-navigation/native'
 
 const ExpensesScreen = () => {
 
@@ -11,22 +14,44 @@ const ExpensesScreen = () => {
   const [isType,setIsType]=useState(false)
   const [expenseType,setExpenseType]=useState('')
 
+  const navigation=useNavigation();
 
 
 
 
-  const expenses=async()=>{
+
+  const expenses=async(types)=>{
     try{
       console.log("ECXOPES")
-      console.log("type",expenseType)
+      console.log("type",types)
 
       const response=await fetch(`http://10.0.2.2:8000/chat/expense/expenses/${userId}?expenseType=${expenseType}`)
 
       const data=await response.json();
-      console.log('Expe',data)
-      setExpenseList(data.expenses)
-console.log('Expe',expenseList)
-      console.log(data)
+    
+      const list=[];
+      if(types=='settled'){
+        console.log(data,"**")
+
+        data.expenses.map(expense=>{
+          if(expense.settled){
+            list.push(expense)
+          }
+        })
+
+      }else{
+        data.expenses.map(expense=>{
+         
+            list.push(expense)
+          
+        })
+        
+      }
+     
+   
+     
+      setExpenseList(list)
+
 
     }
     catch(error){
@@ -34,12 +59,12 @@ console.log('Expe',expenseList)
     }
   }
   
-  const groupExpenses=async()=>{
+  const groupExpenses=async(type)=>{
     try{
       console.log("ECXOPES")
       console.log("type",expenseType)
 
-      const response=await fetch(`http://10.0.2.2:8000/chat/expense/expenses/${userId}?expenseType=group`)
+      const response=await fetch(`http://10.0.2.2:8000/chat/expense/expenses/${userId}?expenseType=${type}`)
 
       const data=await response.json();
       console.log('Expe',data)
@@ -75,7 +100,7 @@ console.log('Expe',expenseList)
 
   useEffect(()=>{
  
-    expenses();
+    expenses('non-settled');
   },[])
 
   return (
@@ -83,26 +108,54 @@ console.log('Expe',expenseList)
 
           <StatusBar backgroundColor={'#D77702'} />
 
-          <HeaderBar title={"HomeScreen"} />
+          <HeaderBar title={"TabScreen"} />
+          <ScrollView horizontal={true}>
           <View style={styles.pressableContainer}>
-          <View style={styles.pressableContainer1}>
-          <TouchableOpacity onPress={()=>groupExpenses()}>
-          <Text  style={{color:'black'}}>Group Expenses:</Text>
-        </TouchableOpacity>
-        </View>
+
+          <TouchableOpacity onPress={()=>expenses('non-settled')}>
         <View style={styles.pressableContainer2}>
-          <TouchableOpacity onPress={()=>nonGroupExpenses()}>
-          <Text style={{color:'black'}}>Non-group Expenses:</Text>
-        </TouchableOpacity>
+         
+          <Text style={{color:'black',fontSize:15,fontWeight:'bold'}}>All Expenses</Text>
+     
         </View>
+        </TouchableOpacity>
+      
+        
+          <TouchableOpacity onPress={()=>groupExpenses('group')}>
+          <View style={styles.pressableContainer1}>
+          
+          <Text  style={{color:'black',fontSize:15,fontWeight:'bold'}}>Group Expenses</Text>
+      
+        </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>groupExpenses('non-group')}>
+        <View style={styles.pressableContainer2}>
+         
+          <Text style={{color:'black',fontSize:15,fontWeight:'bold'}}>Non-group Expenses</Text>
+     
+        </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>expenses('settled')}>
+        <View style={styles.pressableContainer2}>
+         
+          <Text style={{color:'black',fontSize:15,fontWeight:'bold'}}>Settled Expenses</Text>
+     
+        </View>
+        </TouchableOpacity>
+      
+       
+      
           </View>
+          </ScrollView>
+       
 
 
 
           <ScrollView>
           <Pressable>
           {expenseList.map((item, index) => (
-            <ExpenseBox key={index} item={item} />
+            <ExpenseBox key={index} item={item} navigation={navigation} />
+           
           ))}
         </Pressable>
         </ScrollView>
@@ -126,57 +179,49 @@ const styles = StyleSheet.create({
     borderRightWidth:0,
     borderBottomWidth:1,
     borderColor:"#D0D0D0",
-    padding:10,
-justifyContent:'center'
-
-
+    padding:6,
+    justifyContent:'center',
+    height:60
 
 },
 pressableContainer1:{
-flex:1,
-  flexDirection:"row",
+
+
   alignItems:"center",
-  gap:10,
   borderWidth:0,
   borderLeftWidth:1,
   borderRightWidth:1,
   borderBottomWidth:4,
   borderColor:"#D77702",
-  padding:5,
+  padding:3,
   textAlign:'center',
   justifyContent:'center',
   
-  marginTop:-5,
-  height:40,
-
-  
-
+  marginTop:-19,
+  marginBottom:-10,
+  width:160,
+  height:40
 
 
 
 },
 pressableContainer2:{
 
-  flex:1,
-  flexDirection:"row",
+
+ 
   alignItems:"center",
-  gap:10,
   borderWidth:0,
   borderLeftWidth:1,
   borderRightWidth:1,
   borderBottomWidth:4,
   borderColor:"#D77702",
-  padding:5,
+  padding:3,
   textAlign:'center',
   justifyContent:'center',
-  
-  marginTop:-5,
-  height:40,
-  
-
-
-
-
+  marginTop:-19,
+  marginBottom:-10,
+  width:160,
+  height:40
 
 },
 })

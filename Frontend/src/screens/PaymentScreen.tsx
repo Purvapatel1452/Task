@@ -138,7 +138,7 @@ const pay = async () => {
   return (
     <View>
     <View>
-      <HeaderBar title={'AddFriend'} />
+      <HeaderBar title={'TabScreen'} />
     </View>
       <View>
         <Button title="PAY" onPress={()=>onCheckout()} />

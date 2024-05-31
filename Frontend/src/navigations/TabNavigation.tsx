@@ -42,7 +42,7 @@ const TabNavigator = () => {
           />
         ),
       }}>
-      <Tab.Group>
+    
         <Tab.Screen
           name="Group"
           component={GroupScreen}
@@ -54,7 +54,7 @@ const TabNavigator = () => {
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
-          }}></Tab.Screen>
+          }} />
         <Tab.Screen
           name="Stack"
           component={ChatScreen}
@@ -66,8 +66,7 @@ const TabNavigator = () => {
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
-          }}></Tab.Screen>
-
+          }} />
         <Tab.Screen
           name="Payment"
           component={PaymentScreen}
@@ -79,10 +78,10 @@ const TabNavigator = () => {
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
-          }}></Tab.Screen>
+          }} />
 
         <Tab.Screen
-          name="ExpenseNavigator"
+          name="Expenses"
           component={ExpensesScreen}
           options={{
             tabBarIcon: ({focused, color, size}) => (
@@ -92,8 +91,8 @@ const TabNavigator = () => {
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
-          }}></Tab.Screen>
-      </Tab.Group>
+          }} />
+      
     </Tab.Navigator>
   );
 };

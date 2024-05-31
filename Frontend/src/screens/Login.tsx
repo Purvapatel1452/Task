@@ -101,7 +101,7 @@ const Login = ({props}: any) => {
             <View style={styles.action}>
               <FontAwesome
                 name="user-o"
-                color="#420475"
+                color="#D77702"
                 style={styles.smallIcon}
               />
               <TextInput
@@ -114,7 +114,7 @@ const Login = ({props}: any) => {
             <View style={styles.action}>
               <FontAwesome
                 name="lock"
-                color="#420475"
+                color="#D77702"
                 style={styles.smallIcon}
               />
               <TextInput
@@ -153,7 +153,7 @@ const Login = ({props}: any) => {
                 marginTop: 8,
                 marginRight: 10,
               }}>
-              <Text style={{color: '#420475', fontWeight: '700'}}>
+              <Text style={{color: 'gray', fontWeight: '700'}}>
                 Forgot Password
               </Text>
             </View>
@@ -246,7 +246,7 @@ export default Login;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'silver',
   },
   textSign: {
     fontSize: 18,
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   text_footer: {
-    color: '#05375a',
+    color: '#D77702',
     fontSize: 18,
   },
   action: {
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
 
     borderWidth: 1,
-    borderColor: '#420475',
+    borderColor: '#D77702',
     borderRadius: 50,
   },
   textInput: {
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   text_header: {
-    color: '#420475',
+    color: '#D77702',
     fontWeight: 'bold',
     fontSize: 30,
   },
@@ -316,14 +316,14 @@ const styles = StyleSheet.create({
   },
   inBut: {
     width: '70%',
-    backgroundColor: '#420475',
+    backgroundColor: '#D77702',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 50,
   },
   inBut2: {
-    backgroundColor: '#420475',
+    backgroundColor: '#D77702',
     height: 65,
     width: 65,
     borderRadius: 15,

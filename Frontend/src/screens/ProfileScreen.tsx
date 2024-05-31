@@ -28,7 +28,7 @@ const ProfileScreen = () => {
     <View>
           <StatusBar backgroundColor={'#D77702'} />
 
-          <HeaderBar title={"HomeScreen"} />
+          <HeaderBar title={"Profile"} />
 
           <View style={{alignItems:'center',marginTop:30}}>
 

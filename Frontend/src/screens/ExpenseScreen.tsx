@@ -67,34 +67,43 @@ const ExpenseScreen = ({navigation}: any) => {
 
   return (
     <>
-      <HeaderBar title={'AddFriend'} />
+      <HeaderBar title={'Expense'} />
       <View style={styles.mainContainer}>
         <View
           style={{
-            borderBottomWidth: 2,
+            borderBottomWidth: 3,
             borderLeftWidth: 1,
-            borderRightWidth: 0.2,
+            borderRightWidth: 1,
             borderColor: 'silver',
+             flexDirection: 'row', gap: 15,
+             marginTop:40,
+             elevation:0,
+             borderBottomLeftRadius:10,
+             borderBottomRightRadius:10,
+            
+             
           }}>
-          <Text style={styles.title}>Expense </Text>
-        </View>
-
-        <ScrollView
-          contentContainerStyle={styles.container}
-          showsVerticalScrollIndicator={false}>
-          <View style={{flex: 1, flexDirection: 'row', gap: 15}}>
+             
             {expense.type == 'group' ? (
-              <MaterialIcons name="groups" size={40} color={'#D77702'} />
+              <MaterialIcons name="groups" size={40} color={'#D77702'} style={{marginLeft:10}} />
             ) : (
               <FontAwesome6Icon
                 name="money-bills"
                 size={40}
                 color={'#D77702'}
+                style={{marginLeft:10}}
               />
             )}
 
             <Text style={styles.value1}>{expense.description}</Text>
-          </View>
+          
+          
+        </View>
+
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}>
+         
           <View style={{flex: 1, flexDirection: 'row', gap: 8}}>
             <Text style={styles.value2}>₹{expense.amount}</Text>
 
@@ -159,6 +168,7 @@ export default ExpenseScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     marginBottom: 220,
+    
   },
   container: {
     flexGrow: 1,

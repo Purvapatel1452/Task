@@ -14,6 +14,8 @@ import {
   Share,
   Linking,
   Alert,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -31,6 +33,7 @@ import User from '../components/User';
 
 // import {useStripe} from '@stripe/stripe-react-native';
 import HeaderBar from './HeaderBar';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // import ChatBox from '../components/GroupIcon'
 
@@ -157,16 +160,25 @@ const {userId}=useSelector(state=>state.user)
  
 
   return (
-    <View>
-      <HeaderBar title={'AddFriend'} />
+    <View style={{flex:1}}>
+      <HeaderBar title={'Friends'} />
+      <ScrollView>
       <View style={styles.userContainer}>
         {users.map((item: any, index: any) => (
           <User key={index} item={item} />
         ))}
       </View>
-      <View>
-        <Button title="requests" onPress={()=>navigation.navigate('Friends')} />
-      </View>
+      </ScrollView>
+     
+
+      <TouchableOpacity 
+       style={{position:'relative'}}
+       onPress={()=>navigation.navigate('Friends')} 
+       >
+        <View style={styles.buttonContainer2}>
+         <MaterialIcons name='notifications-active' size={25} color={'white'} />
+         </View>
+       </TouchableOpacity>
     
  
   
@@ -189,5 +201,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonContainer2: {
+    position: 'absolute',
+    bottom: 80,
+    left:20,
+    backgroundColor: '#D77702',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 8,
+
   },
 });
