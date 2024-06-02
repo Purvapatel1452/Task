@@ -58,7 +58,7 @@ const {userId}=useSelector(state=>state.auth)
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
           <Icon
             onPress={() => {
-              navigation.navigate('Chats');
+              navigation.navigate('Chat');
             }}
             name="chatbox-ellipses-outline"
             size={30}

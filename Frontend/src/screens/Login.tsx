@@ -371,6 +371,7 @@ import {
   View,
   Alert,
   KeyboardAvoidingView,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 
@@ -382,8 +383,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {decode} from 'base-64';
-import {useDispatch, useSelector} from 'react-redux';
+
 import { login } from '../redux/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 // import { setUser } from '../redux/slices/authSlice';
 
 const Login = ({props}: any) => {
@@ -470,7 +472,8 @@ const Login = ({props}: any) => {
 
   return (
     <KeyboardAvoidingView style={styles.mainContainer} behavior="padding">
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <StatusBar backgroundColor={'#D77702'} />
+      <ScrollView contentContainerStyle={{}}>
         <View>
           <View style={styles.loginContainer}>
             <Text style={styles.text_header}>Login</Text>
@@ -558,20 +561,6 @@ const Login = ({props}: any) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <TouchableHighlight style={styles.inBut2}>
-                  <FontAwesome
-                    name="user-circle-o"
-                    color="white"
-                    style={styles.smallIcon2}
-                  />
-                </TouchableHighlight>
-                <Text style={styles.bottomText}>Guest</Text>
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
                 <TouchableHighlight
                   style={styles.inBut2}
                   onPress={() => navigation.navigate('SignUp')}>
@@ -583,34 +572,7 @@ const Login = ({props}: any) => {
                 </TouchableHighlight>
                 <Text style={styles.bottomText}>Sign Up</Text>
               </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <TouchableHighlight style={styles.inBut2}>
-                  <FontAwesome
-                    name="google"
-                    color="white"
-                    style={styles.smallIcon2}
-                  />
-                </TouchableHighlight>
-                <Text style={styles.bottomText}>Google</Text>
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <TouchableHighlight style={styles.inBut2}>
-                  <FontAwesome
-                    name="facebook-f"
-                    color="white"
-                    style={styles.smallIcon2}
-                  />
-                </TouchableHighlight>
-                <Text style={styles.bottomText}>Facebook</Text>
-              </View>
+             
             </View>
           </View>
         </View>
@@ -624,11 +586,12 @@ export default Login;
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: 'silver',
+    flex:1
   },
   textSign: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
   },
   smallIcon: {
     marginRight: 10,
@@ -671,10 +634,13 @@ const styles = StyleSheet.create({
     marginTop: 180,
     marginHorizontal: 48,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    elevation:4,
+    shadowColor:'black',
+    shadowOpacity:10
   },
   header: {
     justifyContent: 'flex-end',
@@ -690,6 +656,8 @@ const styles = StyleSheet.create({
     marginTop: 30,
     textAlign: 'center',
     margin: 20,
+    
+    
   },
   inBut: {
     width: '70%',
@@ -698,6 +666,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 50,
+    elevation:4,
+    shadowColor:'black',
+    shadowOpacity:10
   },
   inBut2: {
     backgroundColor: '#D77702',
@@ -706,12 +677,17 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation:4,
+    shadowColor:'black',
+    shadowOpacity:10
   },
   bottomButton: {
     marginTop: 10,
     width: '100%',
-    flexDirection: 'row',
     justifyContent: 'space-between',
+    elevation:4,
+    shadowColor:'black',
+    
   },
   smallIcon2: {
     fontSize: 40,

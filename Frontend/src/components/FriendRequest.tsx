@@ -42,7 +42,7 @@ const FriendRequest:React.FC<FriendRequestProps> = ({item, friendRequest, setFri
                 setFriendRequest(friendRequest.filter((request:any)=>
                     request._id!=friendRequestId
                 ))
-             navigation.navigate("Chats")
+             navigation.navigate("Chat")
 
             }
 

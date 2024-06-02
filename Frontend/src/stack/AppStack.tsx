@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { decode } from 'base-64';
-import { login, setUser } from '../redux/slices/authSlice';
+import { login } from '../redux/slices/authSlice';
 
 import AuthStack from './AuthStack';
 import NavigationStack from './NavigationStack';
@@ -24,6 +24,7 @@ const AppStack = () => {
 
   const {userId}=useSelector(state=>state.auth)
   const {token}=useSelector(state=>state.auth)
+  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
@@ -47,26 +48,43 @@ const AppStack = () => {
       } catch (err) {
         console.log('Error:', err);
       }
+      finally{
+        setIsLoading(false)
+      }
     };
 
     checkLogin();
   }, []);
 
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
-    {
-      token && userId
-      ?
-      <NavigationStack />
-      :
-      <AuthStack />
-
-    }
+      {  
+         token && userId  
+         ?  
+         <NavigationStack /> 
+         : 
+         <AuthStack />
+      }
     </NavigationContainer>
-  )
+  );
+
 }
 
 export default AppStack
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+})

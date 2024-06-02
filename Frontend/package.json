@@ -32,7 +32,7 @@
     "react-native-share": "^10.1.0",
     "react-native-upi-payment": "^1.0.5",
     "react-native-vector-icons": "^10.0.3",
-    "react-redux": "^9.1.1",
+    "react-redux": "^9.1.2",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0"
   },

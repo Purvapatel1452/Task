@@ -29,7 +29,19 @@ const ExpenseScreen = ({navigation}: any) => {
       const response = await axios.get(
         `http://10.0.2.2:8000/chat/expense/expense/${expenseId}`,
       );
-      setExpense(response.data);
+
+      const expenseData = response.data;
+
+      // Set current user's payment status as paid
+      const updatedPayments = expenseData.payments.map(payment => {
+        if (payment.participant._id === userId) {
+          return { ...payment, paid: true };
+        }
+        return payment;
+      });
+      // setExpense(response.data);
+
+      setExpense({ ...expenseData, payments: updatedPayments });
       
     } catch (err) {
       setError('Error fetching expense details');

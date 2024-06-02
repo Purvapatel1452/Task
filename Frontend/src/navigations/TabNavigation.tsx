@@ -14,9 +14,6 @@ import StackNavigator from './StackNavigator';
 import PaymentScreen from '../screens/PaymentScreen';
 import ActivityScreen from '../screens/PaymentScreen';
 import GroupScreen from '../screens/GroupScreen';
-import GroupNavigator from './GroupNavigator';
-import ExpenseScreen from '../screens/ExpensesScreen';
-import ExpenseNavigator from './ExpenseNavigator';
 import ChatScreen from '../screens/ChatScreen';
 import ExpensesScreen from '../screens/ExpensesScreen';
 
@@ -50,7 +47,7 @@ const TabNavigator = () => {
             tabBarIcon: ({focused, color, size}) => (
               <MaterialIcons
                 name="groups"
-                size={27}
+                size={30}
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
@@ -74,7 +71,7 @@ const TabNavigator = () => {
             tabBarIcon: ({focused, color, size}) => (
               <MaterialIcons
                 name="payment"
-                size={25}
+                size={27}
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
@@ -87,7 +84,7 @@ const TabNavigator = () => {
             tabBarIcon: ({focused, color, size}) => (
               <MaterialIcons
                 name="chat"
-                size={25}
+                size={27}
                 color={focused ? '#D77702' : '#52555A'}
               />
             ),
