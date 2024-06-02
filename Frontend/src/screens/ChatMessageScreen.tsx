@@ -25,7 +25,7 @@ import ExpenseBox from '../components/ExpenseBox';
 import { useSelector } from 'react-redux';
 
 const ChatMessageScreen = ({navigation}: any) => {
-  const {userId}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [messages, setMessages] = useState([]);
   

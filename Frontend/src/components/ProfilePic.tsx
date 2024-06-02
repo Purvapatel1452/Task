@@ -16,7 +16,7 @@ const ProfilePic = () => {
 //   console.warn('j',k)
 
 const navigation=useNavigation();
-const {userId}=useSelector(state=>state.user)
+const {userId}=useSelector(state=>state.auth)
 
 const [details,setDetails]=useState({})
 

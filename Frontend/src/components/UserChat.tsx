@@ -9,23 +9,17 @@ const UserChat: React.FC<UserChatprops> = ({item}) => {
   const navigation = useNavigation();
 
   const netBalance = item.friendOwesMe - item.iOweFriend;
-  let paymentStatusMessage =''
-  if(netBalance>0){
-
-    paymentStatusMessage = `Owes you ₹${netBalance.toFixed(2)}`
-
-    
-
+  let paymentStatusMessage = '';
+  let amount = '';
+  if (netBalance > 0) {
+    paymentStatusMessage = `owes you `;
+    amount = `₹${netBalance.toFixed(2)}`;
+  } else if (netBalance < 0) {
+    paymentStatusMessage = `you owe `;
+    amount = `₹${Math.abs(netBalance).toFixed(2)}`;
+  } else if (netBalance == 0) {
+    paymentStatusMessage = `settled up`;
   }
-  else if(netBalance<0){
-
-    paymentStatusMessage = `You owe ₹${Math.abs(netBalance).toFixed(2)}`
-
-  }
-  else if(netBalance==0){
-    paymentStatusMessage=`Settled !`
-  }
-
 
   return (
     <Pressable
@@ -35,13 +29,29 @@ const UserChat: React.FC<UserChatprops> = ({item}) => {
       <View style={styles.textContainer}>
         <Text style={styles.textName}>{item.name}</Text>
         <Text style={styles.textLast}>Last chat comes here . . . </Text>
-        
       </View>
       <View style={styles.paymentStatusContainer}>
-          <Text style={[styles.paymentStatus,{color: netBalance >= 0 ? 'green' : 'red'}]}>
-            {paymentStatusMessage}
-          </Text>
-        </View>
+        
+        <Text
+          style={[
+            styles.paymentStatus,
+            {color: netBalance >= 0 ? 'green' : 'red'},
+          ]}>
+          {'    '}
+          {paymentStatusMessage}
+        </Text>
+        <Text
+          style={[
+            styles.paymentStatus,
+            {
+              color: netBalance >= 0 ? 'green' : 'red',
+              fontWeight: '500',
+              fontSize: 14.5,
+            },
+          ]}>
+          {amount}
+        </Text>
+      </View>
     </Pressable>
   );
 };
@@ -84,10 +94,12 @@ const styles = StyleSheet.create({
     color: '#585858',
   },
   paymentStatusContainer: {
-    marginTop: 5,
+    marginTop: 2,
+    alignItems:'center'
   },
   paymentStatus: {
     fontSize: 12,
-    
+    justifyContent:'center',
+    alignSelf:'center',
   },
 });

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 
 const FriendsScreen = () => {
 
-  const {userId}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
     const [friendRequest,setFriendRequest]=useState([])
     
 

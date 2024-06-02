@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 const GroupChatScreen = ({navigation}: any) => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [messages, setMessages] = useState([]);
-  const {userId}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
   const route = useRoute();
   const {groupId}: any = route.params;
   const [message, setMessage] = useState('');

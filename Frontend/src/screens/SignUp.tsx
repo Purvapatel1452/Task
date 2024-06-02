@@ -1,6 +1,6 @@
 import { Alert, Button, Image, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useState } from 'react'
-import Background from '../components/Background'
+
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Error from 'react-native-vector-icons/MaterialIcons'
@@ -8,184 +8,243 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser, sendOtp, setUserData, toggleShowOtpInput, verifyFields, verifyOtp } from '../redux/slices/signUpSlice'
 
 const SignUp = () => {
 
   const navigation=useNavigation()
 
-const [name,setName]=useState('')
-const [nameVerify,setNameVerify]=useState(false)
-const [email,setEmail]=useState('')
-const [emailVerify,setEmailVerify]=useState(false)
-const [mobile,setMobile]=useState('')
-const [mobileVerify,setMobileVerify]=useState(false)
-const [password,setPassword]=useState('')
-const [passwordVerify,setPasswordVerify]=useState(false)
+  const dispatch=useDispatch()
+
+// const [name,setName]=useState('')
+// // const [nameVerify,setNameVerify]=useState(false)
+// const [email,setEmail]=useState('')
+// // const [emailVerify,setEmailVerify]=useState(false)
+// const [mobile,setMobile]=useState('')
+// // const [mobileVerify,setMobileVerify]=useState(false)
+// const [password,setPassword]=useState('')
+// // const [passwordVerify,setPasswordVerify]=useState(false)
+
+// const [otp,setOtp]=useState('')
+// const [showOtpInput, setShowOtpInput]=useState(false);
+// const [otpVerify,setOtpVerify]=useState(false)
+
+const {userData,nameVerify,emailVerify,mobileVerify,passwordVerify,otpVerify,showOtpInput,error,loading}=useSelector((state)=>state.signUp)
 const [showPassword,setShowPassword]=useState(false)
-const [otp,setOtp]=useState('')
-const [showOtpInput, setShowOtpInput]=useState(false);
-const [otpVerify,setOtpVerify]=useState(false)
 
+const handleChange=(field,value)=>{
+  dispatch(setUserData({[field]:value}));
+  dispatch(verifyFields())
 
-function handlesendOtp(){
-  fetch(`http://10.0.2.2:8000/chat/user/send-otp`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email }),
-  })
-    .then((response) => {
+}
 
-      console.log("response zOtp",response.ok)
-      if(!response.ok){
-      console.log("ALressdy")
-      Alert.alert('An Otp is already sent to this email. Please wait before requesting another OTP')
-     }
-     else{
-      console.log("data")
-      Alert.alert(
-        'OTp Sent Successfully',
-        '',
-        [
-          { text: 'OK', onPress: () => setShowOtpInput(true)},
+// function handlesendOtp(){
+//   fetch(`http://10.0.2.2:8000/chat/user/send-otp`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ email }),
+//   })
+//     .then((response) => {
+
+//       console.log("response zOtp",response.ok)
+//       if(!response.ok){
+//       console.log("ALressdy")
+//       Alert.alert('An Otp is already sent to this email. Please wait before requesting another OTP')
+//      }
+//      else{
+//       console.log("data")
+//       Alert.alert(
+//         'OTp Sent Successfully',
+//         '',
+//         [
+//           { text: 'OK', onPress: () => setShowOtpInput(true)},
         
-        ],
-      );
+//         ],
+//       );
       
-     }
-    })
-    .catch((error) => {
-      console.error('Error sending OTP:', error.message);
-      Alert.alert("Error",'Failed to send OTP' )
-    });
+//      }
+//     })
+//     .catch((error) => {
+//       console.error('Error sending OTP:', error.message);
+//       Alert.alert("Error",'Failed to send OTP' )
+//     });
+// }
+
+const handlesendOtp=()=>{
+
+  if(emailVerify){
+    console.log("+++++++",emailVerify)
+    dispatch(sendOtp(userData.email));
+  }
+  else{
+    Alert.alert('Invalid Email','Please enter valid email address to send Otp')
+  }
 }
 
-function handleVerifyOtp(){
+// function handleVerifyOtp(){
 
-  fetch('http://10.0.2.2:8000/chat/user/verify-otp',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-    },
-    body:JSON.stringify({email,otp})
-  })
-  .then((response)=>{
+//   fetch('http://10.0.2.2:8000/chat/user/verify-otp',{
+//     method:'POST',
+//     headers:{
+//       'Content-Type':'application/json',
+//     },
+//     body:JSON.stringify({email,otp})
+//   })
+//   .then((response)=>{
 
-    console.log(response);
-    if(response.ok){
-        Alert.alert("Successfully Verified")
-        setShowOtpInput(false)
-        setOtpVerify(true)
-      }
-  else
-  Alert.alert("Not Correct")
+//     console.log(response);
+//     if(response.ok){
+//         Alert.alert("Successfully Verified")
+//         setShowOtpInput(false)
+//         setOtpVerify(true)
+//       }
+//   else
+//   Alert.alert("Not Correct")
 
-  })
-  .then(data=>console.log(data))
-  .catch((error)=>{
-    console.log("Error:",error)
-    Alert.alert('Failed to verify Otp')
-  })
+//   })
+//   .then(data=>console.log(data))
+//   .catch((error)=>{
+//     console.log("Error:",error)
+//     Alert.alert('Failed to verify Otp')
+//   })
 
 
+// }
+
+const handleVerifyOtp=()=>{
+  dispatch(verifyOtp({email:userData.email,otp:userData.otp}))
 }
 
 
-function handleSubmit(){
+// function handleSubmit(){
 
  
 
     
-  const userData={
-    name,
-    email,
-    mobile,
-    password,
-  }
+//   const userData={
+//     name,
+//     email,
+//     mobile,
+//     password,
+//   }
+  
+
+//   if(nameVerify && emailVerify && passwordVerify && mobileVerify){
+//     if(otpVerify){
+
+//      axios
+//     .post('http://10.0.2.2:8000/chat/user/register',userData)
+//     .then(res=>{
+//       console.log("tt",res.config.data)
+//       Alert.alert(JSON.stringify(res.data.message))
+//       navigation.navigate('Login')
+//       console.log("h")
+
+//     })
+//     .catch((e)=>{
+//       console.log("g")
+//       console.log("ERROR:",e)
+//       Alert.alert("User Already Exist")
+//   })
+//     }
+  
+//   else{
+//     Alert.alert("Email is not Verified")
+  
+//   }
+// }
+//   else{
+//     Alert.alert('Fill mandatory details')
+//     console.log('Fill mandatory details')
+//   }
+
+
+
+// }
+
+
+
+function handleSubmit(){
   
 
   if(nameVerify && emailVerify && passwordVerify && mobileVerify){
     if(otpVerify){
 
-     axios
-    .post('http://10.0.2.2:8000/chat/user/register',userData)
-    .then(res=>{
-      console.log("tt",res.config.data)
-      Alert.alert(JSON.stringify(res.data.message))
-      navigation.navigate('Login')
-      console.log("h")
 
-    })
-    .catch((e)=>{
-      console.log("g")
-      console.log("ERROR:",e)
-      Alert.alert("User Already Exist")
-  })
+      dispatch(registerUser(userData)).then((result)=>{
+
+        if(registerUser.fulfilled.match(result)){
+          Alert.alert('Registration Successfull')
+          navigation.navigate('Login')
+        }
+        else if(registerUser.rejected.match(result)){
+          Alert.alert('Registration Failed',result.payload)
+        }
+
+      })
+    }
+    else{
+      Alert.alert('Email Verification','Please verify your email before registering')
+    }
     }
   
   else{
-    Alert.alert("Email is not Verified")
+    Alert.alert("Invalid Details","Please fill in all mandatory details correctly")
   
   }
-}
-  else{
-    Alert.alert('Fill mandatory details')
-    console.log('Fill mandatory details')
-  }
-
-
 
 }
 
 
 
-function handleName(e){
-  const nameVar=e
-  setName(nameVar)
-  setNameVerify(false)
-  if(nameVar.length>1){
-   setNameVerify(true)
-  }
- }
+// function handleName(e){
+//   const nameVar=e
+//   setName(nameVar)
+//   setNameVerify(false)
+//   if(nameVar.length>1){
+//    setNameVerify(true)
+//   }
+//  }
 
 
- function handleEmail(e){
-  const emailVar=e
-  setEmail(emailVar)
-  setEmailVerify(false)
-  if(/^[\w.%+-]+@[\w,-]+\.[a-zA-Z]{1,}$/.test(emailVar)){
-   setEmail(emailVar)
-   setEmailVerify(true)
-  }
- }
+//  function handleEmail(e){
+//   const emailVar=e
+//   setEmail(emailVar)
+//   setEmailVerify(false)
+//   if(/^[\w.%+-]+@[\w,-]+\.[a-zA-Z]{1,}$/.test(emailVar)){
+//    setEmail(emailVar)
+//    setEmailVerify(true)
+//   }
+//  }
 
- function handleMobile(e){
-  const mobileVar=e
-  setMobile(mobileVar)
-  setMobileVerify(false)
-  if(/[6-9]{1}[0-9]{9}/.test(mobileVar)){
-    setMobile(mobileVar)
-    setMobileVerify(true)
-  }
- }
+//  function handleMobile(e){
+//   const mobileVar=e
+//   setMobile(mobileVar)
+//   setMobileVerify(false)
+//   if(/[6-9]{1}[0-9]{9}/.test(mobileVar)){
+//     setMobile(mobileVar)
+//     setMobileVerify(true)
+//   }
+//  }
 
- function handlePassword(e){
-  const passwordVar=e;
-  setPassword(passwordVar);
-  setPasswordVerify(false)
-  if(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(passwordVar)){
+//  function handlePassword(e){
+//   const passwordVar=e;
+//   setPassword(passwordVar);
+//   setPasswordVerify(false)
+//   if(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(passwordVar)){
 
-    setPassword(passwordVar);
-    setPasswordVerify(true)
+//     setPassword(passwordVar);
+//     setPasswordVerify(true)
 
-  }
+//   }
 
+//  }
 
-
- }
-console.log(password)
-console.log(password.length)
+// console.log(password)
+// console.log(password.length)
   return (
  
   <ScrollView
@@ -204,9 +263,9 @@ console.log(password.length)
 
             <View style={styles.action}>
                 <FontAwesome name='user-o' color='#420475' style={styles.smallIcon} />
-                <TextInput placeholder='Name' style={styles.textInput} onChangeText={e=>handleName(e)} placeholderTextColor={'gray'} />
+                <TextInput placeholder='Name' style={styles.textInput} onChangeText={(value)=>handleChange('name',value)} value={userData.name} placeholderTextColor={'gray'} />
                 {
-                  name.length<1?null:nameVerify?(
+                  userData.name.length<1?null:nameVerify?(
                     <Feather name='check-circle' color='green' size={20} />
                   ):(
                     <Error name="error" color='red' size={20} />
@@ -214,7 +273,7 @@ console.log(password.length)
                 }
             </View>
             {
-              name.length<1?null:nameVerify?null:
+              userData.name.length<1?null:nameVerify?null:
               <Text style={{
                 fontSize:12,
                 color:'red'
@@ -225,9 +284,9 @@ console.log(password.length)
             }
             <View style={styles.action}>
                 <MaterialCommunityIcons name='email-outline' color='#420475' style={styles.smallIcon} />
-                <TextInput placeholder='Email' style={styles.textInput} onChangeText={e=>handleEmail(e)} placeholderTextColor={'gray'} />
+                <TextInput placeholder='Email' style={styles.textInput} onChangeText={(value)=>handleChange('email',value)} value={userData.email} placeholderTextColor={'gray'} />
                 {
-                  email.length<1?null:otpVerify?
+                  userData.email.length<1?null:otpVerify?
                   <Feather name='check-circle' color='green' size={20} />
                 :
                 emailVerify?(
@@ -244,7 +303,7 @@ console.log(password.length)
             }
             </View>
             {
-              email.length<1?null:emailVerify?null:
+              userData.email.length<1?null:emailVerify?null:
               <Text style={{
                 fontSize:12,
                 marginRight:90,
@@ -255,24 +314,24 @@ console.log(password.length)
               </Text>
             }
             {
-              showOtpInput&&(
+              showOtpInput && (
                 
                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Modal
         animationType='fade'
         transparent={true}
         visible={showOtpInput}
-        onRequestClose={() => setShowOtpInput(false)}
+        onRequestClose={() => dispatch(toggleShowOtpInput())}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10,margin:10 }}>
           <TextInput
                         placeholder="OTP"
-                        onChangeText={setOtp}
-                        value={otp}
+                        onChangeText={(value)=>handleChange('otp',value)}
+                        value={userData.otp}
                     />
                     <Button title="Verify OTP" onPress={()=>handleVerifyOtp()} />
-            <Button title="Close" onPress={() => setShowOtpInput(false)} />
+            <Button title="Close" onPress={() => dispatch(toggleShowOtpInput())} />
           </View>
         </View>
       </Modal>
@@ -282,9 +341,9 @@ console.log(password.length)
             }
             <View style={styles.action}>
                 <FontAwesome name='mobile' color='#420475' style={styles.Icon} />
-                <TextInput placeholder='Mobile' style={styles.textInput} keyboardType='phone-pad' onChangeText={e=>handleMobile(e)} maxLength={10} placeholderTextColor={'gray'} />
+                <TextInput placeholder='Mobile' style={styles.textInput} keyboardType='phone-pad' onChangeText={(value)=>handleChange('mobile',value)} value={userData.mobile} maxLength={10} placeholderTextColor={'gray'} />
                    {
-                    mobile.length<1?null:mobileVerify?(
+                    userData.mobile.length<1?null:mobileVerify?(
                       
                       <Feather name='check-circle' color='green' size={20} />
                     ):(
@@ -294,7 +353,7 @@ console.log(password.length)
                 
             </View>
             {
-              mobile.length<1?null:mobileVerify?null:
+              userData.mobile.length<1?null:mobileVerify?null:
               <Text style={{
                 fontSize:12,
                 marginRight:90,
@@ -309,13 +368,14 @@ console.log(password.length)
                 <TextInput 
                 placeholder='Password' 
                 style={styles.textInput} 
-                onChangeText={(e)=>handlePassword(e)}
-                secureTextEntry={showPassword}
+                onChangeText={(value)=>handleChange('password',value)}
+                value={userData.password}
+                secureTextEntry={!showPassword}
                 placeholderTextColor={'gray'}
                 />
 
 <TouchableHighlight onPress={() => setShowPassword(!showPassword)}>
-      {password.length <1 ? <Text></Text> : !showPassword ? (
+      {userData.password.length <1 ? <Text></Text> : !showPassword ? (
         <Feather
         name='eye-off'
         color={passwordVerify?'green':'red'}
@@ -336,7 +396,7 @@ console.log(password.length)
     </TouchableHighlight>
             </View>
             {
-              password.length<1?<Text></Text>:passwordVerify?<Text></Text>:(
+              userData.password.length<1?<Text></Text>:passwordVerify?<Text></Text>:(
                 <Text 
                 style={{
                   marginLeft:20,

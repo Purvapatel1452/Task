@@ -47,7 +47,7 @@ const HomeScreen = () => {
 
 
   const navigation = useNavigation();
-const {userId}=useSelector(state=>state.user)
+const {userId}=useSelector(state=>state.auth)
 
   const [users, setUsers] = useState([]);
   useLayoutEffect(() => {

@@ -30,8 +30,6 @@ const NavigationStack = () => {
 
     <Stack.Screen name="Qr" component={QrScreen} />
     
-    <Stack.Screen name="Stack" component={ChatScreen} />
-    
     <Stack.Screen name="GroupChat" component={GroupChatScreen} />
 
     <Stack.Screen name="Expense" component={ExpenseScreen} />

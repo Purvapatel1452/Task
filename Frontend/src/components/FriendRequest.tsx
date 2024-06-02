@@ -18,7 +18,7 @@ interface FriendRequestProps{
 const FriendRequest:React.FC<FriendRequestProps> = ({item, friendRequest, setFriendRequest}) => {
      
     const navigation=useNavigation()
-    const {userId}=useSelector(state=>state.user)
+    const {userId}=useSelector(state=>state.auth)
     const acceptRequest=async(friendRequestId:any)=>{
 
         try{

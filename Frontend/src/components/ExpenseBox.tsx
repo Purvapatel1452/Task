@@ -5,17 +5,20 @@ import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
+
 const ExpenseBox = ({item}) => {
     const navigation=useNavigation()
+   
+
   return (
     <TouchableOpacity 
     onPress={()=>navigation.navigate("Expense",{expenseId:item._id})}
     style={styles.pressableContainer}>
         {      
             item.type=='group'?
-            <MaterialIcons name='groups' size={22} color={'#D77702'} />
+            <MaterialIcons name='groups' size={32} color={'#D77702'} />
             :
-            <FontAwesome6Icon name='money-bills' size={22} color={'#D77702'} />
+            <FontAwesome6Icon name='money-bills' size={26} color={'#D77702'} />
         }
        
         <View style={styles.textContainer}>
@@ -23,7 +26,12 @@ const ExpenseBox = ({item}) => {
             <Text style={styles.textLast}>{item.description}</Text>
         </View>
         <View >
-            <Text style={styles.textTime}>{item.date}</Text>
+            <Text style={styles.textTime}>{new Date(item.date).toLocaleDateString()} </Text>
+            <Text style={styles.textTime}>{new Date(item.date).toLocaleTimeString([],{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            })} </Text>
         </View>
     </TouchableOpacity>
   )
@@ -62,7 +70,7 @@ const styles = StyleSheet.create({
     textName:{
 
         fontWeight:"500",
-        fontSize:15,
+        fontSize:16,
         color:"black"
 
     },
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
     },
     textTime:{
 
-        fontSize:13,
+        fontSize:12,
         fontWeight:"500",
         color:"#585858"
 

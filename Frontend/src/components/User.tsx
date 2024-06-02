@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 
 const User = ({item}:any) => {
-    const {userId}=useSelector(state=>state.user)
+    const {userId}=useSelector(state=>state.auth)
     
     console.log("USERIDDDDDD",userId)
     const [requestSent,setRequestSent]=useState(false)

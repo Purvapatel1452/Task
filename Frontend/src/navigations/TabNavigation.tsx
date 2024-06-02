@@ -25,7 +25,7 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   console.log('TAAABBBBBBBBBBBBBBBBBBB');
 
-  const userId = useSelector(state => state.userId);
+ 
 
   return (
     <Tab.Navigator
@@ -56,7 +56,7 @@ const TabNavigator = () => {
             ),
           }} />
         <Tab.Screen
-          name="Stack"
+          name="Chat"
           component={ChatScreen}
           options={{
             tabBarIcon: ({focused, color, size}) => (

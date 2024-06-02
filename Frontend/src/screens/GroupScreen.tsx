@@ -33,7 +33,7 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
 
 // const UserId=useSelector((state:any)=>state.home.UserId)
-const {userId}=useSelector(state=>state.user)
+const {userId}=useSelector(state=>state.auth)
 //const navigation=useNavigation()
 
 

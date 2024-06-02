@@ -14,6 +14,7 @@ import {useRoute} from '@react-navigation/native';
 import HeaderBar from './HeaderBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import { useSelector } from 'react-redux';
 
 const ExpenseScreen = ({navigation}: any) => {
   const route = useRoute();
@@ -21,6 +22,7 @@ const ExpenseScreen = ({navigation}: any) => {
   const [expense, setExpense] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {userId}=useSelector(state=>state.auth)
 
   const fetchExpense = async () => {
     try {
@@ -28,6 +30,7 @@ const ExpenseScreen = ({navigation}: any) => {
         `http://10.0.2.2:8000/chat/expense/expense/${expenseId}`,
       );
       setExpense(response.data);
+      
     } catch (err) {
       setError('Error fetching expense details');
       console.error(err);
@@ -38,6 +41,7 @@ const ExpenseScreen = ({navigation}: any) => {
 
   useEffect(() => {
     fetchExpense();
+   
   }, [expenseId]);
 
   const handlePaymentStatus = async (participantId, paid) => {
@@ -113,7 +117,14 @@ const ExpenseScreen = ({navigation}: any) => {
             </View>
           </View>
           <View style={{flex: 1, flexDirection: 'row'}}>
-            <Text style={styles.label}>Paid by {expense.payerId.name} on </Text>
+            <Text 
+            style={styles.label}>
+              Paid by {
+                       expense.payerId._id==userId ?
+                       <Text style={{fontWeight:'bold',color:'black'}}>You</Text>
+                       :
+                       <Text style={{fontWeight:'bold',color:'black'}}>{expense.payerId.name}</Text>
+                      } on </Text>
             <Text style={styles.label}>
               {new Date(expense.date).toLocaleDateString()} at{' '}
               {new Date(expense.date).toLocaleTimeString()}{' '}
@@ -124,26 +135,47 @@ const ExpenseScreen = ({navigation}: any) => {
             <Image source={{uri: expense.payerId.image}} style={styles.image} />
 
             <Text style={styles.paid}>
-              {expense.payerId.name} paid ₹{expense.amount}
+              {
+                expense.payerId._id==userId?
+                'You'
+                :
+              expense.payerId.name
+              } paid ₹{expense.amount}
             </Text>
           </View>
           {expense.payments.map(payment => (
             <View key={payment.participant._id} style={{flexDirection: 'row'}}>
-                          
-              <TouchableOpacity
-                onPress={() => handlePaymentStatus(payment.participant._id, !payment.paid)}
+
+              {
+                expense.payerId._id==userId && payment.participant._id!=userId ?
+             
+                  <TouchableOpacity
+                onPress={() => handlePaymentStatus(payment.participant._id, !payment.paid)}>
                 
-              ><View style={{width:90}}>
+              <View style={{width:90}}>
                 <Text style={styles.paid3}>{payment.paid ? 'Mark as Unpaid' : 'Mark as Paid'}</Text>
                 </View>
                 
 
-              </TouchableOpacity>
+               </TouchableOpacity>
+                
+              :
+              
+              <Text>               </Text>
+
+              }
+                     
+              
               <Text style={styles.paid2}>
-                {payment.participant.name} owes ₹{payment.amount}
+                {
+                payment.participant._id==userId ?
+                'You'
+                :
+                payment.participant.name
+                } owes ₹{payment.amount}
               </Text>
 
-                {payment.paid ? 
+                {payment.paid && expense.payerId._id==userId ? 
                 <Text style={styles.paid4}>Paid</Text> 
                 :
                  <Text style={styles.paid5}>Not Paid</Text>}

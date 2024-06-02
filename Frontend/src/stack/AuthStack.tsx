@@ -19,6 +19,8 @@ const AuthStack = () => {
 
   const userId=useSelector((state:any)=>state.userId)
 
+  console.log(userId,"********")
+
   return (
    
   

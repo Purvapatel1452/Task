@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { decode } from 'base-64';
-import { setUser } from '../redux/actions/authAction';
+import { login, setUser } from '../redux/slices/authSlice';
 
 import AuthStack from './AuthStack';
 import NavigationStack from './NavigationStack';
@@ -18,12 +18,12 @@ import NavigationStack from './NavigationStack';
 
 const AppStack = () => {
 
-  
+ 
 
   const dispatch=useDispatch();
 
-  const {userId}=useSelector(state=>state.user)
-  const {token}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
+  const {token}=useSelector(state=>state.auth)
 
 
   useEffect(() => {
@@ -36,11 +36,13 @@ const AppStack = () => {
           const decodedPayload = decode(payloadBase64);
           const decodedToken = JSON.parse(decodedPayload);
           // console.log("decodedToken" , decodedToken)
-          const userid = decodedToken.userId;
-          console.log('LOGI', userid);
+          const userId = decodedToken.userId;
+          console.log('LOGI', userId);
 
-          dispatch(setUser({userid,token}))
-        
+          // dispatch(({userId,token}))
+          
+          dispatch(login.fulfilled({userId,token}))
+         
         } 
       } catch (err) {
         console.log('Error:', err);

@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 
 import { StripeProvider } from '@stripe/stripe-react-native'  
 
-import { StyleSheet} from 'react-native'
+import { StyleSheet, Text, View} from 'react-native'
 
 import AppStack from './src/stack/AppStack'
 
@@ -15,6 +15,7 @@ const App = () => {
     <StripeProvider publishableKey={STRIPE_KEY}>
      <AppStack />
     </StripeProvider>
+  
    
 
   )

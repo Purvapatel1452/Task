@@ -51,7 +51,7 @@ const HeaderBar = ({title}) => {
                     return  ( 
                         <View style={styles.headerContainer}>
                    <IonIcons name='arrow-back-sharp' size={28}  color={'white'} onPress={()=>navigation.goBack()} />
-                 
+                   <Text style={styles.headerText}>Profile</Text>
                    <Text>          </Text>
                     </View>
                     )
@@ -82,6 +82,7 @@ const HeaderBar = ({title}) => {
         headerText:{
             color:"white",
             fontSize:30,
+            fontWeight:'500'
             
         }
     

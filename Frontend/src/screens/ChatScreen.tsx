@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 
 const ChatScreen = () => {
   const [acceptedFriends, setAcceptedfriends] = useState([]);
-  const {userId}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
   const [showModal, setShowModal] = useState(false);
   const [description, setDecription] = useState('');
   const [amount, setAmount] = useState('');

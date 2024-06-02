@@ -11,6 +11,7 @@ import SignUp from '../screens/SignUp'
 import VerificationForm from '../screens/VerificationScreen'
 
 import Nav from './Nav'
+import NavigationStack from '../stack/NavigationStack'
 
 const Stack=createNativeStackNavigator()
 
@@ -33,8 +34,8 @@ const Stacker = () => {
             component={SignUp}
             options={{headerShown:false}} />
              <Stack.Screen 
-            name='stack' 
-            component={Nav}
+            name='Stack' 
+            component={NavigationStack}
             options={{headerShown:false}} />
         </Stack.Navigator>
    

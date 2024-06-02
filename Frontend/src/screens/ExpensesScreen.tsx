@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const ExpensesScreen = () => {
 
-  const {userId}=useSelector(state=>state.user)
+  const {userId}=useSelector(state=>state.auth)
   const [expenseList,setExpenseList]=useState([])
   const [isType,setIsType]=useState(false)
   const [expenseType,setExpenseType]=useState('')
@@ -109,7 +109,7 @@ console.log('Expe',expenseList)
           <StatusBar backgroundColor={'#D77702'} />
 
           <HeaderBar title={"TabScreen"} />
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
           <View style={styles.pressableContainer}>
 
           <TouchableOpacity onPress={()=>expenses('non-settled')}>
