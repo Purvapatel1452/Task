@@ -1,7 +1,7 @@
 const express=require('express')
 
 
-const { messages, userDetails, chatMessages, groupDetails } = require('../controllers/message-controller');
+const {userDetails, chatMessages, groupDetails, messagess } = require('../controllers/message-controller');
 
 
 const msgRouter=express.Router();
@@ -32,7 +32,7 @@ const upload = multer({ storage: storage });
 
 
 
-msgRouter.post('/sendMessages',upload.single('imageFile'),messages)
+msgRouter.post('/sendMessages',upload.single('imageFile'),messagess)
 
 msgRouter.get('/user/:userId',userDetails)
 

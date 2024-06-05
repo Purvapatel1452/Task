@@ -8,6 +8,19 @@ const addExpense = async (req, res) => {
     const { description, amount, payerId, payeeId,groupId,type } = req.body;
 const part=[...payeeId,payerId]
     const uniqueParticipants=[...new Set(part)]
+
+    
+    const splitAmount=amount/uniqueParticipants.length;
+    console.log(splitAmount)
+
+    
+    const payments = uniqueParticipants.map(participantId => ({
+      participant: participantId,
+      amount: splitAmount,
+      paid: participantId.toString() === payerId.toString(), // Set paid to true if participant is payerId
+    }));
+
+
     const newExpense = new Expense({
       description,
       amount,
@@ -15,23 +28,21 @@ const part=[...payeeId,payerId]
       participants:uniqueParticipants,
       groupId,
       type,
+      payments
     });
+
+
     console.log("NEW EXPP", newExpense);
     await newExpense.save();
 
-    const splitAmount=amount/uniqueParticipants.length;
-    console.log(splitAmount)
 
     for(participantId of uniqueParticipants){
       await User.findByIdAndUpdate(participantId,{
-        $inc:{balance:-splitAmount}
-      });
-    }
-    for(participantId of uniqueParticipants){
-      await User.findByIdAndUpdate(participantId,{
+        $inc:{balance:-splitAmount},
         $push:{expenses:newExpense._id}
       });
     }
+  
 
 
     if(groupId){

@@ -327,10 +327,11 @@ const acceptFriendRequest=async(req,res)=>{
     try {  
         console.log("R")
       const {senderId,recepientId}=req.body
+      console.log(senderId,recepientId,"::::::::")
   
       const sender=await User.findById(senderId);
       const recepient=await User.findById(recepientId)
-  
+  console.log(recepientId,":::::::;")
       sender.friends.push(recepientId);
       recepient.friends.push(senderId)
   

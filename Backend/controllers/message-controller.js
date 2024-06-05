@@ -7,10 +7,12 @@ const User = require('../models/user');
 
 //endpoints to POST messages and to store it in the backend
 
-const messages=async(req,res)=>{
+const messagess=async(req,res)=>{
 
     try{
-console.log('d',req.body)
+
+        console.log("***********")
+console.log('d',req.body,"???????????????")
         const {senderId,recepientId,groupId,messageType,messageText}=req.body
 console.log(senderId,recepientId,messageType,messageText,"???")
         const newMessage= new Message({
@@ -27,7 +29,7 @@ console.log(senderId,recepientId,messageType,messageText,"???")
         await newMessage.save();
       
         console.log("GGG")
-        res.status(200).json({message:"message sent successfully"})
+        res.status(200).json(newMessage)
 
     }catch(err){
 
@@ -144,7 +146,7 @@ console.log("G")
 
 
 module.exports={
-    messages,
+    messagess,
     userDetails,
     groupDetails,
     chatMessages
