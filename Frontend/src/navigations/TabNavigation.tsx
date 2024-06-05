@@ -64,6 +64,21 @@ const TabNavigator = () => {
               />
             ),
           }} />
+
+         <Tab.Screen
+          name="Expenses"
+          component={ExpensesScreen}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <MaterialIcons
+                name="event-note"
+                size={27}
+                color={focused ? '#D77702' : '#52555A'}
+              />
+             
+            ),
+          }} />
+
         <Tab.Screen
           name="Payment"
           component={PaymentScreen}
@@ -77,18 +92,7 @@ const TabNavigator = () => {
             ),
           }} />
 
-        <Tab.Screen
-          name="Expenses"
-          component={ExpensesScreen}
-          options={{
-            tabBarIcon: ({focused, color, size}) => (
-              <MaterialIcons
-                name="chat"
-                size={27}
-                color={focused ? '#D77702' : '#52555A'}
-              />
-            ),
-          }} />
+      
       
     </Tab.Navigator>
   );

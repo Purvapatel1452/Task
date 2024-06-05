@@ -1,6 +1,7 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Pressable,
@@ -22,20 +23,28 @@ import ImagePicker from 'react-native-image-crop-picker';
 import HeaderBar from './HeaderBar';
 import axios from 'axios';
 import ExpenseBox from '../components/ExpenseBox';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMessages, sendMessage } from '../redux/slices/chatSlice';
+import { fetchGroupData, fetchGroupExpenses } from '../redux/slices/groupSlice';
 
 const GroupChatScreen = ({navigation}: any) => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const {userId}=useSelector(state=>state.auth)
+
   const route = useRoute();
   const {groupId}: any = route.params;
   const [message, setMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [groupData, setGroupData] = useState<any>('');
+
+  const scrollViewRef = useRef(null);
+  
   const [isExpense,setIsExpense]=useState(true)
   const [expenseList,setExpenseList]=useState([])
 
+
+  const dispatch=useDispatch();
+  const {userId}=useSelector(state=>state.auth)
+  const {messages,loading,error}=useSelector((state)=>state.chat)
+  const {groupExpenses,groupData,loading:expenseLoading,error:expenseError}=useSelector((state)=>state.group)
 
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
@@ -52,144 +61,246 @@ const GroupChatScreen = ({navigation}: any) => {
 
 
 
-  const groupExpenses=async()=>{
-    try{
+  // const groupExpenses=async()=>{
+  //   try{
 
-      const response= await axios.get(`http://10.0.2.2:8000/chat/expense/groupExpenses/${groupId}`);
+  //     const response= await axios.get(`http://10.0.2.2:8000/chat/expense/groupExpenses/${groupId}`);
 
-      console.log(response.data,")))")
-
-      setExpenseList(response.data)
-
-      
-
-    }
-    catch(error){
-      console.log("internal server error",error);
-
-    }
-  }
-
-
-
-  const fetchMessages = async () => {
-    try {
-      console.log('p');
-      console.log("GRPISS",groupId)
-      
-      // console.log(userId,recepientId)
-
-
-      const msgData={
-        senderId:userId,
-        groupId:groupId
-
-      }
-
-
-      const response = await fetch(`http://10.0.2.2:8000/chat/message/messages`,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-        },
-        body:JSON.stringify(msgData)
-      });
-      console.log('DRRR', response);
-      const data = await response.json();
-
-      console.log('FFFF', data);
-
-      if (response.ok) {
-        setMessages(data);
-      } else {
-        console.log('error in showing message', response.status);
-      }
-    } catch (err) {
-      console.log('error in fetching msg', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchMessages();
-    groupExpenses();
-  }, []);
-
-  useEffect(() => {
-    const fetchGroupData = async () => {
-      try {
-        const response = await fetch(
-          `http://10.0.2.2:8000/chat/message/group/${groupId}`,
-        );
-
-        const data = await response.json();
-        console.log("RECE",data,"'''''")
-        setGroupData(data);
-      } catch (err) {
-        console.log('error in frontend', err);
-      }
-    };
-
-    // const fetchRecepientData = async () => {
-    //   try {
-    //     const response = await fetch(
-    //       `http://10.0.2.2:8000/chat/message/user/${}`,
-    //     );
-
-    //     const data = await response.json();
-    //     console.log("RECE",data,"'''''")
-    //     setGroupData(data);
-    //   } catch (err) {
-    //     console.log('error in frontend', err);
-    //   }
-    // };
-
-    fetchGroupData();
    
-  }, []);
 
-  const handleSend = async (messageType: any, imageUri: any) => {
-    try {
-      console.log("SENNDD")
-      const formData = new FormData();
+  //     setExpenseList(response.data)
 
-      formData.append('senderId', userId);
-      formData.append('groupId', groupId);
+      
 
-      //check msg type image or text
-      console.log('IIIII', imageUri);
-      if (messageType == 'image') {
-        formData.append('messageType', 'image');
-        formData.append('imageFile', {
-          uri: imageUri,
-          name: 'image.jpg',
-          type: 'image/jpeg',
-        });
-      } else {
-        console.log("1111",)
-        formData.append('messageType', 'text');
-        formData.append('messageText', message);
-      }
-console.log(formData,"!!!!!!y")
-      const response = await fetch(
-        'http://10.0.2.2:8000/chat/message/sendMessages',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-      console.log("textRes",response,"OOOOOOOOOOOO")
+  //   }
+  //   catch(error){
+  //     console.log("internal server error",error);
 
-      if (response.ok) {
-        setMessage('');
-        setSelectedImage('');
-      }
+  //   }
+  // }
 
-      fetchMessages();
-    } catch (err) {
-      console.log('error in sending msg', err);
+
+
+  
+  // const groupExpense=async()=>{
+  //   try{
+
+  //     dispatch(fetchGroupExpenses({groupId}))
+
+  //   }
+  //   catch(error){
+  //     console.log("internal server error",error);
+
+  //   }
+  // }
+
+
+
+
+
+
+  // const fetchMessages = async () => {
+  //   try {
+  //     console.log('p');
+  //     console.log("GRPISS",groupId)
+      
+  //     // console.log(userId,recepientId)
+
+
+  //     const msgData={
+  //       senderId:userId,
+  //       groupId:groupId
+
+  //     }
+
+
+  //     const response = await fetch(`http://10.0.2.2:8000/chat/message/messages`,{
+  //       method:'POST',
+  //       headers:{
+  //         'Content-Type':'application/json',
+  //       },
+  //       body:JSON.stringify(msgData)
+  //     });
+  //     console.log('DRRR', response);
+  //     const data = await response.json();
+
+  //     console.log('FFFF', data);
+
+  //     if (response.ok) {
+  //       setMessages(data);
+  //     } else {
+  //       console.log('error in showing message', response.status);
+  //     }
+  //   } catch (err) {
+  //     console.log('error in fetching msg', err);
+  //   }
+  // };
+
+
+
+  
+  // const fetchMessage = async () => {
+  //   try {
+  //     console.log('p');
+  //     console.log("GRPISS",groupId)
+
+  //     dispatch(fetchMessages({userId,groupId}))
+    
+
+    
+  //   } catch (err) {
+  //     console.log('error in fetching msg', err);
+  //   }
+  // };
+
+
+
+  useEffect(() => {
+    dispatch(fetchMessages({userId,groupId}));
+    dispatch(fetchGroupExpenses(groupId))
+    dispatch(fetchGroupData(groupId))
+  }, [dispatch,userId,groupId]);
+
+  // useEffect(() => {
+  //   const fetchGroupData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://10.0.2.2:8000/chat/message/group/${groupId}`,
+  //       );
+
+  //       const data = await response.json();
+      
+  //       setGroupData(data);
+  //     } catch (err) {
+  //       console.log('error in frontend', err);
+  //     }
+  //   };
+
+  //   // const fetchRecepientData = async () => {
+  //   //   try {
+  //   //     const response = await fetch(
+  //   //       `http://10.0.2.2:8000/chat/message/user/${}`,
+  //   //     );
+
+  //   //     const data = await response.json();
+  //   //     console.log("RECE",data,"'''''")
+  //   //     setGroupData(data);
+  //   //   } catch (err) {
+  //   //     console.log('error in frontend', err);
+  //   //   }
+  //   // };
+
+  //   fetchGroupData();
+   
+  // }, []);
+  // useEffect(() => {
+  //  dispatch(fetchGroupData(userId))
+   
+  // }, []);
+
+//   const handleSend = async (messageType: any, imageUri: any) => {
+//     try {
+//       console.log("SENNDD")
+//       const formData = new FormData();
+
+//       formData.append('senderId', userId);
+//       formData.append('groupId', groupId);
+
+//       //check msg type image or text
+//       console.log('IIIII', imageUri);
+//       if (messageType == 'image') {
+//         formData.append('messageType', 'image');
+//         formData.append('imageFile', {
+//           uri: imageUri,
+//           name: 'image.jpg',
+//           type: 'image/jpeg',
+//         });
+//       } else {
+//         console.log("1111",)
+//         formData.append('messageType', 'text');
+//         formData.append('messageText', message);
+//       }
+// console.log(formData,"!!!!!!y")
+//       const response = await fetch(
+//         'http://10.0.2.2:8000/chat/message/sendMessages',
+//         {
+//           method: 'POST',
+//           body: formData,
+//         },
+//       );
+//       console.log("textRes",response,"OOOOOOOOOOOO")
+
+//       if (response.ok) {
+//         setMessage('');
+//         setSelectedImage('');
+//       }
+
+//       fetchMessage();
+//     } catch (err) {
+//       console.log('error in sending msg', err);
+//     }
+//   };
+
+
+
+const scrollToBottom = () => {
+    
+  setTimeout(()=>{
+ 
+     scrollViewRef.current?.scrollToEnd({ animated: true });
+ 
+    },800)
+ 
+   }
+
+
+
+const handleSend = async (messageType: any, imageUri: any) => {
+  try {
+    console.log("SENNDD")
+    const formData = new FormData();
+
+    formData.append('senderId', userId);
+    formData.append('groupId', groupId);
+
+    //check msg type image or text
+   
+    if (messageType == 'image') {
+      formData.append('messageType', 'image');
+      formData.append('imageFile', {
+        uri: imageUri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+    } else {
+      console.log("1111",)
+      formData.append('messageType', 'text');
+      formData.append('messageText', message);
     }
-  };
-  console.log('messages', messages);
+console.log(formData,"!!!!!!y")
+   
+   dispatch(sendMessage({formData}))
+    .then((response)=>{
+
+      console.log(response,"))))))")
+
+})
+
+  
+dispatch(fetchMessages({userId,groupId:groupId}))
+   
+      setMessage('');
+      setSelectedImage('');
+
+        
+      scrollToBottom()
+
+  } catch (err) {
+    console.log('error in sending msg', err);
+  }
+};
+
+
 
  
 
@@ -275,22 +386,39 @@ console.log(formData,"!!!!!!y")
       isExpense?
       <ScrollView>
       <Pressable>
-      {expenseList.map((item, index) => (
-        <ExpenseBox key={index} item={item} />
-      ))}
+      {expenseLoading ? (
+            <ActivityIndicator />
+          ) : expenseError ? (
+            <Text>Error loading expenses: {expenseError}</Text>
+          ) : (
+            groupExpenses.map((item, index) => <ExpenseBox key={index} item={item} />)
+          )}
+    
     </Pressable>
     </ScrollView>
     :
     <KeyboardAvoidingView style={styles.keyboardContainer}>
       
   
-    <ScrollView>
-      {messages.map((item: any, index) => {
+    <ScrollView ref={scrollViewRef}>
+     {
+      messages.map((item: any, index) => {
+        console.log(item,"///////")
         if (item.messageType == 'text') {
           return (
             <Pressable
               key={index}
               style={[
+                !item.senderId._id ?
+                {
+                  alignSelf: 'flex-end',
+                  backgroundColor: '#DCF8C6',
+                  padding: 8,
+                  maxWidth: '60%',
+                  borderRadius: 7,
+                  margin: 10,
+                }
+                :
                 item.senderId._id == userId
                   ? {
                       alignSelf: 'flex-end',

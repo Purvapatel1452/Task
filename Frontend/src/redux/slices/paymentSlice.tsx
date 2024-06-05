@@ -1,0 +1,86 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+export const fetchPaymentIntent = createAsyncThunk(
+  'payment/fetchPaymentIntent',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://10.0.2.2:8000/chat/payments/intents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: 100 }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create payment intent');
+      }
+
+      return data.paymentIntent;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createPaymentIntent = createAsyncThunk(
+  'payment/createPaymentIntent',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://10.0.2.2:8000/chat/payments/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currency: 'usd' }),
+      });
+
+      const { client_secret } = await response.json();
+      return client_secret;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+const paymentSlice = createSlice({
+  name: 'payment',
+  initialState: {
+    loading: false,
+    error: null,
+    paymentIntentClientSecret: '',
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPaymentIntent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPaymentIntent.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paymentIntentClientSecret = action.payload;
+      })
+      .addCase(fetchPaymentIntent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createPaymentIntent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createPaymentIntent.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paymentIntentClientSecret = action.payload;
+      })
+      .addCase(createPaymentIntent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export default paymentSlice.reducer;

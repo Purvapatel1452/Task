@@ -10,30 +10,22 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Share,
-  Linking,
-  Alert,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 
 import {useNavigation} from '@react-navigation/native';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {decode} from 'base-64';
-
-import axios from 'axios';
 
 import User from '../components/User';
 
 // import {useStripe} from '@stripe/stripe-react-native';
 import HeaderBar from './HeaderBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { fetchUsers } from '../redux/slices/usersSlice';
 
 // import ChatBox from '../components/GroupIcon'
 
@@ -42,40 +34,62 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const HomeScreen = () => {
   console.log('PNP');
 
+
+
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+
+
+  const {userId}=useSelector(state=>state.auth)
+
+
+
+  const {users,loading,error}=useSelector((state)=>state.users)
+
+
+  useEffect(() => {
+    if(userId){
+      console.log(":::::::::::")
+      dispatch(fetchUsers(userId))
+      console.log(users,":>>>>>>")
+    
+    }
+    
+    console.log(users,"::::::::::::::;")
+       
+        
+      },[dispatch,userId]);
 
 
   const navigation = useNavigation();
-const {userId}=useSelector(state=>state.auth)
 
-  const [users, setUsers] = useState([]);
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: '',
-      headerLeft: () => <Text style={styles.leftText}>Chat</Text>,
-      headerRight: () => (
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-          <Icon
-            onPress={() => {
-              navigation.navigate('Chat');
-            }}
-            name="chatbox-ellipses-outline"
-            size={30}
-            color="black"
-          />
-          <Icon
-            onPress={() => {
-              navigation.navigate('Friends');
-            }}
-            name="people-outline"
-            size={30}
-            color="black"
-          />
-        </View>
-      ),
-    });
-  }, []);
+  
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: '',
+  //     headerLeft: () => <Text style={styles.leftText}>Chat</Text>,
+  //     headerRight: () => (
+  //       <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+  //         <Icon
+  //           onPress={() => {
+  //             navigation.navigate('Chat');
+  //           }}
+  //           name="chatbox-ellipses-outline"
+  //           size={30}
+  //           color="black"
+  //         />
+  //         <Icon
+  //           onPress={() => {
+  //             navigation.navigate('Friends');
+  //           }}
+  //           name="people-outline"
+  //           size={30}
+  //           color="black"
+  //         />
+  //       </View>
+  //     ),
+  //   });
+  // }, []);
 
   //   const handlePress = async () => {
   //     // Checking if the link is supported
@@ -108,7 +122,57 @@ const {userId}=useSelector(state=>state.auth)
   //   }
   // };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   //   const fetchUsers=async()=>{
+
+  //   //     const token=await AsyncStorage.getItem('authToken')
+  //   //     console.log("TOKEN:",token)
+
+  //   //     const decodedToken:any = jwtDecode(token);
+  //   //     console.log("DECODED",decodedToken);
+
+  //   //     const userId=decodedToken.userId;
+  //   //     console.log("USERID",userId);
+
+  //   //     setUserId(userId)
+
+  //   //     axios.get(`http://192.168.2.122:8000/users/${userId}`)
+  //   //     .then((response)=>{
+  //   //       setUsers(response.data)
+
+  //   //     })
+  //   //     .catch((err)=>{
+  //   //       console.log("retreiving error",err)
+  //   //     })
+
+  //   // }
+
+  //   const fetchUsers = async () => {
+  //     try {
+        
+
+  //         await axios
+  //           .get(`http://10.0.2.2:8000/chat/user/users/${userId}`)
+  //           .then(response => {
+  //              console.log("RESPONSE",response.data)
+  //             setUsers(response.data);
+              
+  //           })
+  //           .catch(err => {
+  //             console.log('retreiving error', err);
+  //           });
+        
+  //     } catch (error) {
+  //       console.error('Error decoding token:', error);
+  //       // Handle error
+  //     }
+  //   };
+
+  //   fetchUsers();
+  // }, []);
+
+
+
     //   const fetchUsers=async()=>{
 
     //     const token=await AsyncStorage.getItem('authToken')
@@ -133,42 +197,53 @@ const {userId}=useSelector(state=>state.auth)
 
     // }
 
-    const fetchUsers = async () => {
-      try {
-        
+  
 
-          await axios
-            .get(`http://10.0.2.2:8000/chat/user/users/${userId}`)
-            .then(response => {
-               console.log("RESPONSE",response.data)
-              setUsers(response.data);
-              
-            })
-            .catch(err => {
-              console.log('retreiving error', err);
-            });
-        
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        // Handle error
-      }
-    };
 
-    fetchUsers();
-  }, []);
 
+
+  // if (loading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //     </View>
+  //   );
+  // }
+
+  // if (error) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Text>Error: {error}</Text>
+  //     </View>
+  //   );
+  // }
  
 
   return (
     <View style={{flex:1}}>
       <HeaderBar title={'Friends'} />
+
+   
       <ScrollView>
+       
       <View style={styles.userContainer}>
-        {users.map((item: any, index: any) => (
+
+        {
+        loading ?
+        <ActivityIndicator />
+        :
+        error ?
+        <Text>Error: {error}</Text>
+        :
+        
+      
+        (users.map((item: any, index: any) => (
           <User key={index} item={item} />
-        ))}
+        )))
+        }
       </View>
       </ScrollView>
+
      
 
       <TouchableOpacity 

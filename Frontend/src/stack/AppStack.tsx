@@ -31,6 +31,7 @@ const AppStack = () => {
     const checkLogin = async () => {
       try {
         const token = await AsyncStorage.getItem('authToken');
+        
 
         if (token) {
           const [_, payloadBase64, __] = token.split('.');

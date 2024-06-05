@@ -14,55 +14,86 @@ import {useRoute} from '@react-navigation/native';
 import HeaderBar from './HeaderBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchExpense, updatePaymentStatus } from '../redux/slices/expenseSlice';
 
 const ExpenseScreen = ({navigation}: any) => {
   const route = useRoute();
   const {expenseId} = route.params;
-  const [expense, setExpense] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [expense, setExpense] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  
   const {userId}=useSelector(state=>state.auth)
+  const dispatch=useDispatch()
+  const { expense, loading, error } = useSelector(state => state.expense);
 
-  const fetchExpense = async () => {
-    try {
-      const response = await axios.get(
-        `http://10.0.2.2:8000/chat/expense/expense/${expenseId}`,
-      );
+//   const fetchExpense = async () => {
+//     try {
+//       const response = await axios.get(
+//         `http://10.0.2.2:8000/chat/expense/expense/${expenseId}`,
+//       );
 
-      const expenseData = response.data;
+//       const expenseData = response.data;
 
-      // Set current user's payment status as paid
-      const updatedPayments = expenseData.payments.map(payment => {
-        if (payment.participant._id === userId) {
-          return { ...payment, paid: true };
-        }
-        return payment;
-      });
-      // setExpense(response.data);
-
-      setExpense({ ...expenseData, payments: updatedPayments });
+//       // Set current user's payment status as paid
+//       const updatedPayments = expenseData.payments.map((payment) => {
+//         console.log(payment,"***")
+//         if (payment.participant._id === expenseData.payerId._id) {
+          
+//           return { ...payment, paid: true };
+//         }
+//         return payment;
+//       });
+//       // setExpense(response.data);
+// console.log()
+//       setExpense({ ...expenseData, payments: updatedPayments });
       
-    } catch (err) {
-      setError('Error fetching expense details');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+//     } catch (err) {
+//       setError('Error fetching expense details');
+//       console.error(err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+
+
+
+const fetchExpenseDetails = async () => {
+  try {
+   dispatch(fetchExpense(expenseId))
+    
+  } catch (err) {
+   
+    console.error(err);
+  } 
+};
+
 
   useEffect(() => {
-    fetchExpense();
+    dispatch(fetchExpense(expenseId))
    
-  }, [expenseId]);
+  }, [dispatch,expenseId]);
+
+  // const handlePaymentStatus = async (participantId, paid) => {
+  //   try {
+  //     console.log("PRESS",participantId,paid,expenseId)
+
+  //     await axios.post(
+  //       `http://10.0.2.2:8000/chat/expense/paymentStatus`,{expenseId,participantId,paid});
+
+  //     fetchExpense();
+  //   } catch (error) {
+  //     console.log('internal server error', error);
+  //   }
+  // };
+
 
   const handlePaymentStatus = async (participantId, paid) => {
     try {
-      console.log("PRESS",participantId,paid,expenseId)
-
-      await axios.post(
-        `http://10.0.2.2:8000/chat/expense/paymentStatus`,{expenseId,participantId,paid});
-
+     
+      dispatch(updatePaymentStatus({ expenseId, participantId, paid }))
       fetchExpense();
     } catch (error) {
       console.log('internal server error', error);

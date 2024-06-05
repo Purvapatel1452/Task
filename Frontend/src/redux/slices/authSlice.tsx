@@ -30,8 +30,12 @@ import { decode } from 'base-64';
 
 export const login=createAsyncThunk("auth/login",async(userData,{rejectWithValue})=>{
   try{
+
+    console.log("LOGI")
     const response=await axios.post("http://10.0.2.2:8000/chat/user/login",userData);
     const token=response.data.data;
+
+    console.log(token,"token")
 
     if(token){
       const [_,payloadBase64, __]=token.split('.');

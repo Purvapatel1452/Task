@@ -424,6 +424,7 @@ const Login = ({props}: any) => {
   // }, []);
 
   const handleSubmit = async () => {
+    console.log(email,password,"&&")
     const userData = {
       email: email,
       password: password,
@@ -458,6 +459,7 @@ const Login = ({props}: any) => {
 
       dispatch(login({email,password}))
         .then((result)=>{
+          console.log(result.type,"::::")
           if(result.type==='auth/login/fulfilled'){
             navigation.navigate('Stack');
           }

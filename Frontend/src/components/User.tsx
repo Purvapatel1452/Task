@@ -3,73 +3,92 @@ import React, { useContext,useEffect,useState } from 'react'
 import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
 
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { checkFriendRequest, resetRequestSent, sendFriendRequest } from '../redux/slices/friendSlice'
 
 
 const User = ({item}:any) => {
+
+    const dispatch=useDispatch()
     const {userId}=useSelector(state=>state.auth)
+    const { requestSent, loading, error } = useSelector(state => state.friend);
+
+
     
     console.log("USERIDDDDDD",userId)
-    const [requestSent,setRequestSent]=useState(false)
+    // const [requestSent,setRequestSent]=useState(false)
 
 
 
+    // useEffect(() => {
+    //     const checkRequest = async () => {
+    //         try {
+    //             const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
+    //             const currentUser = response.data;
+    //             console.log(currentUser)
+    //             // Check if the item._id exists in the sentFriendRequests array
+    //             const isRequestSent = currentUser.sentFriendRequests.includes(item._id);
+                
+    //             setRequestSent(isRequestSent);
+    //         } catch (err) {
+    //             console.log('Error fetching user data', err);
+    //         }
+    //     };
+
+    //     checkRequest();
+    // }, []);
     useEffect(() => {
-        const checkRequest = async () => {
-            try {
-                const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
-                const currentUser = response.data;
-                console.log(currentUser)
-                // Check if the item._id exists in the sentFriendRequests array
-                const isRequestSent = currentUser.sentFriendRequests.includes(item._id);
-                
-                setRequestSent(isRequestSent);
-            } catch (err) {
-                console.log('Error fetching user data', err);
-            }
+        if (userId) {
+          dispatch(checkFriendRequest(userId));
+        }
+    
+        // Reset requestSent state when component unmounts
+        return () => {
+          dispatch(resetRequestSent());
         };
+      }, [dispatch, userId]);
+    
 
-        checkRequest();
-    }, []);
+    // const sendFriendRequest=async(currentUserId: any,selectedUserId: any)=>{
 
+    //     try{
+    //         console.log("current",currentUserId)
+    //         console.log("SELECT",selectedUserId)
 
-    const sendFriendRequest=async(currentUserId: any,selectedUserId: any)=>{
+    //         // const response=await fetch("http://10.0.2.2:8000/friend-request",{
+    //         //     method:"POST",
+    //         //     headers:{
+    //         //         "ContentType":"application/json",
+    //         //     },
+    //         //     body:JSON.stringify({currentUserId,selectedUserId})
+    //         // })
 
-        try{
-            console.log("current",currentUserId)
-            console.log("SELECT",selectedUserId)
+    //         const response=await axios.post("http://10.0.2.2:8000/chat/user/friend-request",{currentUserId,selectedUserId})
+    //         console.log("RES",response)
+    //         console.log("rrrr",response)
 
-            // const response=await fetch("http://10.0.2.2:8000/friend-request",{
-            //     method:"POST",
-            //     headers:{
-            //         "ContentType":"application/json",
-            //     },
-            //     body:JSON.stringify({currentUserId,selectedUserId})
-            // })
+    //         if(response){
 
-            const response=await axios.post("http://10.0.2.2:8000/chat/user/friend-request",{currentUserId,selectedUserId})
-            console.log("RES",response)
-            console.log("rrrr",response)
-
-            if(response){
-
-                setRequestSent(true)
+    //             setRequestSent(true)
                 
-            }
+    //         }
 
 
 
-        }
-        catch(err){
+    //     }
+    //     catch(err){
 
-            console.log("Error in handling send Request",err)
+    //         console.log("Error in handling send Request",err)
 
-        }
-
-
+    //     }
 
 
-    }
+
+
+    // }
+
+
+//    dispatch(sendFriendRequest({ currentUserId, selectedUserId }))
  
   return (
     <Pressable  style={styles.pressableContainer} >
@@ -104,7 +123,7 @@ const User = ({item}:any) => {
         style={styles.pressAddFrnd}
         onPress={()=>{
             console.log("request sent",userId)
-            sendFriendRequest(userId,item._id)}}>
+            dispatch(sendFriendRequest({currentUserId:userId,selectedUserId:item._id}))}}>
             <Text style={styles.textAdd} >Add Friend</Text>
         </Pressable>
 

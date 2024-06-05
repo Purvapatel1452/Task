@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useDebugValue, useEffect, useState } from 'react'
 
-import { View, Text, StyleSheet,Image, TouchableOpacity } from 'react-native'
-import { useSelector } from 'react-redux'
+import { View, Text, StyleSheet,Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUserDetails } from '../redux/slices/usersSlice'
 
 
 
@@ -16,36 +17,48 @@ const ProfilePic = () => {
 //   console.warn('j',k)
 
 const navigation=useNavigation();
+
+const dispatch=useDispatch()
 const {userId}=useSelector(state=>state.auth)
-
-const [details,setDetails]=useState({})
-
-const userDetails=async()=>{
-
-  try{
-console.log(userId)
-    const response=await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`)
-
-    const res=response.data
-
-    setDetails(res)
-
-    console.log(res,"++++++++++++++++")
+const {details,loading,error}=useSelector((state)=>state.users)
 
 
-  }
-  catch(error){
-    console.log("internal server error",error);
-  }
 
-}
+// const userDetails=async()=>{
+
+//   try{
+// console.log(userId)
+//     const response=await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`)
+
+//     const res=response.data
+
+//     setDetails(res)
+
+//     console.log(res,"++++++++++++++++")
+
+
+//   }
+//   catch(error){
+//     console.log("internal server error",error);
+//   }
+
+// }
 
 useEffect(()=>{
 
-  userDetails()
+  dispatch(fetchUserDetails(userId))
 
-},[1])
 
+},[dispatch,userId])
+
+
+if (loading) {
+  return <ActivityIndicator size="large" color="#0000ff" />;
+}
+
+if (error) {
+  return <Text>Error: {error}</Text>;
+}
 
 
   return (<>

@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useDebugValue } from 'react';
 
-import {Pressable, StyleSheet, Text, View, Image} from 'react-native';
+import {Pressable, StyleSheet, Text, View, Image, ActivityIndicator} from 'react-native';
 
 import ChatScreen from '../screens/ChatScreen';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { acceptFriendRequest, fetchFriendRequests } from '../redux/slices/friendSlice';
+import { fetchFriends } from '../redux/slices/groupSlice';
 
 
 
@@ -18,43 +20,68 @@ interface FriendRequestProps{
 const FriendRequest:React.FC<FriendRequestProps> = ({item, friendRequest, setFriendRequest}) => {
      
     const navigation=useNavigation()
+
+
     const {userId}=useSelector(state=>state.auth)
-    const acceptRequest=async(friendRequestId:any)=>{
+    const dispatch=useDispatch()
+    const { loading, error } = useSelector((state) => state.friend);
 
-        try{
 
-            const response=await fetch("http://10.0.2.2:8000/chat/user/friend-request/accept",{
-                method:"POST",
-                headers:{
-                    "Content-type":"application/json",
-                },
-                body:JSON.stringify({
-                    senderId:friendRequestId,
-                    recepientId:userId
-                })
-            })
 
-            console.log("RESPONSE",response)
-            if(response.ok){
-                console.log(response.ok)
-                console.log("rEQID",friendRequestId)
+    // const acceptRequest=async(friendRequestId:any)=>{
 
-                setFriendRequest(friendRequest.filter((request:any)=>
-                    request._id!=friendRequestId
-                ))
-             navigation.navigate("Chat")
+    //     try{
 
-            }
+    //         const response=await fetch("http://10.0.2.2:8000/chat/user/friend-request/accept",{
+    //             method:"POST",
+    //             headers:{
+    //                 "Content-type":"application/json",
+    //             },
+    //             body:JSON.stringify({
+    //                 senderId:friendRequestId,
+    //                 recepientId:userId
+    //             })
+    //         })
+
+    //         console.log("RESPONSE",response)
+    //         if(response.ok){
+    //             console.log(response.ok)
+    //             console.log("rEQID",friendRequestId)
+
+    //             setFriendRequest(friendRequest.filter((request:any)=>
+    //                 request._id!=friendRequestId
+    //             ))
+    //          navigation.navigate("Chat")
+
+    //         }
 
             
 
-        }
-        catch(err){
-            console.log("FRONT",err)
+    //     }
+    //     catch(err){
+    //         console.log("FRONT",err)
 
-        }
+    //     }
 
-    }
+    // }
+
+
+    const acceptRequest=async(friendRequestId:any)=>{
+
+      try{
+
+         dispatch(acceptFriendRequest({friendRequestId,userId}))
+        //  dispatch(fetchFriendRequests(userId))
+        //  dispatch(fetchFriends(userId))
+           navigation.navigate("Chat")
+
+          }
+      catch(err){
+          console.log("FRONT",err)
+
+      }
+
+  }
 
 
   return (
@@ -74,7 +101,13 @@ const FriendRequest:React.FC<FriendRequestProps> = ({item, friendRequest, setFri
           marginHorizontal:10
           
         }}>
-        <Text style={{color: 'white', textAlign: 'center'}}>Accept</Text>
+
+        {loading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={{ color: 'white', textAlign: 'center' }}>Accept</Text>
+        )}
+        {/* <Text style={{color: 'white', textAlign: 'center'}}>Accept</Text> */}
       </Pressable>
     </Pressable>
   );

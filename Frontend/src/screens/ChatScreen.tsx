@@ -7,6 +7,7 @@ import {
   Modal,
   Pressable,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -20,22 +21,32 @@ import {useNavigation,useFocusEffect} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFriends, fetchGroups } from '../redux/slices/groupSlice';
+import { addExpense } from '../redux/slices/expensesSlice';
+import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice';
 
 const ChatScreen = () => {
-  const [acceptedFriends, setAcceptedfriends] = useState([]);
-  const {userId}=useSelector(state=>state.auth)
+  // const [acceptedFriends, setAcceptedfriends] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [description, setDecription] = useState('');
   const [amount, setAmount] = useState('');
-  const [friendList, setFriendList] = useState([]);
+  // const [friendList, setFriendList] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [isGroup, setIsGroup] = useState(false);
   const [selectGroup, setSelectGroup] = useState('');
   const [select, setSelect] = useState([]);
   const [type,setType]=useState([])
-  const [paymentStatus,setPaymentStatus]=useState([])
-  const [groupId, setGroupId] = useState('');
+  // const [paymentStatus,setPaymentStatus]=useState([])
+
+
+
+  const {userId}=useSelector(state=>state.auth)
+  const { groups, loading: groupLoading, error: groupError } = useSelector(state => state.group);
+  const { friends, loading: friendLoading, error: friendError } = useSelector(state => state.group);
+  const { loading: expenseLoading, error: expenseError } = useSelector(state => state.expense);
+  const { paymentStatus, loading, error } = useSelector(state => state.friend);
+  const dispatch=useDispatch();
 
   const navigation = useNavigation();
   const [refresh, setRefresh] = useState(false);
@@ -44,53 +55,25 @@ const ChatScreen = () => {
     setSelect([]);
     setSelectedFriends([]);
     setIsGroup(false);
-    try {
-      const response = await fetch(
-        `http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`,
-      );
-      const data = await response.json();
-      
-      if (response.ok) {
-       
-
-        setFriendList(data);
-        
-      }
-    } catch (error) {
-      console.log('internal server problem', error);
-    }
+    dispatch(fetchFriends(userId))
+      .then((response)=>{
+        console.log(response,"success")
+      })
   };
 
   const handleGroups = async () => {
     setSelectedFriends([]);
     setSelectGroup('');
     setIsGroup(true);
-    try {
-      const response = await fetch(
-        `http://10.0.2.2:8000/chat/group/groups/${userId}`,
-      );
-      const data = await response.json();
+    dispatch(fetchGroups(userId))
 
-      if (response.ok) {
-        setFriendList(data);
-
-    
-      }
-    } catch (error) {
-      console.log('Error in internal sever', error);
-    }
+   
   };
 
   const handleAddExpense = async () => {
-   
-
-    try {
-      setDecription('');
-      setAmount('');
-      setSelectedFriends([]);
-      let data={}
-if(isGroup){
-        data = {
+    let data = {};
+    if (isGroup) {
+      data = {
         description: description,
         amount: amount,
         payerId: userId,
@@ -98,43 +81,83 @@ if(isGroup){
         groupId: selectGroup,
         type:type
       };
-    }
-    else{
-        data = {
+    } else {
+      data = {
         description: description,
         amount: amount,
         payerId: userId,
         payeeId: selectedFriends,
-        type:type
+        type: type,
       };
-
     }
   
-      const response = await fetch(
-        'http://10.0.2.2:8000/chat/expense/addExpense',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        },
-      );
-
-      const expense = await response.json();
-      
-
-      if (response.ok) {
+    dispatch(addExpense(data)).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
         Alert.alert('Expense Added !!!');
         setShowModal(false);
         setDecription('');
         setAmount('');
         setSelectedFriends([]);
+      } else {
+        Alert.alert('Error in adding expense');
       }
-    } catch (error) {
-      console.log('Error in adding expense', error);
-    }
+    });
   };
+
+//   const handleAddExpense = async () => {
+   
+
+//     try {
+//       setDecription('');
+//       setAmount('');
+//       setSelectedFriends([]);
+//       let data={}
+// if(isGroup){
+//         data = {
+//         description: description,
+//         amount: amount,
+//         payerId: userId,
+//         payeeId: selectedFriends,
+//         groupId: selectGroup,
+//         type:type
+//       };
+//     }
+//     else{
+//         data = {
+//         description: description,
+//         amount: amount,
+//         payerId: userId,
+//         payeeId: selectedFriends,
+//         type:type
+//       };
+
+//     }
+  
+//       const response = await fetch(
+//         'http://10.0.2.2:8000/chat/expense/addExpense',
+//         {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify(data),
+//         },
+//       );
+
+//       const expense = await response.json();
+      
+
+//       if (response.ok) {
+//         Alert.alert('Expense Added !!!');
+//         setShowModal(false);
+//         setDecription('');
+//         setAmount('');
+//         setSelectedFriends([]);
+//       }
+//     } catch (error) {
+//       console.log('Error in adding expense', error);
+//     }
+//   };
 
   const handleModel = async () => {
     console.log('MODALVIEWW');
@@ -164,46 +187,41 @@ if(isGroup){
 
   const acceptedFriendsList = useCallback(async () => {
     try {
-      const response = await fetch(
-        `http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`,
-      );
-      
-      const data = await response.json();
-  
+     
+     
+      dispatch(fetchFriends(userId))
+        .then((response)=>{
+          console.log(response,"success")
+        })
 
-    
-
-      if (response.ok) {
-        setAcceptedfriends(data);
-      }
     } catch (err) {
       console.log('Error in frontend', err);
     }
   },[userId])
 
-  const fetchFriendsPaymentStatus =useCallback(async () => {
-    try {
-      console.log("*******************",userId)
-      const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
-      const friendsPaymentStatus = await response.json();
+  // const fetchFriendsPaymentStatus =useCallback(async () => {
+  //   try {
+  //     console.log("*******************",userId)
+  //     const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
+  //     const friendsPaymentStatus = await response.json();
   
-      if (response.ok) {
-        console.log(friendsPaymentStatus, "--");
-        // Assuming setFriendsPaymentStatus is a state setter function
-        setPaymentStatus(friendsPaymentStatus); 
-      } else {
-        console.error('Failed to fetch friends payment status');
-      }
-    } catch (err) {
-      console.error('Error in frontend', err);
-    }
-  },[userId]);
+  //     if (response.ok) {
+  //       console.log(friendsPaymentStatus, "--");
+  //       // Assuming setFriendsPaymentStatus is a state setter function
+  //       setPaymentStatus(friendsPaymentStatus); 
+  //     } else {
+  //       console.error('Failed to fetch friends payment status');
+  //     }
+  //   } catch (err) {
+  //     console.error('Error in frontend', err);
+  //   }
+  // },[userId]);
 
   useFocusEffect(
     useCallback(() => {
       const fetchAllData = async () => {
-        await acceptedFriendsList();
-        await fetchFriendsPaymentStatus();
+        dispatch(fetchFriends(userId))
+        dispatch(fetchFriendsPaymentStatus(userId))
       };
       fetchAllData();
       const unsubscribe = navigation.addListener('tabPress', e => {
@@ -214,23 +232,23 @@ if(isGroup){
       return () => {
         unsubscribe();
       };
-    }, [refresh, acceptedFriendsList, fetchFriendsPaymentStatus])
+    }, [refresh, fetchFriends, fetchFriendsPaymentStatus])
   );
 
   useEffect(() => {
 
     const fetchAllData=async()=>{
       
-    await fetchFriendsPaymentStatus();
-    await acceptedFriendsList();
+    dispatch(fetchFriendsPaymentStatus(userId))
+    dispatch(fetchFriends(userId))
 
     };
     fetchAllData();
   
-  }, [refresh,fetchFriendsPaymentStatus,acceptedFriendsList]);
+  }, [refresh,fetchFriendsPaymentStatus,fetchFriends]);
 
   const combineData = () => {
-    return acceptedFriends.map(friend => {
+    return friends.map(friend => {
       const paymentStatusForFriend = paymentStatus.find(
         status => status.friendId === friend._id,
       );
@@ -254,6 +272,8 @@ if(isGroup){
 
   return (
     <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
+        
+        <StatusBar backgroundColor={'#D77702'} />
       <HeaderBar title={'TabScreen'} />
       <ScrollView>
         <Pressable>
@@ -326,19 +346,19 @@ if(isGroup){
             <Text style={styles.label}>Select Participants/Groups :</Text>
             <View style={styles.inputContainer1}>
               <TouchableOpacity
-                style={styles.saveButton1}
+                style={[styles.saveButton1,{  backgroundColor: !isGroup ? '#D77702' : 'silver'}]}
                 onPress={() => handleFriends()}>
                 <Text style={styles.saveButtonText}>Friends</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.saveButton1}
+                style={[styles.saveButton1,{  backgroundColor: isGroup ? '#D77702' : 'silver'}]}
                 onPress={() => handleGroups()}>
                 <Text style={styles.saveButtonText}>Groups</Text>
               </TouchableOpacity>
             </View>
 
             <FlatList
-              data={friendList}
+              data={isGroup ? groups : friends}
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.friendItem}
