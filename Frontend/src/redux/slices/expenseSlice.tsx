@@ -4,6 +4,7 @@ import axios from 'axios';
 // Thunk for fetching expense details
 export const fetchExpense = createAsyncThunk('expense/fetchExpense', async (expenseId, { rejectWithValue }) => {
   try {
+    console.log("EXPPPPP")
     const response = await axios.get(`http://10.0.2.2:8000/chat/expense/expense/${expenseId}`);
     const expenseData = response.data;
 
@@ -34,7 +35,7 @@ export const updatePaymentStatus = createAsyncThunk('expense/updatePaymentStatus
 const expenseSlice = createSlice({
   name: 'expense',
   initialState: {
-    expense: null,
+    expens: null,
     loading: false,
     error: null,
   },
@@ -47,8 +48,11 @@ const expenseSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchExpense.fulfilled, (state, action) => {
+        
         state.loading = false;
-        state.expense = action.payload;
+        state.expens = action.payload;
+        console.log(state.expens,">>>>>>>>>>>>>>>>")
+      
       })
       .addCase(fetchExpense.rejected, (state, action) => {
         state.loading = false;
@@ -56,8 +60,8 @@ const expenseSlice = createSlice({
       })
       // Update Payment Status
       .addCase(updatePaymentStatus.fulfilled, (state, action) => {
-        if (state.expense) {
-          state.expense.payments = state.expense.payments.map(payment =>
+        if (state.expens) {
+          state.expens.payments = state.expens.payments.map(payment =>
             payment.participant._id === action.payload.participantId
               ? { ...payment, paid: action.payload.paid }
               : payment

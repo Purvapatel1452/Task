@@ -71,10 +71,15 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
+      
+    
       const response = await axios.post("http://10.0.2.2:8000/chat/user/friend-request", {
         currentUserId,
         selectedUserId
       });
+
+    
+     
       return selectedUserId; // return selected user ID to update the state
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -85,10 +90,15 @@ export const sendFriendRequest = createAsyncThunk(
 // Async thunk to check if a friend request is already sent
 export const checkFriendRequest = createAsyncThunk(
   'friendRequest/checkFriendRequest',
-  async (userId, { rejectWithValue }) => {
+  async ({userId,item}, { rejectWithValue }) => {
     try {
+   console.log("CHECKKCK")
       const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
-      return response.data;
+     
+      const req=response.data.sentFriendRequests.includes(item._id)
+      console.log(req,"REEEEQQQQQQQQQQQQ")
+  
+      return req;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -109,9 +119,6 @@ const friendSlice = createSlice({
       state.friendRequests = action.payload;
     },
     
-      resetRequestSent(state) {
-        state.requestSent = false;
-      }
   },
   extraReducers: (builder) => {
     builder
@@ -175,7 +182,8 @@ const friendSlice = createSlice({
       })
       .addCase(checkFriendRequest.fulfilled, (state, action) => {
         state.loading = false;
-        state.requestSent = action.payload.sentFriendRequests.includes(action.meta.arg);
+       state.requestSent=action.payload
+        // state.requestSent = action.payload.sentFriendRequests.includes(action.meta.arg);
       })
       .addCase(checkFriendRequest.rejected, (state, action) => {
         state.loading = false;
@@ -184,6 +192,6 @@ const friendSlice = createSlice({
   },
 });
 
-export const {resetRequestSent}= friendSlice.actions
+// export const {resetRequestSent}= friendSlice.actions
 
 export default friendSlice.reducer;

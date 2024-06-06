@@ -274,11 +274,13 @@ const ChatScreen = () => {
     <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
         
         <StatusBar backgroundColor={'#D77702'} />
-      <HeaderBar title={'TabScreen'} />
+      <HeaderBar title={'ChatScreen'} />
       <ScrollView>
         <Pressable>
           {combinedData.map((item, index) => (
-            <UserChat key={index} item={item} />
+            <UserChat key={index} item={item} navigateMessages={()=>{      
+              navigation.navigate('Payment')
+            }}/>
           ))}
         </Pressable>
         <View style={styles.container}>

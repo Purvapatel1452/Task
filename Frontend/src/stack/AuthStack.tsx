@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 import Login from '../screens/Login'
 import SignUp from '../screens/SignUp'
-import NavigationStack from './NavigationStack'
+
 
 
 
@@ -33,10 +33,10 @@ const AuthStack = () => {
             name='SignUp' 
             component={SignUp}
             options={{headerShown:false}} />
-             <Stack.Screen 
+             {/* <Stack.Screen 
             name='Stack' 
             component={NavigationStack}
-            options={{headerShown:false}} />
+            options={{headerShown:false}} /> */}
         </Stack.Navigator>
    
   

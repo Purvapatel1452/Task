@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkFriendRequest, resetRequestSent, sendFriendRequest } from '../redux/slices/friendSlice'
+import { current } from '@reduxjs/toolkit'
 
 
 const User = ({item}:any) => {
@@ -14,8 +15,7 @@ const User = ({item}:any) => {
     const { requestSent, loading, error } = useSelector(state => state.friend);
 
 
-    
-    console.log("USERIDDDDDD",userId)
+  
     // const [requestSent,setRequestSent]=useState(false)
 
 
@@ -39,13 +39,14 @@ const User = ({item}:any) => {
     // }, []);
     useEffect(() => {
         if (userId) {
-          dispatch(checkFriendRequest(userId));
+         
+          dispatch(checkFriendRequest({userId,item}));
         }
     
         // Reset requestSent state when component unmounts
-        return () => {
-          dispatch(resetRequestSent());
-        };
+        // return () => {
+        //   dispatch(resetRequestSent());
+        // };
       }, [dispatch, userId]);
     
 
@@ -90,6 +91,30 @@ const User = ({item}:any) => {
 
 //    dispatch(sendFriendRequest({ currentUserId, selectedUserId }))
  
+
+
+   const sendFriendRequests=async({userId})=>{
+
+        try{
+           
+            dispatch(sendFriendRequest({ currentUserId:userId, selectedUserId:item._id }))
+
+
+        }
+        catch(err){
+
+            console.log("Error in handling send Request",err)
+
+        }
+
+
+
+
+    }
+
+
+  
+ 
   return (
     <Pressable  style={styles.pressableContainer} >
     <View>
@@ -123,7 +148,7 @@ const User = ({item}:any) => {
         style={styles.pressAddFrnd}
         onPress={()=>{
             console.log("request sent",userId)
-            dispatch(sendFriendRequest({currentUserId:userId,selectedUserId:item._id}))}}>
+            sendFriendRequests({userId})}}>
             <Text style={styles.textAdd} >Add Friend</Text>
         </Pressable>
 

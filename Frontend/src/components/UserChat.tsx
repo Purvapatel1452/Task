@@ -5,7 +5,7 @@ interface UserChatprops {
   item: any;
 }
 
-const UserChat: React.FC<UserChatprops> = ({item}) => {
+const UserChat: React.FC<UserChatprops> = ({item, navigateMessages}) => {
   const navigation = useNavigation();
 
   const netBalance = item.friendOwesMe - item.iOweFriend;
@@ -23,7 +23,7 @@ const UserChat: React.FC<UserChatprops> = ({item}) => {
 
   return (
     <Pressable
-      onPress={() => navigation.navigate('Messages', {recepientId: item._id})}
+      onPress={navigateMessages}
       style={styles.pressableContainer}>
       <Image source={{uri: item.image}} style={styles.image} />
       <View style={styles.textContainer}>

@@ -26,8 +26,23 @@ const ExpenseScreen = ({navigation}: any) => {
   
   const {userId}=useSelector(state=>state.auth)
   const dispatch=useDispatch()
-  const { expense, loading, error } = useSelector(state => state.expense);
+  const { expens, loading, error } = useSelector((state) => state.expense);
 
+  const [load,setLoad]=useState(false)
+  const [ld,setLd]=useState(true)
+  setTimeout(()=>{
+    setLd(false)
+   },1000)
+
+
+   useEffect(()=>{
+    
+   })
+useEffect(()=>{
+
+  console.log("EUUSEE")
+
+},[])
 //   const fetchExpense = async () => {
 //     try {
 //       const response = await axios.get(
@@ -72,7 +87,11 @@ const fetchExpenseDetails = async () => {
 
 
   useEffect(() => {
+  
+
     dispatch(fetchExpense(expenseId))
+   
+   
    
   }, [dispatch,expenseId]);
 
@@ -92,30 +111,42 @@ const fetchExpenseDetails = async () => {
 
   const handlePaymentStatus = async (participantId, paid) => {
     try {
-     
+     setLoad(true)
+     setTimeout(()=>{
+      setLoad(false)
+     },1000)
+    
       dispatch(updatePaymentStatus({ expenseId, participantId, paid }))
-      fetchExpense();
+      dispatch(fetchExpense(expenseId))
     } catch (error) {
       console.log('internal server error', error);
     }
   };
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  // if (loading) {
+  //   return <ActivityIndicator size="large" color="#0000ff" />;
+  // }
 
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={styles.error}>{error}</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <>
       <HeaderBar title={'Expense'} />
+      {
+          ld ?
+        <ActivityIndicator />
+      
+          :
       <View style={styles.mainContainer}>
+
+      
+
         <View
           style={{
             borderBottomWidth: 3,
@@ -130,8 +161,11 @@ const fetchExpenseDetails = async () => {
             
              
           }}>
+
+
              
-            {expense.type == 'group' ? (
+            {expens &&
+            expens.type == 'group' ? (
               <MaterialIcons name="groups" size={40} color={'#D77702'} style={{marginLeft:10}} />
             ) : (
               <FontAwesome6Icon
@@ -142,7 +176,7 @@ const fetchExpenseDetails = async () => {
               />
             )}
 
-            <Text style={styles.value1}>{expense.description}</Text>
+            <Text style={styles.value1}>{expens.description}</Text>
           
           
         </View>
@@ -152,45 +186,45 @@ const fetchExpenseDetails = async () => {
           showsVerticalScrollIndicator={false}>
          
           <View style={{flex: 1, flexDirection: 'row', gap: 8}}>
-            <Text style={styles.value2}>₹{expense.amount}</Text>
+            <Text style={styles.value2}>₹{expens.amount}</Text>
 
             <View
               style={{elevation: 20, shadowColor: 'red', shadowOpacity: 10}}>
-              <Text style={styles.value}>{expense.type}</Text>
+              <Text style={styles.value}>{expens.type}</Text>
             </View>
           </View>
           <View style={{flex: 1, flexDirection: 'row'}}>
             <Text 
             style={styles.label}>
               Paid by {
-                       expense.payerId._id==userId ?
+                       expens.payerId._id==userId ?
                        <Text style={{fontWeight:'bold',color:'black'}}>You</Text>
                        :
-                       <Text style={{fontWeight:'bold',color:'black'}}>{expense.payerId.name}</Text>
+                       <Text style={{fontWeight:'bold',color:'black'}}>{expens.payerId.name}</Text>
                       } on </Text>
             <Text style={styles.label}>
-              {new Date(expense.date).toLocaleDateString()} at{' '}
-              {new Date(expense.date).toLocaleTimeString()}{' '}
+              {new Date(expens.date).toLocaleDateString()} at{' '}
+              {new Date(expens.date).toLocaleTimeString()}{' '}
             </Text>
           </View>
 
           <View style={{flex: 1, flexDirection: 'row', gap: 20, marginTop: 20}}>
-            <Image source={{uri: expense.payerId.image}} style={styles.image} />
+            <Image source={{uri: expens.payerId.image}} style={styles.image} />
 
             <Text style={styles.paid}>
               {
-                expense.payerId._id==userId?
+                expens.payerId._id==userId?
                 'You'
                 :
-              expense.payerId.name
-              } paid ₹{expense.amount}
+              expens.payerId.name
+              } paid ₹{expens.amount}
             </Text>
           </View>
-          {expense.payments.map(payment => (
+          {expens.payments.map(payment => (
             <View key={payment.participant._id} style={{flexDirection: 'row'}}>
 
               {
-                expense.payerId._id==userId && payment.participant._id!=userId ?
+                expens.payerId._id==userId && payment.participant._id!=userId ?
              
                   <TouchableOpacity
                 onPress={() => handlePaymentStatus(payment.participant._id, !payment.paid)}>
@@ -218,7 +252,11 @@ const fetchExpenseDetails = async () => {
                 } owes ₹{payment.amount}
               </Text>
 
-                {payment.paid && expense.payerId._id==userId ? 
+
+                {load ?
+                <ActivityIndicator />
+                :
+                payment.paid && expens.payerId._id==userId ? 
                 <Text style={styles.paid4}>Paid</Text> 
                 :
                  <Text style={styles.paid5}>Not Paid</Text>}
@@ -226,14 +264,17 @@ const fetchExpenseDetails = async () => {
               
               
             </View>
-          ))}
+))}
 
           <Text style={styles.label4}>Status:</Text>
           <Text style={styles.value5}>
-            {expense.settled ? 'Settled' : 'Not Settled'}
+            {expens.settled ? 'Settled' : 'Not Settled'}
           </Text>
         </ScrollView>
+
       </View>
+      }
+        
     </>
   );
 };
@@ -246,7 +287,7 @@ const styles = StyleSheet.create({
     
   },
   container: {
-    flexGrow: 1,
+    // flexGrow: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
   },

@@ -65,10 +65,8 @@ const FriendsScreen = () => {
   return (
     <View>
       
-      <HeaderBar title={'Friends'} />
-      {
-        friendRequests.length>0 && <Text>Your Friend Requests</Text>
-      }
+      <HeaderBar title={'FriendRequest'} />
+   
 
       {
         friendRequests.map((item,index)=>

@@ -121,6 +121,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginVertical: 10,
+    padding:5,
+    borderWidth:1,
+    borderColor:"silver",
+    borderRadius:20,
+    margin:8,
+    elevation:4,
+    shadowColor:"black",
+    shadowOpacity:10,
+    backgroundColor:"white"
   },
   text:{
 

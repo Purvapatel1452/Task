@@ -401,7 +401,7 @@ const handleAddExpense = async () => {
   
       <StatusBar backgroundColor={'#D77702'} />
 
-      <HeaderBar title={"TabScreen"} />
+      <HeaderBar title={"GroupScreen"} />
     
 
 

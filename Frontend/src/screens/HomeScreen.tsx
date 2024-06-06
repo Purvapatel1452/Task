@@ -221,7 +221,7 @@ const HomeScreen = () => {
 
   return (
     <View style={{flex:1}}>
-      <HeaderBar title={'Friends'} />
+      <HeaderBar title={'AddFriends'} />
 
    
       <ScrollView>

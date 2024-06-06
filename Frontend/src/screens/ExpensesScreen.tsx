@@ -151,7 +151,7 @@ console.log('Expe',expenseList)
 
           <StatusBar backgroundColor={'#D77702'} />
 
-          <HeaderBar title={"TabScreen"} />
+          <HeaderBar title={"ExpensesScreen"} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}  >
           <View style={styles.pressableContainer}>
 
