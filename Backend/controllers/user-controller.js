@@ -274,6 +274,7 @@ const  getUsers=async(req, res) => {
 
             $push:{sentFriendRequests:selectedUserId}
         })
+        console.log(currentUser,":::::",selectedUserId)
 
 
 res.sendStatus(200)
