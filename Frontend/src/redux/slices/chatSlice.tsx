@@ -32,7 +32,7 @@ if(recepientId){
 console.log(d,"???")
 
       const response = await axios.post('http://10.0.2.2:8000/chat/message/messages',d);
-      console.log(response.data,"mSGSsssssssssssssss")
+   
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -60,17 +60,20 @@ export const sendMessage = createAsyncThunk(
     'chat/sendMessage',
     async ({ formData }, { rejectWithValue }) => {
       try {
-          console.log(formData,".................")
+      
           const response = await fetch(
             'http://10.0.2.2:8000/chat/message/sendMessages',
             {
               method: 'POST',
-              body: formData,
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body: JSON.stringify(formData),
             },
           );
           const data=await response.json()
-        console.log(data,"{{{{{{{{")
-        fetchMessages(formData)
+    
+        fetchMessages({formData})
        return data
         
       } catch (error) {

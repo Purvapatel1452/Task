@@ -11,6 +11,7 @@ import ExpenseScreen from '../screens/ExpenseScreen';
 import HomeScreen from '../screens/HomeScreen';
 import FriendsScreen from '../screens/FriendsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import GroupScreen from '../screens/GroupScreen';
 
 
 
@@ -19,17 +20,19 @@ const Stack=createNativeStackNavigator();
 
 const NavigationStack = () => {
 
-
   return (
     <Stack.Navigator
     screenOptions={{
-      headerShown: false,
-    }}>
-    <Stack.Screen name="Tab" component={TabNavigator} />
+      headerShown:false
+    }}
+    >
+    {/* <Stack.Screen name="Tab" component={TabNavigator} /> */}
+
+    <Stack.Screen name="GroupScreen" component={GroupScreen} />
 
     <Stack.Screen name="Qr" component={QrScreen} />
     
-    <Stack.Screen name="GroupChat" component={GroupChatScreen} />
+    <Stack.Screen name="GroupChat" component={GroupChatScreen}  />
 
     <Stack.Screen name="Expense" component={ExpenseScreen} />
 

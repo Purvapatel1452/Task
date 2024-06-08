@@ -1,10 +1,10 @@
 import React, { useContext,useEffect,useState } from 'react'
 
-import { Pressable, StyleSheet, Text, View,Image, Alert } from 'react-native'
+import { Pressable, StyleSheet, Text, View,Image, Alert, ActivityIndicator } from 'react-native'
 
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkFriendRequest, resetRequestSent, sendFriendRequest } from '../redux/slices/friendSlice'
+import { checkFriendRequest, sendFriendRequest } from '../redux/slices/friendSlice'
 import { current } from '@reduxjs/toolkit'
 
 
@@ -13,6 +13,15 @@ const User = ({item}:any) => {
     const dispatch=useDispatch()
     const {userId}=useSelector(state=>state.auth)
     const { requestSent, loading, error } = useSelector(state => state.friend);
+
+    const [load,setLoad]=useState(true);
+
+    setTimeout(()=>{
+
+        setLoad(false)
+        console.log(requestSent,item.name)
+
+    },3000)
 
 
   
@@ -41,13 +50,16 @@ const User = ({item}:any) => {
         if (userId) {
          
           dispatch(checkFriendRequest({userId,item}));
+          console.log(requestSent,"::::::::;",item.name)
         }
+
+    
     
         // Reset requestSent state when component unmounts
         // return () => {
         //   dispatch(resetRequestSent());
         // };
-      }, [dispatch, userId]);
+      }, []);
     
 
     // const sendFriendRequest=async(currentUserId: any,selectedUserId: any)=>{
@@ -98,7 +110,7 @@ const User = ({item}:any) => {
         try{
            
             dispatch(sendFriendRequest({ currentUserId:userId, selectedUserId:item._id }))
-
+            console.log(requestSent,"--------------",item.name)
 
         }
         catch(err){
@@ -133,7 +145,9 @@ const User = ({item}:any) => {
 
     </View>
 
-    {
+    {load?
+    <ActivityIndicator />
+    :
 
         requestSent?
         <Pressable 

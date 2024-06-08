@@ -433,7 +433,7 @@ const handleAddExpense = async () => {
 
        <TouchableOpacity 
        style={{position:'relative'}}
-       onPress={()=>navigation.navigate('Qr')} 
+       onPress={()=>navigation.navigate('Qr ')} 
        >
         <View style={styles.buttonContainer2}>
          <MaterialCommunityIcon name='qrcode-scan' size={23} color={'white'} />

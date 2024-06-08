@@ -279,7 +279,7 @@ const ChatScreen = () => {
         <Pressable>
           {combinedData.map((item, index) => (
             <UserChat key={index} item={item} navigateMessages={()=>{      
-              navigation.navigate('Payment')
+              navigation.navigate('Messages',{recepientId:item._id})
             }}/>
           ))}
         </Pressable>

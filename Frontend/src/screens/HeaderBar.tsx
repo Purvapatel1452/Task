@@ -27,6 +27,16 @@ const HeaderBar = ({title}) => {
                       
                         </View>
                         )
+                        case 'GroupChatScreen':
+                            return  ( 
+                                <View style={styles.headerContainer}>
+                          
+                           
+    
+                            <ProfilePic />
+                          
+                            </View>
+                            )
                 case 'Expense':
                 return  ( 
                     <View style={styles.headerContainer}>

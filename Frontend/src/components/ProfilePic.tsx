@@ -53,7 +53,7 @@ useEffect(()=>{
 
 
 if (loading) {
-  return <ActivityIndicator size="large" color="#0000ff" />;
+  return <ActivityIndicator size="small" color="silver" />;
 }
 
 if (error) {
@@ -65,7 +65,7 @@ if (error) {
   <TouchableOpacity onPress={()=>navigation.navigate("Profile",{data:details})} >
     <View style={styles.ImageContainer}>
       <Image 
-      source={require('../../assets/bg/bgImg.jpg')} 
+      source={{uri:details.image}} 
       style={styles.Image}
       />
     </View>
@@ -80,13 +80,13 @@ const styles=StyleSheet.create({
        width:36,
        borderRadius:12,
        borderColor:'black',
-       borderWidth:2,
+       borderWidth:1,
        alignItems:"center",
        justifyContent:"center",
        overflow:"hidden",
        shadowColor:'black',
-       shadowOpacity:22,
-       elevation:15
+       shadowOpacity:10,
+       elevation:5
        
 
     },

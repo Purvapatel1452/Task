@@ -78,6 +78,8 @@ export const sendFriendRequest = createAsyncThunk(
         selectedUserId
       });
 
+      console.log(response,"::::{{{{{{{")
+
     
      
       return selectedUserId; // return selected user ID to update the state
@@ -94,9 +96,9 @@ export const checkFriendRequest = createAsyncThunk(
     try {
    console.log("CHECKKCK")
       const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
-     
+  
       const req=response.data.sentFriendRequests.includes(item._id)
-      console.log(req,"REEEEQQQQQQQQQQQQ")
+     
   
       return req;
     } catch (error) {
@@ -183,6 +185,7 @@ const friendSlice = createSlice({
       .addCase(checkFriendRequest.fulfilled, (state, action) => {
         state.loading = false;
        state.requestSent=action.payload
+       console.log(state.requestSent,"<<>>")
         // state.requestSent = action.payload.sentFriendRequests.includes(action.meta.arg);
       })
       .addCase(checkFriendRequest.rejected, (state, action) => {

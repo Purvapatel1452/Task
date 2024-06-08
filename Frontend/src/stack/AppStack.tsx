@@ -10,6 +10,7 @@ import { login } from '../redux/slices/authSlice';
 
 import AuthStack from './AuthStack';
 import NavigationStack from './NavigationStack';
+import TabNavigator from '../navigations/TabNavigation';
 
 
 
@@ -66,12 +67,23 @@ const AppStack = () => {
     );
   }
 
+  // return (
+  //   <NavigationContainer>
+  //     {  
+  //        token && userId  
+  //        ?  
+  //        <NavigationStack /> 
+  //        : 
+  //        <AuthStack />
+  //     }
+  //   </NavigationContainer>
+  // );
   return (
     <NavigationContainer>
       {  
          token && userId  
          ?  
-         <NavigationStack /> 
+       <TabNavigator />
          : 
          <AuthStack />
       }

@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux'
 import { registerUser, sendOtp, setUserData, toggleShowOtpInput, verifyFields, verifyOtp } from '../redux/slices/signUpSlice'
 import Background from '../components/Background'
+import { TouchableOpacity } from 'react-native'
 
 const SignUp = () => {
 
@@ -395,8 +396,8 @@ useEffect(()=>{
                 placeholderTextColor={'gray'}
                 />
 
-<TouchableHighlight onPress={() => setShowPassword(!showPassword)}>
-      {userData.password.length <1 ? <Text></Text> : !showPassword ? (
+<TouchableOpacity activeOpacity={1} onPress={() => setShowPassword(!showPassword)}>
+      {userData.password.length <1 ? <Text></Text> : showPassword ? (
         <Feather
         name='eye-off'
         color={passwordVerify?'green':'red'}
@@ -414,7 +415,7 @@ useEffect(()=>{
         />
         
       )}
-    </TouchableHighlight>
+    </TouchableOpacity>
             </View>
             {
               userData.password.length<1?<Text></Text>:passwordVerify?<Text></Text>:(
