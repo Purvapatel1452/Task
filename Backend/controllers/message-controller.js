@@ -7,39 +7,80 @@ const User = require('../models/user');
 
 //endpoints to POST messages and to store it in the backend
 
-const messagess=async(req,res)=>{
+// const messagess=async(req,res)=>{
 
-    try{
+//     try{
 
-        console.log("***********")
-console.log('d',req.body,"???????????????")
-        const {senderId,recepientId,groupId,messageType,messageText}=req.body
-console.log(senderId,recepientId,messageType,messageText,"???")
-        const newMessage= new Message({
-            senderId,
-            recepientId,
-            groupId,
-            messageType,
-            message:messageText,
-            timestamp:new Date(),
-            imageUrl:messageType=='image'?req.file.path:null
-        })
+//         console.log("***********")
+// console.log('d',req.body,"???????????????")
+//         const {senderId,recepientId,groupId,messageType,messageText}=req.body
+        
+// console.log(senderId,recepientId,messageType,messageText,"???")
+//         const newMessage= new Message({
+//             senderId,
+//             recepientId,
+//             groupId,
+//             messageType,
+//             message:messageText,
+//             timestamp:new Date(),
+//             imageUrl:messageType=='image'?req.file.path:null
+//         })
  
-        console.log(newMessage,"NUU")
-        await newMessage.save();
+//         console.log(newMessage,"NUU")
+//         await newMessage.save();
       
-        console.log("GGG")
-        res.status(200).json(newMessage)
+//         console.log("GGG")
+//         res.status(200).json(newMessage)
 
-    }catch(err){
+//     }catch(err){
 
-        console.log("error in posting msg",err)
+//         console.log("error in posting msg",err)
 
-        res.status(500).json({message:"internal server error"})
+//         res.status(500).json({message:"internal server error"})
 
+//     }
+
+// }
+
+
+const messagess = async (req, res) => {
+    try {
+      const { senderId, recepientId, groupId, messageType, messageText,imageUrl } = req.body;
+  
+    //   let imageUrl = null;
+    //   if (messageType === 'image' && req.file) {
+    //     console.log(req.file,"FIIIIIIIIIIIIELLLLLLLLE")
+    //     const file = req.file;
+    //     const filePath = `chat/${Date.now()}_${file.originalname}`;
+    //     await bucket.upload(file.path, {
+    //       destination: filePath,
+    //       metadata: {
+    //         contentType: file.mimetype,
+    //       },
+    //     });
+  
+    //     imageUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+    //   }
+
+    console.log(req.body,"????????????????????",senderId)
+  
+      const newMessage = new Message({
+        senderId,
+        recepientId,
+        groupId,
+        messageType,
+        message: messageText,
+        timestamp: new Date(),
+        imageUrl: imageUrl,
+      });
+  
+      await newMessage.save();
+      res.status(200).json(newMessage);
+    } catch (err) {
+      console.log('error in posting msg', err);
+      res.status(500).json({ message: 'internal server error' });
     }
-
-}
+  };
 
 
 
