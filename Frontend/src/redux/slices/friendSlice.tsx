@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import axios from 'axios';
@@ -8,7 +9,8 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
+      console.log(BASE_URL,"ZKK")
+      const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch friends payment status');
       }
@@ -25,7 +27,8 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/chat/user/friend-request/${userId}`);
+      console.log(BASE_URL,"DXx")
+      const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -38,16 +41,16 @@ export const acceptFriendRequest = createAsyncThunk(
   'friendRequest/acceptFriendRequest',
   async ({friendRequestId,userId}, {  rejectWithValue }) => {
     
-   console.log(friendRequestId,userId,"???:::::::::::><>>")
-
+   console.log(friendRequestId,userId,"ZHH")
+   console.log(BASE_URL,"ZJJ")
     try {
       const d={
         senderId: friendRequestId,
         recepientId: userId
 
       }
-      console.log(d,"{{")
-      const response = await fetch("http://10.0.2.2:8000/chat/user/friend-request/accept", {
+  
+      const response = await fetch(`${BASE_URL}/user/friend-request/accept`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,9 +74,8 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
-      
-    
-      const response = await axios.post("http://10.0.2.2:8000/chat/user/friend-request", {
+      console.log(BASE_URL,"<MK:>")
+      const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
         selectedUserId
       });
@@ -94,9 +96,10 @@ export const checkFriendRequest = createAsyncThunk(
   'friendRequest/checkFriendRequest',
   async ({userId,item}, { rejectWithValue }) => {
     try {
-   console.log("CHECKKCK")
-      const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
-  
+
+      console.log(BASE_URL,"L:{")
+      const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
+    
       const req=response.data.sentFriendRequests.includes(item._id)
      
   

@@ -358,7 +358,7 @@ const ChatScreen = () => {
                 <Text style={styles.saveButtonText}>Groups</Text>
               </TouchableOpacity>
             </View>
-
+            <View style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5}}>
             <FlatList
               data={isGroup ? groups : friends}
               renderItem={({item}) => (
@@ -391,6 +391,7 @@ const ChatScreen = () => {
               )}
               keyExtractor={item => item._id}
             />
+            </View>
 
             <TouchableOpacity
               style={styles.saveButton}
@@ -489,10 +490,12 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginVertical:10
+
   },
   inputContainer1: {
     flexDirection: 'row',
+    marginVertical:10
   },
   input: {
     borderBottomWidth: 1,
@@ -516,8 +519,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderWidth: 1,
+    margin:7,
+    borderRadius:30,
+    height:60,
+    borderColor:"gray",
+    elevation:5,
+    backgroundColor:"white",
+    shadowColor:"black",
+    shadowOpacity:20
   },
   checkbox: {
     height: 24,

@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -5,7 +6,8 @@ export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/chat/user/users/${userId}`);
+      console.log(BASE_URL,"FEWDEddddddd*")
+      const response = await axios.get(`${BASE_URL}/user/users/${userId}`);
       return response.data; // Assuming the API response structure is correct
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -18,7 +20,8 @@ export const fetchUserDetails = createAsyncThunk(
     'profile/fetchUserDetails',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`http://10.0.2.2:8000/chat/user/userDetails/${userId}`);
+        console.log(BASE_URL,"M<<xxxxxxxxxxxm")
+        const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);

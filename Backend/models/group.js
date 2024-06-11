@@ -15,7 +15,7 @@ const groupSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'GroupExpense'
     }],
-    // Other group attributes
+
     description: String,
     created_at: {
         type: Date,
@@ -32,31 +32,4 @@ const groupSchema = new mongoose.Schema({
 const Group = mongoose.model('Group', groupSchema);
 
 module.exports = Group;
-
-// Group Expense Schema
-// const groupExpenseSchema = new mongoose.Schema({
-//     group: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Group',
-//         required: true
-//     },
-//     payer: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'User',
-//         required: true
-//     },
-//     amount: {
-//         type: Number,
-//         required: true
-//     },
-//     description: String,
-//     date: {
-//         type: Date,
-//         default: Date.now
-//     },
-//     // Add more attributes as needed
-// });
-
-// const GroupExpense = mongoose.model('GroupExpense', groupExpenseSchema);
-
 

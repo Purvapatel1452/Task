@@ -1,3 +1,4 @@
+import { BASE_URL } from "@env";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -6,9 +7,8 @@ import axios from "axios";
 export const sendOtp= createAsyncThunk('signUp/sendOtp',async(email,{rejectWithValue})=>{
     try{
 
-        
-console.log('___',email)
-        const response=await axios.post("http://10.0.2.2:8000/chat/user/send-otp",{email});
+      console.log(BASE_URL,"ZD#@")
+        const response=await axios.post(`${BASE_URL}/user/send-otp`,{email});
         console.log("*******",response)
         return response.data
 
@@ -22,8 +22,8 @@ console.log('___',email)
 
 export const verifyOtp=createAsyncThunk('signUp/verifyOtp',async({email,otp},{rejectWithValue})=>{
     try{
-
-        const response=await axios.post('http://10.0.2.2:8000/chat/user/verify-otp',{email,otp});
+      console.log(BASE_URL,"!@Q~")
+        const response=await axios.post(`${BASE_URL}/user/verify-otp`,{email,otp});
         return response.data;
 
     }
@@ -35,7 +35,8 @@ export const verifyOtp=createAsyncThunk('signUp/verifyOtp',async({email,otp},{re
 
 export const registerUser = createAsyncThunk('signUp/registerUser', async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://10.0.2.2:8000/chat/user/register', userData);
+      console.log(BASE_URL,"ZG^%$")
+      const response = await axios.post(`${BASE_URL}/user/register`, userData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);

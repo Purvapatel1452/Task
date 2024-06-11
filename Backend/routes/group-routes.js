@@ -1,12 +1,14 @@
-const express=require('express')
+const express = require("express");
 
-const { createGroup, getAllGroups }=require('../controllers/group-controller')
+const {
+  createGroup,
+  getAllGroups,
+} = require("../controllers/group-controller");
 
-const groupRouter=express.Router();
+const groupRouter = express.Router();
 
-groupRouter.post('/createGroup',createGroup)
+groupRouter.post("/createGroup", createGroup);
 
-groupRouter.get('/groups/:userId',getAllGroups)
+groupRouter.get("/groups/:userId", getAllGroups);
 
-
-module.exports=groupRouter
+module.exports = groupRouter;

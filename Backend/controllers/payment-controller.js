@@ -57,9 +57,6 @@ const stripWebhook = async (req, res) => {
     const paymentIntent = event.data.object;
     console.log("RRee", event.data.object);
 
-    // Store payment data in your database
-    // Example: Save paymentIntent.id or any other necessary data
-
     console.log("PaymentIntent was successful", paymentIntent);
   }
   if (event.type === "charge.succeeded") {

@@ -1,4 +1,5 @@
 // features/group/groupSlice.js
+import  {BASE_URL}  from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -6,7 +7,8 @@ export const fetchGroups = createAsyncThunk(
   'group/fetchGroups',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/chat/group/groups/${userId}`);
+      console.log("URL",BASE_URL,"H")
+      const response = await axios.get(`${BASE_URL}/group/groups/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -18,7 +20,8 @@ export const createGroup = createAsyncThunk(
   'group/createGroup',
   async (groupData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://10.0.2.2:8000/chat/group/createGroup', groupData);
+      console.log(BASE_URL,"V:_")
+      const response = await axios.post(`${BASE_URL}/group/createGroup`, groupData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -29,7 +32,8 @@ export const createGroup = createAsyncThunk(
 
 export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/chat/user/accepted-friends/${userId}`);
+      console.log(BASE_URL,"|}||")
+      const response = await axios.get(`${BASE_URL}/user/accepted-friends/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -40,10 +44,10 @@ export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userI
   export const fetchGroupExpenses = createAsyncThunk(
     'expense/fetchGroupExpenses',
     async (groupId, { rejectWithValue }) => {
-      console.log(groupId,"?????????????")
+      console.log(BASE_URL,"BH^$%^")
       try {
-        console.log(groupId,"--------------")
-        const response = await axios.get(`http://10.0.2.2:8000/chat/expense/groupExpenses/${groupId}`);
+        console.log(BASE_URL)
+        const response = await axios.get(`${BASE_URL}/expense/groupExpenses/${groupId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -56,7 +60,8 @@ export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userI
     'group/fetchGroupData',
     async (groupId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`http://10.0.2.2:8000/chat/message/group/${groupId}`);
+        console.log(BASE_URL,"CVG")
+        const response = await axios.get(`${BASE_URL}/message/group/${groupId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);

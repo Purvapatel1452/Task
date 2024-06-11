@@ -1,5 +1,6 @@
 /Backend/node_modules
 /Backend/files
 
-/Chat/node_modules
-/Chat/assets
+/Frontend/node_modules
+/Frontend/.env
+

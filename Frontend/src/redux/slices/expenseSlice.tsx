@@ -1,11 +1,12 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Thunk for fetching expense details
 export const fetchExpense = createAsyncThunk('expense/fetchExpense', async (expenseId, { rejectWithValue }) => {
-  try {
-    console.log("EXPPPPP")
-    const response = await axios.get(`http://10.0.2.2:8000/chat/expense/expense/${expenseId}`);
+  try {console.log(BASE_URL,"ZMM")
+   
+    const response = await axios.get(`${BASE_URL}/expense/expense/${expenseId}`);
     const expenseData = response.data;
 
     // Set current user's payment status as paid
@@ -25,7 +26,8 @@ export const fetchExpense = createAsyncThunk('expense/fetchExpense', async (expe
 // Thunk for updating payment status
 export const updatePaymentStatus = createAsyncThunk('expense/updatePaymentStatus', async ({ expenseId, participantId, paid }, { rejectWithValue }) => {
   try {
-    await axios.post(`http://10.0.2.2:8000/chat/expense/paymentStatus`, { expenseId, participantId, paid });
+    console.log(BASE_URL,"H[]")
+    await axios.post(`${BASE_URL}/expense/paymentStatus`, { expenseId, participantId, paid });
     return { participantId, paid };
   } catch (error) {
     return rejectWithValue(error.response.data);

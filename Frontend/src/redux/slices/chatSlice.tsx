@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -7,6 +8,7 @@ export const fetchMessages = createAsyncThunk(
   async ({ userId, groupId,recepientId }, { rejectWithValue }) => {
     try {
 let d=null
+console.log(BASE_URL,"KKAAZZ")
 if(recepientId){
   
   d={
@@ -29,9 +31,9 @@ if(recepientId){
 
 }
 
-console.log(d,"???")
 
-      const response = await axios.post('http://10.0.2.2:8000/chat/message/messages',d);
+
+      const response = await axios.post(`${BASE_URL}/message/messages`,d);
    
       return response.data;
     } catch (error) {
@@ -60,9 +62,9 @@ export const sendMessage = createAsyncThunk(
     'chat/sendMessage',
     async ({ formData }, { rejectWithValue }) => {
       try {
-      
+        console.log(BASE_URL,"MN")
           const response = await fetch(
-            'http://10.0.2.2:8000/chat/message/sendMessages',
+            `${BASE_URL}/message/sendMessages`,
             {
               method: 'POST',
               headers:{

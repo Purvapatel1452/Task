@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -6,7 +7,8 @@ export const fetchRecipientData = createAsyncThunk(
   'recipient/fetchRecipientData',
   async (recepientId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/chat/message/user/${recepientId}`);
+      console.log(BASE_URL,"Z##")
+      const response = await axios.get(`${BASE_URL}/message/user/${recepientId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -19,9 +21,9 @@ export const fetchUserExpenses = createAsyncThunk(
     'expenses/fetchUserExpenses',
     async ({ userId, recepientId }, { rejectWithValue }) => {
       try {
-        console.log(userId,"::::::::::::",recepientId)
+        console.log(BASE_URL,"{B^")
 
-        const response = await axios.get(`http://10.0.2.2:8000/chat/expense/userExpenses/${userId}/${recepientId}`);
+        const response = await axios.get(`${BASE_URL}/expense/userExpenses/${userId}/${recepientId}`);
        
      
         return response.data;

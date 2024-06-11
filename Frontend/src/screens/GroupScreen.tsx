@@ -1,5 +1,5 @@
 
-import { ActivityIndicator, Alert, FlatList, Image, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 
 import GroupBox from '../components/GroupBox'
@@ -17,6 +17,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createGroup, fetchFriends, fetchGroups } from '../redux/slices/groupSlice'
 import { addExpense } from '../redux/slices/expensesSlice'
 import { fetchUsers } from '../redux/slices/usersSlice'
+import Feather from 'react-native-vector-icons/Feather'
+import Modall from 'react-native-modal';
+import ImagePicker, { openCamera } from 'react-native-image-crop-picker';
+import FastImage from 'react-native-fast-image'
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 
 interface GroupScreenProps {
@@ -54,9 +60,11 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const [expenseSelect,setExpenseSelect]=useState([])
   const [expenseSelectedFrnds,setExpenseSelectedFrnds]=useState([])
   const [isGroup,setIsGroup]=useState(false)
+  const [isModalVisible,setModalVisible]=useState(false)
 
   const [expenseSelectGroup,setExpenseSelectGroup]=useState('')
   const [type,setType]=useState('')
+  const [image,setImage]=useState(null)
 
 
 
@@ -112,11 +120,17 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
       return Alert.alert('Please enter Mandatory details !!!');
     }
 
+      
     const groupData = {
       name: groupName,
       description: groupDescription,
       members: [...selectedFriends, userId],
+    
+
     };
+
+    
+
 
     dispatch(createGroup(groupData)).then((response) => {
       if (response.meta.requestStatus === 'fulfilled') {
@@ -316,7 +330,38 @@ const handleAddExpense = async () => {
   //    catch(error) {
   //     console.log("internal server problem", error);
   //   }
-  // };
+//}
+
+  
+  const pickImage = async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+      });
+      const source = { uri: image.path };
+      setImage(source);
+    } catch (error) {
+      console.log('Error in selecting image:', error);
+    }
+  };
+
+  const pickCamera = async() => {
+    try {
+      const image = await ImagePicker.openCamera({
+        width: 300,
+        height: 400,
+        cropping: true,
+      });
+      const source = { uri: image.path };
+console.log(source)
+      setImage(source);
+      
+    } catch (error) {
+      console.log('Error in capturing photo:', error);
+    }
+  };
 
 
   const handleModel = async () => {
@@ -455,13 +500,14 @@ const handleAddExpense = async () => {
            <View style={styles.modalContent}>
            <View style={styles.inputContainer}>
            <MaterialIcons name='edit-note' size={50} style={{borderWidth:0.5,borderBottomWidth:3,borderRadius:10,borderColor:'gray'}} color={'#D77702'} />
-           <TextInput style={styles.input} placeholder='Group Name' value={groupName} onChangeText={setGroupName} />
-             </View>
+           <TextInput style={styles.input1} placeholder='Group Name' value={groupName} onChangeText={setGroupName} />
+          </View>
              <View style={styles.inputContainer}>
            <MaterialCommunityIcons name='cash' size={45} style={{padding:3,borderWidth:0.5,borderBottomWidth:3,borderRadius:10,borderColor:'gray'}} color={'#D77702'} />
            <TextInput style={[styles.input, styles.textArea]} placeholder='Group Description' multiline numberOfLines={4} value={groupDescription} onChangeText={setGroupDescription} />
              </View>
              <Text style={styles.label}>Select Friends:</Text>
+             <View style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5}}>
              <FlatList
               data={friends}
               renderItem={({ item }) => (
@@ -481,6 +527,7 @@ const handleAddExpense = async () => {
               )}
               keyExtractor={(item) => item._id}
             />
+            </View>
             <TouchableOpacity 
             style={styles.saveButton}
             onPress={()=>handleCreateGroup()}
@@ -493,6 +540,8 @@ const handleAddExpense = async () => {
           </View>
         </View>
       </Modal>
+
+      
 
       <Modal animationType="fade" transparent={true} visible={showExpenseModal}>
         <View style={styles.modalContainer}>
@@ -551,7 +600,7 @@ const handleAddExpense = async () => {
                 <Text style={styles.saveButtonText}>Groups</Text>
               </TouchableOpacity>
             </View>
-
+<View  style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5,margin:5}}>
             <FlatList
               data={isGroup ? groups : friends}
               renderItem={({item}) => (
@@ -584,6 +633,7 @@ const handleAddExpense = async () => {
               )}
               keyExtractor={item => item._id}
             />
+            </View>
 
             <TouchableOpacity
               style={styles.saveButton}
@@ -705,6 +755,16 @@ const styles = StyleSheet.create({
     width:250,
     marginLeft:2
   },
+  input1: {
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    width:250,
+    marginLeft:2,
+    marginRight:50
+  },
   textArea: {
     height:41,
   },
@@ -718,8 +778,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderWidth: 1,
+    margin:7,
+    borderRadius:30,
+    height:60,
+    borderColor:"gray",
+    elevation:5,
+    backgroundColor:"white",
+    shadowColor:"black",
+    shadowOpacity:20
+
   },
   checkbox: {
     height: 24,
@@ -770,8 +838,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image: {
-    height: 50,
-    width: 50,
+    height: 40,
+    width: 40,
     borderRadius: 25,
     resizeMode: "cover",
   },
@@ -810,6 +878,18 @@ const styles = StyleSheet.create({
   },
   inputContainer1: {
     flexDirection: 'row',
+  },
+  modalOption: {
+    fontSize: 18,
+    padding: 5,
+    textAlign: 'center',
+  },
+  iconContainer1: {
+    backgroundColor: 'silver',
+    borderRadius: 50,
+    padding: 15,
+    
+  
   },
 });
 

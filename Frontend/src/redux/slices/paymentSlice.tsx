@@ -1,10 +1,12 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchPaymentIntent = createAsyncThunk(
   'payment/fetchPaymentIntent',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/chat/payments/intents', {
+      console.log(BASE_URL,"ZZX")
+      const response = await fetch(`${BASE_URL}/payments/intents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +31,8 @@ export const createPaymentIntent = createAsyncThunk(
   'payment/createPaymentIntent',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/chat/payments/create-payment-intent', {
+      console.log(BASE_URL,"VFR")
+      const response = await fetch(`${BASE_URL}/payments/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,38 +1,44 @@
-const express=require('express')
+const express = require("express");
 
-const { registerUser, loginUser, getUsers, friendRequest, friendRequestList, acceptFriendRequest, friends, sendOtp, verifyOtp, friendsPaymentStatus, getUserDetails, uploadImage } = require('../controllers/user-controller')
+const {
+  registerUser,
+  loginUser,
+  getUsers,
+  friendRequest,
+  friendRequestList,
+  acceptFriendRequest,
+  friends,
+  sendOtp,
+  verifyOtp,
+  friendsPaymentStatus,
+  getUserDetails,
+  uploadImage,
+} = require("../controllers/user-controller");
 
+const router = express.Router();
 
+router.post("/register", registerUser);
 
+router.post("/send-otp", sendOtp);
 
-const router=express.Router()
+router.post("/verify-otp", verifyOtp);
 
+router.post("/login", loginUser);
 
-router.post('/register',registerUser)
+router.post("/uploadImage", uploadImage);
 
-router.post('/send-otp',sendOtp)
+router.get("/userDetails/:userId", getUserDetails);
 
-router.post('/verify-otp',verifyOtp)
+router.get("/users/:userId", getUsers);
 
-router.post("/login",loginUser)
+router.post("/friend-request", friendRequest);
 
-router.post("/uploadImage",uploadImage)
+router.get("/friend-request/:userId", friendRequestList);
 
-router.get("/userDetails/:userId",getUserDetails)
+router.post("/friend-request/accept", acceptFriendRequest);
 
-router.get('/users/:userId',getUsers)
+router.get("/accepted-friends/:userId", friends);
 
-router.post("/friend-request",friendRequest)
+router.get("/friendsPaymentStatus/:userId", friendsPaymentStatus);
 
-router.get("/friend-request/:userId",friendRequestList)
-
-router.post("/friend-request/accept",acceptFriendRequest)
-
-router.get("/accepted-friends/:userId",friends)
-
-router.get("/friendsPaymentStatus/:userId",friendsPaymentStatus)
-
-
-
-module.exports=router
-
+module.exports = router;

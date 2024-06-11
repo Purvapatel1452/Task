@@ -30,8 +30,10 @@ import { fetchMessages, sendMessage } from '../redux/slices/chatSlice';
 import { fetchGroupData, fetchGroupExpenses } from '../redux/slices/groupSlice';
 import storage from '@react-native-firebase/storage';
 import Modal from 'react-native-modal';
+import { BASE_URL } from '@env';
 
 const GroupChatScreen = ({navigation}: any) => {
+  console.log(BASE_URL)
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
 
   const route = useRoute();
@@ -50,6 +52,7 @@ const GroupChatScreen = ({navigation}: any) => {
   const {userId}=useSelector(state=>state.auth)
   const {messages,loading,error}=useSelector((state)=>state.chat)
   const {groupExpenses,groupData,loading:expenseLoading,error:expenseError}=useSelector((state)=>state.group)
+  
 
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
@@ -504,8 +507,8 @@ if (messageType == 'image') {
       });
   };
 
-  const pickCamera = () => {
-    ImagePicker.openCamera({
+  const pickCamera = async() => {
+    await ImagePicker.openCamera({
       width: 300,
       height: 400,
       cropping: true,

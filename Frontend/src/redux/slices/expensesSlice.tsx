@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -5,7 +6,8 @@ export const addExpense = createAsyncThunk(
   'expense/addExpense',
   async (expenseData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://10.0.2.2:8000/chat/expense/addExpense', expenseData);
+      console.log(BASE_URL,"N>>")
+      const response = await axios.post(`${BASE_URL}/expense/addExpense`, expenseData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -18,14 +20,13 @@ export const fetchExpenses = createAsyncThunk(
     'expense/fetchExpenses',
     async ({ userId, expenseType,type }, { rejectWithValue }) => {
       try {
-        console.log(userId,".....",type)
-        console.log(userId,"????",expenseType)
+        console.log(BASE_URL,"??")
         if(type!==undefined){
           expenseType=''
 
         }
-       
-        const response = await axios.get(`http://10.0.2.2:8000/chat/expense/expenses/${userId}?expenseType=${expenseType}`);
+
+        const response = await axios.get(`${BASE_URL}/expense/expenses/${userId}?expenseType=${expenseType}`);
         console.log(response.data.expenses,">>>>>>>>>>>>>")
         let list=[];
             if(type=='settled'){

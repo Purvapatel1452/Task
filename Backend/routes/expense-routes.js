@@ -1,24 +1,25 @@
-const express=require('express');
-const { addExpense, expenses, expense, updatePaymentStatus, getGroupExpenses, userExpenses } = require('../controllers/expense-controller');
+const express = require("express");
+const {
+  addExpense,
+  expenses,
+  expense,
+  updatePaymentStatus,
+  getGroupExpenses,
+  userExpenses,
+} = require("../controllers/expense-controller");
 
-const expenseRouter=express.Router();
+const expenseRouter = express.Router();
 
+expenseRouter.post("/addExpense", addExpense);
 
+expenseRouter.get("/expenses/:userId", expenses);
 
-expenseRouter.post('/addExpense',addExpense)
+expenseRouter.get("/expense/:expenseId", expense);
 
-expenseRouter.get('/expenses/:userId',expenses)
+expenseRouter.post("/paymentStatus", updatePaymentStatus);
 
-expenseRouter.get('/expense/:expenseId',expense)
+expenseRouter.get("/groupExpenses/:groupId", getGroupExpenses);
 
-expenseRouter.post('/paymentStatus',updatePaymentStatus)
+expenseRouter.get("/userExpenses/:userId/:friendId", userExpenses);
 
-expenseRouter.get('/groupExpenses/:groupId',getGroupExpenses)
-
-expenseRouter.get('/userExpenses/:userId/:friendId',userExpenses)
-
-
-
-
-
-module.exports=expenseRouter
+module.exports = expenseRouter;
