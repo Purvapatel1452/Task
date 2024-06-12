@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import User from '../components/User'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { createGroup, fetchFriends, fetchGroups } from '../redux/slices/groupSlice'
+import { createGroup, fetchFriends, fetchGroupPaymentStatus, fetchGroups } from '../redux/slices/groupSlice'
 import { addExpense } from '../redux/slices/expensesSlice'
 import { fetchUsers } from '../redux/slices/usersSlice'
 import Feather from 'react-native-vector-icons/Feather'
@@ -23,6 +23,7 @@ import ImagePicker, { openCamera } from 'react-native-image-crop-picker';
 import FastImage from 'react-native-fast-image'
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
+import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice'
 
 
 interface GroupScreenProps {
@@ -49,8 +50,9 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const {userId}=useSelector(state=>state.auth)
   const { groups, loading: groupLoading, error: groupError } = useSelector(state => state.group);
   const { friends, loading: friendLoading, error: friendError } = useSelector(state => state.group);
-
+  const {groupPaymentStatus,loading:groupStatusLoading,error:groupStatusError}=useSelector(state=>state.group)
   const { loading: expenseLoading, error: expenseError } = useSelector(state => state.expense);
+  const { paymentStatus, loading, error } = useSelector(state => state.friend);
 
 
 
@@ -434,10 +436,72 @@ console.log(source)
   // }, []);
 
   useEffect(() => {
-    if (userId) {
+  
       dispatch(fetchGroups(userId));
-    }
+      console.log("NNNOOWOW")
+      dispatch(fetchFriends(userId))
+      dispatch(fetchFriendsPaymentStatus(userId))
+      dispatch(fetchGroupPaymentStatus(userId));
+      console.log("SJJJJJJJJJJJJJ")
+  
   }, [dispatch, userId]);
+
+
+  // const combineData = () => {
+  //   const combinedGroups = groups.map(group => {
+  //     let groupOwesMe = 0;
+  //     let iOweGroup = 0;
+  
+  //     const membersDetails = group.members.map(member => {
+      
+  //     //   const friend = friends.find(friend => friend._id === memberId);
+     
+  //     //   return friend ? {
+  //     //     ...friend,
+  //     //     friendOwesMe: friend.friendOwesMe || 0,
+  //     //     iOweFriend: friend.iOweFriend || 0
+  //     //   } : null;
+  //     member.map(friend => {
+  //       const paymentStatusForFriend = paymentStatus.find(
+  //         status => status.friendId === friend._id,
+  //       );
+  //       return {
+  //         ...friend,
+  //         friendOwesMe: paymentStatusForFriend
+  //           ? paymentStatusForFriend.friendOwesMe
+  //           : 0,
+  //         iOweFriend: paymentStatusForFriend
+  //           ? paymentStatusForFriend.iOweFriend
+  //           : 0,
+  //       };
+      
+  //     }).filter(member => member !== null);
+    
+  //     membersDetails.forEach(member => {
+  //       groupOwesMe += member.friendOwesMe;
+  //       iOweGroup += member.iOweFriend;
+  //     });
+
+   
+  
+  //     return {
+  //       ...group,
+  //       membersDetails: membersDetails,
+  //       groupOwesMe: groupOwesMe,
+  //       iOweGroup: iOweGroup
+  //     };
+  // });
+  
+  //   return combinedGroups;
+  // })
+  // }
+  
+  // const combinedData = combineData();
+
+  
+ 
+
+
 
   return (
 
@@ -654,6 +718,9 @@ console.log(source)
    
   );
 };
+
+export default GroupScreen;
+
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -893,5 +960,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GroupScreen;
+
 

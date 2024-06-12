@@ -1,5 +1,6 @@
 const Group = require("../models/group");
 const User = require("../models/user");
+const Expense=require('../models/expense')
 
 const createGroup = async (req, res) => {
   try {
@@ -81,7 +82,75 @@ const getAllGroups = async (req, res) => {
   }
 };
 
+
+
+
+
+const fetchGroupPaymentStatus = async (req, res) => {
+  try {
+    console.log("PAUY")
+    const { userId } = req.params;
+    console.log(userId, "********");
+
+    // Find the user and populate their groups
+    const user = await User.findById(userId).populate("groups");
+
+    const userGroups = user.groups;
+    const groupPaymentStatus = [];
+
+    for (const group of userGroups) {
+      const expenses = await Expense.find({
+        groupId: group._id,
+        participants: userId,
+      });
+
+      let groupOwesMe = 0;
+      let iOweGroup = 0;
+
+      expenses.forEach((expense) => {
+        expense.payments.forEach((payment) => {
+          console.log(
+            payment.participant._id.toString(),
+            userId,
+            "+++++++++++",
+            expense.payerId._id.toString(),
+            group._id.toString()
+          );
+          if (
+            payment.participant._id.toString() === userId &&
+            !payment.paid
+          ) {
+            iOweGroup += payment.amount;
+            console.log("IIIIIII");
+          } else if (
+            expense.payerId._id.toString() === userId &&
+            !payment.paid
+          ) {
+            groupOwesMe += payment.amount;
+            console.log("ffffffffffff");
+          }
+        });
+      });
+
+      groupPaymentStatus.push({
+        groupId: group._id,
+        groupName: group.name,
+        groupOwesMe,
+        iOweGroup,
+      });
+    }
+
+    res.status(200).json(groupPaymentStatus);
+  } catch (error) {
+    console.log("Error in internal server", error);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
+
+
 module.exports = {
   createGroup,
   getAllGroups,
+  fetchGroupPaymentStatus
 };

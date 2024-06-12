@@ -17,6 +17,23 @@ interface GroupBoxProps {
 const GroupBox: React.FC<GroupBoxProps> = ({ item }) => {
   const navigation = useNavigation<NavigationProp<any>>();
 
+
+
+  const netBalance = item.groupOwesMe - item.iOweGroup;
+  let paymentStatusMessage = '';
+  let amount = '';
+
+  if (netBalance > 0) {
+    paymentStatusMessage = `owes you `;
+    amount = `₹${netBalance.toFixed(2)}`;
+  } else if (netBalance < 0) {
+    paymentStatusMessage = `you owe `;
+    amount = `₹${Math.abs(netBalance).toFixed(2)}`;
+  } else if (netBalance === 0) {
+    paymentStatusMessage = `settled up`;
+  }
+
+
   return (
     <Pressable
       onPress={() => navigation.navigate('GroupChat', { groupId: item._id })}
@@ -27,7 +44,7 @@ const GroupBox: React.FC<GroupBoxProps> = ({ item }) => {
         <Text style={styles.textLast}>{item.description}</Text>
       </View>
       <View>
-        <Text style={styles.textTime}>{item.created_at}</Text>
+        <Text style={styles.textTime}>{amount}</Text>
       </View>
     </Pressable>
   );
