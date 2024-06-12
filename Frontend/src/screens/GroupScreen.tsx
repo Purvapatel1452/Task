@@ -22,7 +22,7 @@ import Modall from 'react-native-modal';
 import ImagePicker, { openCamera } from 'react-native-image-crop-picker';
 import FastImage from 'react-native-fast-image'
 import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice'
 
 
@@ -508,7 +508,9 @@ console.log(source)
     <View style={{flex:1,backgroundColor:'#f8f8f8'}}>
          
   
-      <StatusBar backgroundColor={'#D77702'} />
+      {/* <StatusBar backgroundColor={'#D77702'} /> */}
+      <StatusBar backgroundColor="red" barStyle="dark-content" />
+
 
       <HeaderBar title={"GroupScreen"} />
     

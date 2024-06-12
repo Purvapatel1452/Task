@@ -25,7 +25,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import * as Progress from 'react-native-progress';
 import FastImage from 'react-native-fast-image';
 import {fetchUserDetails} from '../redux/slices/usersSlice';

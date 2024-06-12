@@ -413,7 +413,7 @@ const friendsPaymentStatus = async (req, res) => {
         iOweFriend,
       });
     }
-
+console.log(friendsWithPendingPaytmets,"PPPPPPPPPPpp")
     res.status(200).json(friendsWithPendingPaytmets);
   } catch (error) {
     console.log("Error in internal server", error);

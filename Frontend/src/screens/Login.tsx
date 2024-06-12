@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     width: 320,
-    marginTop: 180,
+    marginTop: 250,
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 30,
