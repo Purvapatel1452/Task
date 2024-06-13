@@ -45,7 +45,7 @@ const createToken = (userId) => {
   };
 
   const token = jwt.sign(payload, "Purv@ p@tel", { expiresIn: "1h" });
-  console.log("TOKEN", token);
+
 
   return token;
 };
@@ -55,7 +55,7 @@ const registerUser = async (req, res) => {
   const { name, email, mobile, password } = req.body;
 
   const oldUser = await User.findOne({ email: email });
-  console.log(oldUser);
+
   if (oldUser) {
     return res.status(400).json({ message: "User alredy exist" });
   }
@@ -87,7 +87,7 @@ const registerUser = async (req, res) => {
 //verify Mobile no through OTP
 
 const sendOtp = async (req, res) => {
-  console.log("OTP");
+
 
   const { email } = req.body;
 
@@ -142,7 +142,7 @@ const verifyOtp = async (req, res) => {
 const loginUser = async (req, res) => {
   console.log("hii");
   const { email, password } = req.body;
-  console.log(req.body);
+
 
   if (!email || !password) {
     return res
@@ -303,11 +303,9 @@ const acceptFriendRequest = async (req, res) => {
   try {
     console.log("R");
     const { senderId, recepientId } = req.body;
-    console.log(senderId, recepientId, "::::::::");
-
     const sender = await User.findById(senderId);
     const recepient = await User.findById(recepientId);
-    console.log(recepientId, ":::::::;");
+  
     sender.friends.push(recepientId);
     recepient.friends.push(senderId);
 
@@ -354,7 +352,7 @@ const friends = async (req, res) => {
 const friendsPaymentStatus = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId, "********");
+  
 
     const user = await User.findById(userId).populate("friends");
 
@@ -381,14 +379,9 @@ const friendsPaymentStatus = async (req, res) => {
       let iOweFriend = 0;
 
       expenses.forEach((expense) => {
+        console.log(expense,"??")
         expense.payments.forEach((payment) => {
-          console.log(
-            payment.participant._id.toString(),
-            userId,
-            "+++++++++++",
-            expense.payerId._id.toString(),
-            friend._id.toString()
-          );
+        
           if (
             payment.participant._id.toString() === friend._id.toString() &&
             expense.payerId._id.toString() === userId &&
@@ -413,7 +406,7 @@ const friendsPaymentStatus = async (req, res) => {
         iOweFriend,
       });
     }
-console.log(friendsWithPendingPaytmets,"PPPPPPPPPPpp")
+
     res.status(200).json(friendsWithPendingPaytmets);
   } catch (error) {
     console.log("Error in internal server", error);

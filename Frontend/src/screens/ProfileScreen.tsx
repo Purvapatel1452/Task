@@ -134,14 +134,40 @@ const ProfileScreen = () => {
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={'#D77702'} />
 
-      {/* <HeaderBar title={'Profile'} /> */}
-
       <View style={{alignItems: 'center'}}>
-        <View style={{flex:1}}>
-          <ImageBackground source={{uri:'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp'}} style={{height:250,width:width,position: "relative",}} >
+        {/* <View style={{flex:1,position:"absolute"}}>
+          <View     style={{position:"relative",marginTop:10,backgroundColor:"rgba(0, 0, 0, 0.37)"}}>
+        <IonIcons
+              name="arrow-back-sharp"
+              size={28}
+              color={'black'}
+          
+
+              onPress={() => navigation.goBack()}
+            />
+            </View>
+       
+          <ImageBackground source={{uri:'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp'}} style={{height:height*0.25,width:width,position: "relative",}} >
           <View style={styles.overlay} />
           </ImageBackground>
-        </View>
+        </View> */}
+         <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, position: "relative" }}>
+        <ImageBackground
+          source={{ uri: 'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp' }}
+          style={{ height: height * 0.24, width: width }}
+        >
+          <View style={styles.overlay} />
+          <IonIcons
+            name="arrow-back-sharp"
+            size={28}
+            color={'white'}
+            style={styles.icon}
+            onPress={() => navigation.goBack()}
+          />
+        </ImageBackground>
+      </View>
+    </View>
         <View style={styles.contentContainer}>
           {loading ? (
             <ActivityIndicator size={30} style={{height: 190}} />
@@ -292,7 +318,7 @@ const ProfileScreen = () => {
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 
 export default ProfileScreen;
 
@@ -303,7 +329,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:170
+    marginTop:height*0.15
   },
   add: {
     borderWidth: 1,
@@ -312,18 +338,18 @@ const styles = StyleSheet.create({
     width: 40,
     backgroundColor: 'silver',
     marginLeft: 110,
-    marginTop: -28,
+    marginTop: -34,
   },
   profileImage: {
-    height: 178,
-    width: 178,
+    height: height*0.2,
+    width: width*0.4,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'gray',
   },
   profileImage1: {
-    height: 150,
-    width: 170,
+    height: height*0.2,
+    width: height*0.2,
     borderRadius: 100,
     color: 'gray',
     justifyContent: 'center',
@@ -339,52 +365,54 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     borderColor: 'silver',
     borderWidth: 1,
-    height: 180,
-    width: 180,
+    height: height*0.2,
+    width: height*0.2,
     backgroundColor: '#F2F2F2',
     marginTop: -10,
   },
   name: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 16,
 
     fontWeight: 'bold',
   },
   email: {
     color: 'gray',
-    fontSize: 18,
+    fontSize: 14,
   },
   nameLogo: {
     color: 'black',
-    fontSize: 30,
-    marginTop: 30,
+    fontSize: 25,
+    marginTop: height*0.03,
     marginLeft: width * 0.04,
     fontWeight: 'bold',
   },
   mobileLogo: {
     color: 'black',
-    fontSize: 35,
-    marginTop: 30,
+    fontSize: 30,
+    marginTop: height*0.034,
     marginRight: 6,
   
     fontWeight: 'bold',
     marginLeft: width * 0.06,
   },
   nameContainer: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderRadius: 10,
     borderColor: 'orange',
-    elevation: 5,
+  
     shadowColor: 'black',
     backgroundColor: 'white',
-    width: 270,
+    width: 100,
     marginTop: 20,
-    height: 50,
+    height: height*0.05,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
+    alignItems: 'flex-start',
+    paddingLeft:10,
+    paddingTop:5,
+   
     flex:1,
-    marginRight: width * 0.05,
+    marginRight: width * 0.09,
   },
   logOutContainer: {
     marginTop:20,
@@ -429,8 +457,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imageBox: {
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     marginVertical: 10,
     borderRadius: 120,
   },
@@ -451,5 +479,10 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)', // Adjust the opacity to make the image look dull
+  },
+  icon: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
   },
 });

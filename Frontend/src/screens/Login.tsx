@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   StatusBar,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -163,6 +164,8 @@ const Login: React.FC<LoginProps> = (props) => {
   );
 };
 
+const { height } = Dimensions.get('window');
+
 export default Login;
 
 const styles = StyleSheet.create({
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     width: 320,
-    marginTop: 250,
+    marginTop: height*0.25,
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 30,

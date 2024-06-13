@@ -28,8 +28,8 @@ export const login = createAsyncThunk<LoginResponse, UserData, { rejectValue: st
   async (userData, { rejectWithValue }) => {
     try {
       console.log('LOGI');
-      console.log(BASE_URL, 'c7777776565hvhgf777');
-      console.log(BASE_URL, 'c;;tu]]]]3r');
+      console.log(BASE_URL, 'c7ll');
+      console.log(BASE_URL, 'c]3r');
       const response = await axios.post(`${BASE_URL}/user/login`, userData);
       const token = response.data.data;
 

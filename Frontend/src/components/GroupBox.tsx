@@ -16,7 +16,7 @@ interface GroupBoxProps {
 
 const GroupBox: React.FC<GroupBoxProps> = ({ item }) => {
   const navigation = useNavigation<NavigationProp<any>>();
-
+  const { name, description, groupOwesMe, iOweGroup } = item;
 
 
   const netBalance = item.groupOwesMe - item.iOweGroup;
@@ -34,6 +34,7 @@ const GroupBox: React.FC<GroupBoxProps> = ({ item }) => {
   }
 
 
+
   return (
     <Pressable
       onPress={() => navigation.navigate('GroupChat', { groupId: item._id })}
@@ -43,8 +44,26 @@ const GroupBox: React.FC<GroupBoxProps> = ({ item }) => {
         <Text style={styles.textName}>{item.name}</Text>
         <Text style={styles.textLast}>{item.description}</Text>
       </View>
-      <View>
-        <Text style={styles.textTime}>{amount}</Text>
+      <View style={styles.paymentStatusContainer}>
+        <Text
+          style={[
+            styles.paymentStatus,
+            { color: netBalance >= 0 ? 'green' : 'red' },
+          ]}>
+          {'    '}
+          {paymentStatusMessage}
+        </Text>
+        <Text
+          style={[
+            styles.paymentStatus,
+            {
+              color: netBalance >= 0 ? 'green' : 'red',
+              fontWeight: '500',
+              fontSize: 14.5,
+            },
+          ]}>
+          {amount}
+        </Text>
       </View>
     </Pressable>
   );
@@ -86,6 +105,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
     color: '#585858',
+  },
+  paymentStatusContainer: {
+    marginTop: 2,
+    alignItems: 'center',
+  },
+  paymentStatus: {
+    fontSize: 12,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });
 

@@ -57,19 +57,12 @@ const HeaderBar = ({title}) => {
           </View>
         );
 
-      case 'Profile':
-        return (
-          <View style={styles.headerContainer}>
-            <IonIcons
-              name="arrow-back-sharp"
-              size={28}
-              color={'white'}
-              onPress={() => navigation.goBack()}
-            />
-            <Text style={styles.headerText}>Profile</Text>
-            <Text> </Text>
-          </View>
-        );
+      // case 'Profile':
+      //   return (
+        
+            
+         
+      //   );
       case 'GroupScreen':
         return (
           <View style={styles.headerContainer}>
@@ -126,7 +119,7 @@ export default HeaderBar;
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: '#D77702',
-
+position:"relative",
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',

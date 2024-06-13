@@ -1,6 +1,7 @@
 import {
   Alert,
   Button,
+  Dimensions,
   Image,
   KeyboardAvoidingView,
   Modal,
@@ -466,6 +467,8 @@ const SignUp = () => {
   );
 };
 
+const { height } = Dimensions.get('window');
+
 export default SignUp;
 
 const styles = StyleSheet.create({
@@ -526,7 +529,7 @@ const styles = StyleSheet.create({
 
   loginContainer: {
     width: 320,
-    marginTop: 150,
+    marginTop:  height*0.18,
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 30,

@@ -500,6 +500,56 @@ console.log(source)
 
   
  
+  // const combineData = () => {
+  //   const combinedGroups = groups.map(group => {
+  //     let groupOwesMe = 0;
+  //     let iOweGroup = 0;
+
+  //     const membersDetails = group.members.map(member => {
+  //       const paymentStatusForFriend = paymentStatus.find(
+  //         status => status.friendId === member._id,
+  //       );
+  //       return {
+  //         ...member,
+  //         friendOwesMe: paymentStatusForFriend ? paymentStatusForFriend.friendOwesMe : 0,
+  //         iOweFriend: paymentStatusForFriend ? paymentStatusForFriend.iOweFriend : 0,
+  //       };
+  //     });
+
+  //     membersDetails.forEach(member => {
+  //       groupOwesMe += member.friendOwesMe;
+  //       iOweGroup += member.iOweFriend;
+  //     });
+
+  //     return {
+  //       ...group,
+  //       membersDetails: membersDetails,
+  //       groupOwesMe: groupOwesMe,
+  //       iOweGroup: iOweGroup
+  //     };
+  //   });
+
+  //   return combinedGroups;
+  // };
+  const combineData = () => {
+    return groups.map(group => {
+      const paymentStatusForGroup = groupPaymentStatus.find(
+        status => status.groupId === group._id,
+      );
+      return {
+        ...group,
+        groupOwesMe: paymentStatusForGroup
+          ? paymentStatusForGroup.groupOwesMe
+          : 0,
+        iOweGroup: paymentStatusForGroup
+          ? paymentStatusForGroup.iOweGroup
+          : 0,
+      };
+    });
+  }
+
+  const combinedData = combineData();
+  console.log(combinedData[0])
 
 
 
@@ -525,7 +575,7 @@ console.log(source)
         <Text>Error: {groupError}</Text>
       ) : (
        <Pressable>
-         {groups.map((item, index) =>
+         {combinedData.map((item, index) =>
            <GroupBox key={index} item={item} 
            />
            
