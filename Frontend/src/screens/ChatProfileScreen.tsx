@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Modal,
   Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -25,13 +26,13 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-// import firestore from '@react-native-firebase/firestore';
 import * as Progress from 'react-native-progress';
 import FastImage from 'react-native-fast-image';
 import {fetchUserDetails} from '../redux/slices/usersSlice';
 import {BASE_URL} from '@env';
+import {fetchGroupData} from '../redux/slices/groupSlice';
 
-const ProfileScreen = () => {
+const ChatProfileScreen = () => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
@@ -44,19 +45,18 @@ const ProfileScreen = () => {
 
   const dispatch = useDispatch();
   const {userId} = useSelector(state => state.auth);
-  const {details, loading, error} = useSelector(state => state.users);
+  const {groupData, loading, error} = useSelector(state => state.group);
 
   const route = useRoute();
-  const {data} = route.params;
+  const {groupId} = route.params;
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('authToken');
     dispatch(clearUser());
   };
-
   useEffect(() => {
-    dispatch(fetchUserDetails(userId));
-  }, [dispatch, userId, ur]);
+    dispatch(fetchGroupData(groupId));
+  }, [dispatch, groupId, ur]);
 
   const selectImage = async () => {
     try {
@@ -74,6 +74,7 @@ const ProfileScreen = () => {
 
   const takePhoto = async () => {
     try {
+      console.log('CMAera');
       const image = await ImagePicker.openCamera({
         width: 300,
         height: 400,
@@ -97,7 +98,7 @@ const ProfileScreen = () => {
     setUploading(true);
     setTransferred(0);
 
-    const task = storage().ref(`user/${filename}`).putFile(uploadUri);
+    const task = storage().ref(`group/${filename}`).putFile(uploadUri);
 
     task.on('state_changed', snapshot => {
       setTransferred(
@@ -107,17 +108,16 @@ const ProfileScreen = () => {
 
     try {
       await task;
-      const url = await storage().ref(`user/${filename}`).getDownloadURL();
+      const url = await storage().ref(`group/${filename}`).getDownloadURL();
 
-      console.log(':');
-      const response = await axios.post(`${BASE_URL}/user/uploadImage`, {
-        userId,
+      console.log(':', BASE_URL);
+      const response = await axios.post(`${BASE_URL}/group/uploadGroupImage`, {
+        groupId: groupData._id,
         imageUrl: url,
       });
 
       if (response) {
         setUr(url);
-     
 
         setUploading(false);
         setModalVisible(false);
@@ -133,61 +133,36 @@ const ProfileScreen = () => {
   return (
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={'#D77702'} />
-
-      <View style={{alignItems: 'center'}}>
-        {/* <View style={{flex:1,position:"absolute"}}>
-          <View     style={{position:"relative",marginTop:10,backgroundColor:"rgba(0, 0, 0, 0.37)"}}>
-        <IonIcons
+      <ScrollView>
+        <View
+          style={{
+            flex: 1,
+            position: 'relative',
+            borderBottomWidth: 1,
+            elevation: 5,
+            backgroundColor: 'red',
+            shadowColor: 'black',
+          }}>
+          <ImageBackground
+            source={{uri: groupData.image}}
+            style={{height: height * 0.3, width: width}}>
+            <View style={styles.overlay} />
+            <IonIcons
               name="arrow-back-sharp"
               size={28}
-              color={'black'}
-          
-
+              color={'white'}
+              style={styles.icon}
               onPress={() => navigation.goBack()}
             />
-            </View>
-       
-          <ImageBackground source={{uri:'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp'}} style={{height:height*0.25,width:width,position: "relative",}} >
-          <View style={styles.overlay} />
           </ImageBackground>
-        </View> */}
-         <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, position: "relative" }}>
-        <ImageBackground
-          source={{ uri: 'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp' }}
-          style={{ height: height * 0.24, width: width }}
-        >
-          <View style={styles.overlay} />
-          <IonIcons
-            name="arrow-back-sharp"
-            size={28}
-            color={'white'}
-            style={styles.icon}
-            onPress={() => navigation.goBack()}
-          />
-        </ImageBackground>
-      </View>
-    </View>
+          <View style={{position: 'relative', top: -height * 0.3}}>
+            <View style={styles.groupNameContainer}>
+              <Text style={styles.headerText}>{groupData.name}</Text>
+              <Text style={styles.desc}>{groupData.description}</Text>
+            </View>
+          </View>
+        </View>
         <View style={styles.contentContainer}>
-          {loading ? (
-            <ActivityIndicator size={30} style={{height: 190}} />
-          ) : details.image ? (
-            <View style={styles.imageContainer}>
-              <FastImage
-                source={{uri: details.image}}
-                style={styles.profileImage}
-              />
-            </View>
-          ) : (
-            <View style={styles.imageContainer}>
-              <IonIcons
-                name="person-outline"
-                size={140}
-                style={styles.profileImage1}
-              />
-            </View>
-          )}
-
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={styles.add}>
               <MaterialIcons
@@ -198,8 +173,11 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
 
-        
-          <View style={{flexDirection: 'row', gap: 10,alignItems:"center"}}>
+          <View style={styles.lengthContainer}>
+            <Text style={styles.memberLength}>{groupData.members.length} members</Text>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
             <MaterialIcons
               name="person"
               color="black"
@@ -207,11 +185,11 @@ const ProfileScreen = () => {
               style={styles.nameLogo}
             />
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{details.name}</Text>
+              <Text style={styles.name}>{groupData.name}</Text>
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', gap: 10,alignItems:'center'}}>
+          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
             <MaterialCommunityIcons
               name="email"
               color="black"
@@ -219,7 +197,7 @@ const ProfileScreen = () => {
               style={styles.nameLogo}
             />
             <View style={styles.nameContainer}>
-              <Text style={styles.email}>{details.email}</Text>
+              <Text style={styles.email}>{groupData.members._id}</Text>
             </View>
           </View>
 
@@ -231,7 +209,7 @@ const ProfileScreen = () => {
               style={styles.mobileLogo}
             />
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>+91 {details.mobile}</Text>
+              <Text style={styles.name}>+91 {groupData.description}</Text>
             </View>
           </View>
         </View>
@@ -254,7 +232,7 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 
       <Modal
         animationType="slide"
@@ -318,9 +296,9 @@ const ProfileScreen = () => {
   );
 };
 
-const { width,height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-export default ProfileScreen;
+export default ChatProfileScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -329,27 +307,32 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:height*0.15
+    marginTop: height * 0.001,
+    
   },
   add: {
     borderWidth: 1,
     borderRadius: 40,
     height: 40,
     width: 40,
-    backgroundColor: 'silver',
-    marginLeft: 110,
-    marginTop: -34,
+    borderColor: 'gray',
+    elevation: 2,
+    shadowColor: 'black',
+    backgroundColor: 'white',
+    left: height * 0.21,
+    top: -height * 0.065,
+    marginTop: height * 0.04,
   },
   profileImage: {
-    height: height*0.2,
-    width: width*0.4,
+    height: height * 0.2,
+    width: width * 0.4,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'gray',
   },
   profileImage1: {
-    height: height*0.2,
-    width: height*0.2,
+    height: height * 0.2,
+    width: height * 0.2,
     borderRadius: 100,
     color: 'gray',
     justifyContent: 'center',
@@ -358,17 +341,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imageContainer: {
-    
     elevation: 9,
     borderRadius: 100,
     shadowOpacity: 10,
     shadowColor: 'black',
     borderColor: 'silver',
     borderWidth: 1,
-    height: height*0.2,
-    width: height*0.2,
+    height: height * 0.2,
+    width: height * 0.2,
     backgroundColor: '#F2F2F2',
-    marginTop: -10,
+    marginTop: 11,
   },
   name: {
     color: 'black',
@@ -383,16 +365,16 @@ const styles = StyleSheet.create({
   nameLogo: {
     color: 'black',
     fontSize: 25,
-    marginTop: height*0.03,
+    marginTop: height * 0.24,
     marginLeft: width * 0.04,
     fontWeight: 'bold',
   },
   mobileLogo: {
     color: 'black',
     fontSize: 30,
-    marginTop: height*0.034,
+    marginTop: height * 0.034,
     marginRight: 6,
-  
+
     fontWeight: 'bold',
     marginLeft: width * 0.06,
   },
@@ -400,22 +382,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderRadius: 10,
     borderColor: 'orange',
-  
+
     shadowColor: 'black',
     backgroundColor: 'white',
     width: 100,
-    marginTop: 20,
-    height: height*0.05,
+    marginTop: 200,
+    height: height * 0.05,
     justifyContent: 'center',
     alignItems: 'flex-start',
-    paddingLeft:10,
-    paddingTop:5,
-   
-    flex:1,
+    paddingLeft: 10,
+    paddingTop: 5,
+
+    flex: 1,
     marginRight: width * 0.09,
   },
   logOutContainer: {
-    marginTop:20,
+    marginTop: 20,
     elevation: 2,
     shadowColor: 'black',
     shadowOpacity: 10,
@@ -482,7 +464,48 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    top: 15,
+    top: 20,
     left: 15,
   },
+  headerText: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: '500',
+  },
+  groupNameContainer: {
+    position: 'absolute',
+    top: height * 0.015,
+    left: 55,
+  },
+  desc: {
+    position: 'relative',
+    top: -height * 0.02,
+    left: width * 0.002,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '300',
+    marginTop: 20,
+  },
+  descriptionContainer: {
+    position: 'absolute',
+    marginTop: -20,
+    left: width * 0.074,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '300',
+    flexDirection: 'row',
+    gap: -8,
+  },
+  lengthContainer:{
+    alignSelf:"flex-start",
+    left:width * 0.05,
+    top:-height * 0.05,
+    position:"absolute"
+  },
+  memberLength:{
+    fontSize:20,
+    fontWeight:"bold",
+    color:"silver"
+
+  }
 });

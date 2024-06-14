@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserDetails } from '../redux/slices/usersSlice';
 import { RootState } from '../redux/store'; // assuming you have a root reducer defined in store.ts
@@ -38,12 +38,15 @@ const ProfilePic: React.FC = () => {
   );
 };
 
+
+const {width, height} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   imageContainer: {
-    height: 30,
-    width: 30,
+    height: height * 0.038,
+    width: height * 0.037,
     borderRadius: 12,
-    borderColor: 'black',
+    borderColor: 'silver',
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',

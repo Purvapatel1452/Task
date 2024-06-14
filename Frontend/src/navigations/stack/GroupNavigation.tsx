@@ -9,6 +9,7 @@ import GroupChatScreen from '../../screens/GroupChatScreen';
 import ExpenseScreen from '../../screens/ExpenseScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
 import { RootState } from '../../redux/store'; // Adjust the import based on your store setup
+import ChatProfileScreen from '../../screens/ChatProfileScreen';
 
 // Define the types for your navigation parameters
 export type GroupStackParamList = {
@@ -44,6 +45,7 @@ const GroupNavigation: React.FC = () => {
       <Stack.Screen name="Expenses" component={ExpensesScreen} />
       <Stack.Screen name="Expense" component={ExpenseScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="GroupChatProfile" component={ChatProfileScreen} />
     </Stack.Navigator>
   );
 };

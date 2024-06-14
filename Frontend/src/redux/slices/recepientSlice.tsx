@@ -3,11 +3,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 
-export const fetchRecipientData = createAsyncThunk(
-  'recipient/fetchRecipientData',
+export const fetchRecepientData = createAsyncThunk(
+  'recepient/fetchRecepientData',
   async (recepientId, { rejectWithValue }) => {
     try {
       console.log(BASE_URL,"Z##")
+      console.log(recepientId,"???????")
       const response = await axios.get(`${BASE_URL}/message/user/${recepientId}`);
       return response.data;
     } catch (error) {
@@ -33,10 +34,10 @@ export const fetchUserExpenses = createAsyncThunk(
     }
   );
 
-const recipientSlice = createSlice({
-  name: 'recipient',
+const recepientSlice = createSlice({
+  name: 'recepient',
   initialState: {
-    recipientDatas: null,
+    recepientDatas: null,
     userExpense:[],
     loading: false,
     error: null,
@@ -44,14 +45,14 @@ const recipientSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRecipientData.pending, (state) => {
+      .addCase(fetchRecepientData.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchRecipientData.fulfilled, (state, action) => {
+      .addCase(fetchRecepientData.fulfilled, (state, action) => {
         state.loading = false;
-        state.recipientDatas = action.payload;
+        state.recepientDatas = action.payload;
       })
-      .addCase(fetchRecipientData.rejected, (state, action) => {
+      .addCase(fetchRecepientData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -69,4 +70,4 @@ const recipientSlice = createSlice({
   },
 });
 
-export default recipientSlice.reducer;
+export default recepientSlice.reducer;

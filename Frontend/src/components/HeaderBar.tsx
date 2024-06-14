@@ -1,19 +1,30 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import ProfilePic from '../components/ProfilePic';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect } from 'react';
+import ProfilePic from './ProfilePic';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGroupData } from '../redux/slices/groupSlice';
 
 const HeaderBar = ({title}) => {
   const navigation = useNavigation();
 
+  const dispatch=useDispatch()
+  const {userId}=useSelector((state)=>state.auth)
+  const {groupData,loading,error}=useSelector((state)=>state.group)
+
+
+  useEffect(()=>{
+    dispatch(fetchGroupData(userId))
+  },[dispatch,])
+console.log(groupData,"<<<<<,")
   const renderIcon = () => {
     switch (title) {
       case 'TabScreen':
         return (
           <View style={styles.headerContainer}>
             <Text></Text>
-            <ProfilePic />
+           
           </View>
         );
       case 'ChatScreen':
@@ -26,8 +37,20 @@ const HeaderBar = ({title}) => {
         );
       case 'GroupChatScreen':
         return (
-          <View style={styles.headerContainer}>
-            <ProfilePic />
+          <View style={styles.headerContainerGroup}>
+            <IonIcons
+              name="arrow-back-sharp"
+              size={28}
+              color={'white'}
+              onPress={() => navigation.goBack()}
+            />
+            <TouchableOpacity onPress={() => navigation.navigate('ChatProfile', { data: groupData })}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: groupData.image }} style={styles.image} />
+      </View>
+    </TouchableOpacity>
+            <Text style={styles.headerText}>Expense</Text>
+          
           </View>
         );
       case 'Expense':
@@ -57,12 +80,6 @@ const HeaderBar = ({title}) => {
           </View>
         );
 
-      // case 'Profile':
-      //   return (
-        
-            
-         
-      //   );
       case 'GroupScreen':
         return (
           <View style={styles.headerContainer}>
@@ -132,6 +149,23 @@ position:"relative",
     shadowOpacity: 2,
     elevation: 10,
   },
+  headerContainerGroup: {
+    backgroundColor: '#D77702',
+position:"relative",
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderBottomWidth: 1,
+    borderBottomStartRadius: 1,
+    borderBottomEndRadius: 1,
+    borderColor: 'silver',
+    shadowColor: 'black',
+    shadowOpacity: 2,
+    elevation: 10,
+    gap:10
+  },
+
   headerContainer1: {
     backgroundColor: '#D77702',
 
@@ -151,5 +185,22 @@ position:"relative",
     color: 'white',
     fontSize: 30,
     fontWeight: '500',
+  },
+  imageContainer: {
+    height: 30,
+    width: 30,
+    borderRadius: 12,
+    borderColor: 'black',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    shadowColor: 'black',
+    shadowOpacity: 10,
+    elevation: 5,
+  },
+  image: {
+    height: 36,
+    width: 36,
   },
 });

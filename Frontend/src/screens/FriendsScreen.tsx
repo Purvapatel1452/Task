@@ -3,7 +3,7 @@ import React, { useContext, useDebugValue, useEffect,useState } from 'react'
 
 import axios from 'axios'
 import FriendRequest from '../components/FriendRequest'
-import HeaderBar from './HeaderBar'
+import HeaderBar from '../components/HeaderBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchFriendRequests } from '../redux/slices/friendSlice'
 

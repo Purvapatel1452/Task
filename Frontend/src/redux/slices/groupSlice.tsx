@@ -60,8 +60,9 @@ export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userI
     'group/fetchGroupData',
     async (groupId, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"{{++f//ixuVG")
+        console.log(BASE_URL,"{{+xuVG")
         const response = await axios.get(`${BASE_URL}/message/group/${groupId}`);
+        console.log(response.data,"???/////")
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);

@@ -23,7 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import User from '../components/User';
 
 // import {useStripe} from '@stripe/stripe-react-native';
-import HeaderBar from './HeaderBar';
+import HeaderBar from '../components/HeaderBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { fetchUsers } from '../redux/slices/usersSlice';
 

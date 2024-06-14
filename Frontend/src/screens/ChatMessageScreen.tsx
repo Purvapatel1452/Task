@@ -27,17 +27,18 @@ import {useRoute} from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
-import HeaderBar from './HeaderBar';
+import HeaderBar from '../components/HeaderBar';
 import axios from 'axios';
 import ExpenseBox from '../components/ExpenseBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchMessages, sendMessage} from '../redux/slices/chatSlice';
 import {
-  fetchRecipientData,
+  fetchRecepientData,
   fetchUserExpenses,
 } from '../redux/slices/recepientSlice';
 import storage from '@react-native-firebase/storage';
 import Modal from 'react-native-modal';
+import HeaderChatBar from '../components/HeaderChatBar';
 
 
 
@@ -116,7 +117,7 @@ const ChatMessageScreen = ({navigation}: any) => {
   useEffect(() => {
     dispatch(fetchMessages({userId, recepientId}));
     dispatch(fetchUserExpenses({userId, recepientId}));
-    dispatch(fetchRecipientData(recepientId));
+    dispatch(fetchRecepientData(recepientId));
   }, [dispatch, userId, recepientId]);
 
   // useEffect(() => {
@@ -262,7 +263,7 @@ const ChatMessageScreen = ({navigation}: any) => {
 
   const handleSend = async (messageType: any, imageUri: any) => {
     try {
-      console.log("SENNDD")
+
     
    
   
@@ -277,7 +278,7 @@ const ChatMessageScreen = ({navigation}: any) => {
         const filename = uri.substring(uri.lastIndexOf('/') + 1);
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
   
-        console.log(uploadUri,"LLLL")
+     
     
         const task = storage().ref(`chat/${filename}`).putFile(uploadUri);
         toggleModal()
@@ -287,9 +288,9 @@ const ChatMessageScreen = ({navigation}: any) => {
         try {
           await task;
           const url = await storage().ref(`chat/${filename}`).getDownloadURL();
-          console.log(url)
+       
   
-    console.log(url,"URLRLRL")
+   
     formData={
       senderId:userId,
       recepientId:recepientId,
@@ -298,7 +299,7 @@ const ChatMessageScreen = ({navigation}: any) => {
       imageUrl:url
     }
   
-    console.log("IIIOOPPP",formData)
+   
          
     
         
@@ -309,7 +310,7 @@ const ChatMessageScreen = ({navigation}: any) => {
      
   
       } else {
-        console.log("1111",)
+       
         formData={
           senderId:userId,
           recepientId:recepientId,
@@ -319,12 +320,12 @@ const ChatMessageScreen = ({navigation}: any) => {
         }
       }
     
-      console.log({formData})
+    
      
      dispatch(sendMessage({formData}))
       .then((response)=>{
   
-        console.log(response,"))))))")
+       
   
   })
   
@@ -399,7 +400,7 @@ const ChatMessageScreen = ({navigation}: any) => {
       cropping: true,
     })
       .then(image => {
-        console.log('IIIOOPP', image.path);
+       
         const source={uri:image.path}
         handleSend('image', source);
       })
@@ -414,7 +415,7 @@ const ChatMessageScreen = ({navigation}: any) => {
       height: 400,
       cropping: true,
     }).then(image => {
-      console.log(image.path);
+     
       const source={uri:image.path}
       handleSend('image', source);
     });
@@ -426,7 +427,7 @@ const ChatMessageScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
-      <HeaderBar title={'ChatScreen'} />
+      <HeaderChatBar title={'ChatMessageScreen'} id={recepientId} />
 
       <View style={styles.pressableContainer}>
         <View style={styles.pressableContainer1}>
@@ -512,6 +513,16 @@ const ChatMessageScreen = ({navigation}: any) => {
                   <Pressable
                     key={index}
                     style={[
+                      !item.senderId._id ?
+                      {
+                        alignSelf: 'flex-end',
+                        backgroundColor: '#DCF8C6',
+                        padding: 8,
+                        maxWidth: '60%',
+                        borderRadius: 7,
+                        margin: 10,
+                      }
+                      :
                       item.senderId._id == userId
                         ? {
                             alignSelf: 'flex-end',

@@ -1,6 +1,6 @@
-import { Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import HeaderBar from './HeaderBar'
+import HeaderBar from '../components/HeaderBar'
 import ExpenseBox from '../components/ExpenseBox'
 import { useDispatch, useSelector } from 'react-redux'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -195,12 +195,18 @@ console.log('Expe',expenseList)
 
 
           <ScrollView>
+            {
+            loading ?
+            <ActivityIndicator />
+            :
             <View style={{marginBottom:300}}>
-          {expenses.map((item, index) => (
-            <ExpenseBox key={index} item={item} navigation={navigation} />
+            {expenses.map((item, index) => (
+              <ExpenseBox key={index} item={item} navigation={navigation} />
+             
+            ))}
+            </View>
+            }
            
-          ))}
-          </View>
         </ScrollView>
 
 

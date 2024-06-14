@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
-import HeaderBar from './HeaderBar';
+import HeaderBar from '../components/HeaderBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import { useDispatch, useSelector } from 'react-redux';

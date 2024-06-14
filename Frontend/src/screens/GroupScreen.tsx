@@ -8,7 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
-import HeaderBar from './HeaderBar'
+import HeaderBar from '../components/HeaderBar'
 
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -559,7 +559,7 @@ console.log(source)
          
   
       {/* <StatusBar backgroundColor={'#D77702'} /> */}
-      <StatusBar backgroundColor="red" barStyle="dark-content" />
+      <StatusBar backgroundColor="#D77702" barStyle="dark-content" />
 
 
       <HeaderBar title={"GroupScreen"} />
@@ -898,11 +898,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderWidth: 1,
-    margin:7,
-    borderRadius:30,
+    margin:5,
+    borderRadius:10,
     height:60,
     borderColor:"gray",
-    elevation:5,
+    elevation:2,
     backgroundColor:"white",
     shadowColor:"black",
     shadowOpacity:20

@@ -57,7 +57,7 @@ const groupDetails = async (req, res) => {
     const { groupId } = req.params;
     console.log("user", groupId);
 
-    const group = await Group.findById(groupId);
+    const group = await Group.findById(groupId).populate('members');
 
     console.log("GOrup", group);
 

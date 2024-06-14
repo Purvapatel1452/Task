@@ -140,8 +140,36 @@ const fetchGroupPaymentStatus = async (req, res) => {
   }
 };
 
+
+const uploadGroupImage = async (req, res) => {
+  const { groupId, imageUrl } = req.body;
+
+  if (!groupId || !imageUrl) {
+    return res
+      .status(400)
+      .json({ message: "User ID and image URL are required" });
+  }
+
+  try {
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    group.image = imageUrl;
+    await group.save();
+
+    res.status(200).json({ message: "Image updated successfully", group });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createGroup,
   getAllGroups,
-  fetchGroupPaymentStatus
+  fetchGroupPaymentStatus,
+  uploadGroupImage
 };

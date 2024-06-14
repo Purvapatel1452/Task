@@ -9,6 +9,7 @@ import ChatMessageScreen from '../../screens/ChatMessageScreen';
 import ExpenseScreen from '../../screens/ExpenseScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
 import { RootState } from '../../redux/store'; // assuming you have a root reducer defined in store.ts
+import UserProfileScreen from '../../screens/UserProfileScreen';
 
 // Define the types for your navigation parameters
 export type RootStackParamList = {
@@ -34,16 +35,18 @@ const ChatNavigation: React.FC = () => {
       <Stack.Screen name="Chats" component={ChatScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Friends" component={FriendsScreen} />
-      <Stack.Screen
+      <Stack.Screen name="Messages" component={ChatMessageScreen} />
+      {/* <Stack.Screen
         name="Messages"
         component={ChatMessageScreen}
         options={({ route }) => ({
           tabBarVisible:
             route.state?.index === undefined || route.state.index === 0,
         })}
-      />
+      /> */}
       <Stack.Screen name="Expense" component={ExpenseScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="UserProfile" component={UserProfileScreen} />
     </Stack.Navigator>
   );
 };

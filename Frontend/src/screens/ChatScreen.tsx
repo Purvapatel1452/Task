@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 import UserChat from '../components/UserChat';
-import HeaderBar from './HeaderBar';
+import HeaderBar from '../components/HeaderBar';
 import {useNavigation,useFocusEffect} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -520,11 +520,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderWidth: 1,
-    margin:7,
-    borderRadius:30,
+    margin:5,
+    borderRadius:10,
     height:60,
     borderColor:"gray",
-    elevation:5,
+    elevation:2,
     backgroundColor:"white",
     shadowColor:"black",
     shadowOpacity:20

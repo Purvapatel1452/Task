@@ -130,7 +130,7 @@ const verifyOtp = async (req, res) => {
   }
 
   if (otpData.otp !== otp) {
-    return res.status(400).send("Invalud OTP");
+    return res.status(400).send("Invalid OTP");
   }
 
   await OTPData.deleteOne({ email });

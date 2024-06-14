@@ -22,7 +22,7 @@ import {useRoute} from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
-import HeaderBar from './HeaderBar';
+import HeaderBar from '../components/HeaderBar';
 import axios from 'axios';
 import ExpenseBox from '../components/ExpenseBox';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +31,7 @@ import { fetchGroupData, fetchGroupExpenses } from '../redux/slices/groupSlice';
 import storage from '@react-native-firebase/storage';
 import Modal from 'react-native-modal';
 import { BASE_URL } from '@env';
+import HeaderChatBar from '../components/HeaderChatBar';
 
 const GroupChatScreen = ({navigation}: any) => {
   console.log(BASE_URL)
@@ -524,7 +525,7 @@ if (messageType == 'image') {
   };
 
   return (<>
-    <HeaderBar title={'GroupChatScreen'} />
+    <HeaderChatBar title={'GroupChatScreen'} id={groupId} />
 
     <View style={styles.pressableContainer}>
     <View style={styles.pressableContainer1}>

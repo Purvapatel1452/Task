@@ -1,6 +1,6 @@
 import { Alert, Button, Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import HeaderBar from './HeaderBar'
+import HeaderBar from '../components/HeaderBar'
 import { PlatformPay, PlatformPayButton, confirmPlatformPayPayment, useStripe } from '@stripe/stripe-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPaymentIntent, fetchPaymentIntent } from '../redux/slices/paymentSlice';
