@@ -6,7 +6,7 @@ export const addExpense = createAsyncThunk(
   'expense/addExpense',
   async (expenseData, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"Nrgsder>>")
+      console.log(BASE_URL,"N38sfsfuiyuwwder>>")
       const response = await axios.post(`${BASE_URL}/expense/addExpense`, expenseData);
       return response.data;
     } catch (error) {
@@ -20,14 +20,14 @@ export const fetchExpenses = createAsyncThunk(
     'expense/fetchExpenses',
     async ({ userId, expenseType,type }, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"??ret4")
+        console.log(BASE_URL,"??wyti7g9utret4")
         if(type!==undefined){
           expenseType=''
 
         }
 
         const response = await axios.get(`${BASE_URL}/expense/expenses/${userId}?expenseType=${expenseType}`);
-        console.log(response.data.expenses,">>>>>>>>>>>>>")
+ 
         let list=[];
             if(type=='settled'){
               

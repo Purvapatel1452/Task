@@ -9,7 +9,7 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"ZKK1qqq")
+      console.log(BASE_URL,"ZK4iuhuyf65er8K1qqq")
       const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch friends payment status');
@@ -27,7 +27,7 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"DXdce22x")
+      console.log(BASE_URL,"DXrfiydrd5dce22x")
       const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`);
       return response.data;
     } catch (error) {
@@ -42,7 +42,7 @@ export const acceptFriendRequest = createAsyncThunk(
   async ({friendRequestId,userId}, {  rejectWithValue }) => {
     
    console.log(friendRequestId,userId,"ZHH")
-   console.log(BASE_URL,"ZJdcd22J")
+   console.log(BASE_URL,"ZJdcdytg6fiy22J")
     try {
       const d={
         senderId: friendRequestId,
@@ -74,7 +74,7 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"<MK!!2eded:>")
+      console.log(BASE_URL,"<MK!!i43uhg6yr2eded:>")
       const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
         selectedUserId
@@ -97,7 +97,7 @@ export const checkFriendRequest = createAsyncThunk(
   async ({userId,item}, { rejectWithValue }) => {
     try {
 
-      console.log(BASE_URL,":{djeoiL:{")
+      console.log(BASE_URL,":{dgfdtrrfu4jeoiL:{")
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
     
       const req=response.data.sentFriendRequests.includes(item._id)

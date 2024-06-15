@@ -662,22 +662,49 @@ if (messageType == 'image') {
                     },
               ]}>
               <View>
-                <Image
-                  source={{uri: source}}
-                  style={{width: 200, height: 200, borderRadius: 7}}
-                />
-                <Text
-                  style={{
-                    textAlign: 'right',
-                    fontSize: 9,
-                    position: 'absolute',
-                    right: 10,
-                    bottom: 7,
-                    color: 'white',
-                    marginTop: 5,
-                  }}>
-                  {formatTime(item?.timeStamp)}
-                </Text>
+                {     item.senderId._id == userId ?
+                <>
+                     <Image
+                     source={{uri: source}}
+                     style={{width: 200, height: 200, borderRadius: 7}}
+                   />
+                   <Text
+                     style={{
+                       textAlign: 'right',
+                       fontSize: 9,
+                       position: 'absolute',
+                       right: 10,
+                       bottom: 7,
+                       color: 'white',
+                       marginTop: 5,
+                     }}>
+                     {formatTime(item?.timeStamp)}
+                   </Text>
+                   </>
+                   :
+                   <>
+                   <Text style={styles.senderName}>
+                  {item.senderId.name}
+                   </Text>
+                     <Image
+                     source={{uri: source}}
+                     style={{width: 200, height: 200, borderRadius: 7}}
+                   />
+                   <Text
+                     style={{
+                       textAlign: 'right',
+                       fontSize: 9,
+                       position: 'absolute',
+                       right: 10,
+                       bottom: 7,
+                       color: 'white',
+                       marginTop: 5,
+                     }}>
+                     {formatTime(item?.timeStamp)}
+                   </Text>
+                   </>
+                }
+              
               </View>
             </Pressable>
           );

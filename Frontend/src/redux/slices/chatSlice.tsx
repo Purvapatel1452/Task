@@ -1,45 +1,33 @@
-import { BASE_URL } from '@env';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {BASE_URL} from '@env';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 export const fetchMessages = createAsyncThunk(
   'chat/fetchMessages',
-  async ({ userId, groupId,recepientId }, { rejectWithValue }) => {
+  async ({userId, groupId, recepientId}, {rejectWithValue}) => {
     try {
-let d=null
-console.log(BASE_URL,"KKAAZ33@@@@@@cjnjZ")
-if(recepientId){
-  
-  d={
-        
-    senderId: userId,
-    recepientId: recepientId,
-  
+      let d = null;
+      console.log(BASE_URL, 'Kedovj[@@@@cjnjZ');
+      if (recepientId) {
+        d = {
+          senderId: userId,
+          recepientId: recepientId,
+        };
+      } else {
+        d = {
+          senderId: userId,
+          groupId: groupId,
+        };
+      }
 
-}
+      const response = await axios.post(`${BASE_URL}/message/messages`, d);
 
-}else{
-  
-  d={
-        
-    senderId: userId,
-    groupId: groupId,
-  
-
-}
-
-}
-
-
-
-      const response = await axios.post(`${BASE_URL}/message/messages`,d);
-   
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 // export const sendMessage = createAsyncThunk(
@@ -56,35 +44,27 @@ if(recepientId){
 //   }
 // );
 
-
-
 export const sendMessage = createAsyncThunk(
-    'chat/sendMessage',
-    async ({ formData }, { rejectWithValue }) => {
-      try {
-        console.log(BASE_URL,"M3;;N")
-          const response = await fetch(
-            `${BASE_URL}/message/sendMessages`,
-            {
-              method: 'POST',
-              headers:{
-                "Content-Type":"application/json"
-              },
-              body: JSON.stringify(formData),
-            },
-          );
-          const data=await response.json()
-    
-        fetchMessages({formData})
-       return data
-        
-      } catch (error) {
-        return rejectWithValue(error.response.data);
-      }
+  'chat/sendMessage',
+  async ({formData}, {rejectWithValue}) => {
+    try {
+      console.log(BASE_URL, 'M3edfsuiertgrhi;;N');
+      const response = await fetch(`${BASE_URL}/message/sendMessages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      fetchMessages({formData});
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
-  );
-
-
+  },
+);
 
 const chatSlice = createSlice({
   name: 'chat',
@@ -94,9 +74,9 @@ const chatSlice = createSlice({
     error: null,
   },
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchMessages.pending, (state) => {
+      .addCase(fetchMessages.pending, state => {
         state.loading = true;
       })
       .addCase(fetchMessages.fulfilled, (state, action) => {
@@ -107,13 +87,12 @@ const chatSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(sendMessage.pending, (state) => {
+      .addCase(sendMessage.pending, state => {
         state.loading = true;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.loading = false;
-        state.messages.push(action.payload)
-      
+        state.messages.push(action.payload);
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
