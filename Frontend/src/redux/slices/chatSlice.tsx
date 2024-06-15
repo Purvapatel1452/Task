@@ -8,7 +8,7 @@ export const fetchMessages = createAsyncThunk(
   async ({userId, groupId, recepientId}, {rejectWithValue}) => {
     try {
       let d = null;
-      console.log(BASE_URL, 'Kedovj[@@@@cjnjZ');
+      console.log(BASE_URL, 'KeffetewfedovjfwnjZ');
       if (recepientId) {
         d = {
           senderId: userId,
@@ -48,7 +48,7 @@ export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async ({formData}, {rejectWithValue}) => {
     try {
-      console.log(BASE_URL, 'M3edfsuiertgrhi;;N');
+      console.log(BASE_URL, 'M3edfwiertgrhi;edwerfw4td;N');
       const response = await fetch(`${BASE_URL}/message/sendMessages`, {
         method: 'POST',
         headers: {

@@ -36,7 +36,7 @@ const Login: React.FC<LoginProps> = (props) => {
     console.log(email, password, '&&');
     if (email && password) {
       dispatch(login({ email, password })).then((result: any) => {
-        console.log(result.type, '::::');
+      
       });
     } else {
       Alert.alert('Fill mandatory details');

@@ -7,7 +7,7 @@ export const fetchGroups = createAsyncThunk(
   'group/fetchGroups',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log("U:'pkjgug5diewpRL",BASE_URL,"tg533jdkjdxiue::")
+      console.log("U:'yrypkdiewpRL",BASE_URL,"tg533xiue::")
       const response = await axios.get(`${BASE_URL}/group/groups/${userId}`);
       return response.data;
     } catch (error) {
@@ -20,7 +20,7 @@ export const createGroup = createAsyncThunk(
   'group/createGroup',
   async (groupData, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"Voiwygddwe))(_")
+      console.log(BASE_URL,"Voitcrghddwefe(_")
       const response = await axios.post(`${BASE_URL}/group/createGroup`, groupData);
       return response.data;
     } catch (error) {
@@ -32,7 +32,7 @@ export const createGroup = createAsyncThunk(
 
 export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"hg67xmkui'd")
+      console.log(BASE_URL,"hgtyhtthi'fwed")
       const response = await axios.get(`${BASE_URL}/user/accepted-friends/${userId}`);
       return response.data;
     } catch (error) {
@@ -46,7 +46,7 @@ export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userI
     async (groupId, { rejectWithValue }) => {
    
       try {
-        console.log(BASE_URL,"0=wshjgyu9-8eodlc,,%^")
+        console.log(BASE_URL,"0=wweertgsdf^")
         const response = await axios.get(`${BASE_URL}/expense/groupExpenses/${groupId}`);
         return response.data;
       } catch (error) {
@@ -60,7 +60,7 @@ export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userI
     'group/fetchGroupData',
     async (groupId, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"{hghh{+wjgG")
+        console.log(BASE_URL,"{hrytthwjgG")
         const response = await axios.get(`${BASE_URL}/message/group/${groupId}`);
         console.log(response.data,"???/////")
         return response.data;
@@ -75,7 +75,8 @@ export const fetchGroupPaymentStatus = createAsyncThunk(
   'group/fetchGroupPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"::ju76{sjew,5lde")
+      console.log(BASE_URL,"/rgijr98w,5lde")
+      console.log(BASE_URL)
       const response = await axios.get(`${BASE_URL}/group/groupPaymentStatus/${userId}`);
       return response.data;
     } catch (error) {
@@ -83,6 +84,28 @@ export const fetchGroupPaymentStatus = createAsyncThunk(
     }
   }
 );
+
+
+
+export const editGroup = createAsyncThunk(
+  'group/editGroup',
+  async ({ groupId, groupData, userId }, { rejectWithValue }) => {
+    try {
+      console.log(BASE_URL,"KLSDEFWFffweg")
+      console.log(groupData,"LLllllllldwdu")
+      const response = await axios.put(`${BASE_URL}/group/editGroup/${groupId}`, {
+        ...groupData,
+        admiId:userId,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
+
 
 
 const groupSlice = createSlice({
@@ -164,9 +187,23 @@ const groupSlice = createSlice({
               .addCase(fetchGroupPaymentStatus.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+              })
+              .addCase(editGroup.pending, (state) => {
+                state.loading = true;
+              })
+              .addCase(editGroup.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.groups.findIndex((group) => group._id === action.payload._id);
+                if (index !== -1) {
+                  state.groups[index] = action.payload;
+                }
+              })
+              .addCase(editGroup.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
               });
     },
-    reducers:undefined
+    reducers:{}
     
 });
 

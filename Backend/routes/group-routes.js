@@ -5,6 +5,7 @@ const {
   getAllGroups,
   fetchGroupPaymentStatus,
   uploadGroupImage,
+  editGroupDetails,
 } = require("../controllers/group-controller");
 
 const groupRouter = express.Router();
@@ -16,6 +17,8 @@ groupRouter.get("/groups/:userId", getAllGroups);
 groupRouter.get('/groupPaymentStatus/:userId',fetchGroupPaymentStatus) 
 
 groupRouter.post('/uploadGroupImage',uploadGroupImage) 
+
+groupRouter.put('/editGroup/:groupId',editGroupDetails) 
 
 
 module.exports = groupRouter;

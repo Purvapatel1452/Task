@@ -2,14 +2,17 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  FlatList,
   Image,
   ImageBackground,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -30,7 +33,9 @@ import * as Progress from 'react-native-progress';
 import FastImage from 'react-native-fast-image';
 import {fetchUserDetails} from '../redux/slices/usersSlice';
 import {BASE_URL} from '@env';
-import {fetchGroupData} from '../redux/slices/groupSlice';
+import {editGroup, fetchGroupData} from '../redux/slices/groupSlice';
+import UserChat from '../components/UserChat';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ChatProfileScreen = () => {
   const [image, setImage] = useState(null);
@@ -40,23 +45,58 @@ const ChatProfileScreen = () => {
   const [ur, setUr] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [load, setLoad] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [groupDescription, setGroupDescription] = useState('');
+  const [members, setMembers] = useState([]);
+  const [editModal,setEditModal]=useState(false)
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
   const {userId} = useSelector(state => state.auth);
-  const {groupData, loading, error} = useSelector(state => state.group);
+  const {groupData, friends, loading, error} = useSelector(state => state.group);
+
 
   const route = useRoute();
   const {groupId} = route.params;
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem('authToken');
-    dispatch(clearUser());
-  };
+  
   useEffect(() => {
     dispatch(fetchGroupData(groupId));
   }, [dispatch, groupId, ur]);
+
+  useEffect(() => {
+    if (groupData) {
+      setGroupName(groupData.name);
+      setGroupDescription(groupData.description);
+      setMembers(groupData.members.map((member) => member._id));
+      setSelectedFriends(groupData.members.map((member) => member._id))
+    }
+  }, [groupData]);
+
+
+
+  const handleEditGroup = () => {
+
+
+    console.log("UPDATED")
+    const updatedGroupData = {
+      name: groupName,
+      description: groupDescription,
+      members:selectedFriends,
+      image: groupData.image,
+    };
+    console.log(updatedGroupData,"Lllll")
+    dispatch(editGroup({ groupId, groupData: updatedGroupData, userId })).then(() => {
+      Alert.alert('Group updated successfully!');
+      setModalVisible(false);
+    }).catch((error) => {
+      Alert.alert('Failed to update group:', error.message);
+    });
+  };
+
+
 
   const selectImage = async () => {
     try {
@@ -81,7 +121,7 @@ const ChatProfileScreen = () => {
         cropping: true,
       });
       const source = {uri: image.path};
-      console.log(source);
+
       setImage(source);
     } catch (error) {
       console.log('Error in capturing photo:', error);
@@ -130,22 +170,33 @@ const ChatProfileScreen = () => {
     }
   };
 
+
+
+
+  const handleSelection = (friendId) => {
+    if (selectedFriends.includes(friendId)) {
+      setSelectedFriends(selectedFriends.filter((id) => id !== friendId));
+    } else {
+      setSelectedFriends([...selectedFriends, friendId]);
+    }
+  };
+
   return (
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={'#D77702'} />
-      <ScrollView>
+
         <View
           style={{
             flex: 1,
             position: 'relative',
             borderBottomWidth: 1,
             elevation: 5,
-            backgroundColor: 'red',
+            backgroundColor: 'white',
             shadowColor: 'black',
           }}>
           <ImageBackground
             source={{uri: groupData.image}}
-            style={{height: height * 0.3, width: width}}>
+            style={{height: height * 0.328, width: width}}>
             <View style={styles.overlay} />
             <IonIcons
               name="arrow-back-sharp"
@@ -177,50 +228,29 @@ const ChatProfileScreen = () => {
             <Text style={styles.memberLength}>{groupData.members.length} members</Text>
           </View>
 
-          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-            <MaterialIcons
-              name="person"
-              color="black"
-              size={20}
-              style={styles.nameLogo}
-            />
-            <View style={styles.nameContainer}>
-              <Text style={styles.name}>{groupData.name}</Text>
-            </View>
-          </View>
+          <ScrollView style={{height:height*0.5,width:width*1,top:-height*0.087}}>
+          
+        <Pressable>
+          {groupData.members.map((item, index) => (
+            <UserChat key={index} item={item} navigateMessages={()=>{      
+              navigation.navigate('Messages',{recepientId:item._id})
+            }}/>
+          ))}
+        </Pressable>
+       
+      </ScrollView>
+ 
 
-          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-            <MaterialCommunityIcons
-              name="email"
-              color="black"
-              size={20}
-              style={styles.nameLogo}
-            />
-            <View style={styles.nameContainer}>
-              <Text style={styles.email}>{groupData.members._id}</Text>
-            </View>
-          </View>
-
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <FontAwesome
-              name="mobile"
-              color="black"
-              size={30}
-              style={styles.mobileLogo}
-            />
-            <View style={styles.nameContainer}>
-              <Text style={styles.name}>+91 {groupData.description}</Text>
-            </View>
-          </View>
+          
         </View>
 
         <TouchableOpacity
-          onPress={() => handleLogout()}
+          onPress={()=>setEditModal(true)}
           style={styles.logOutContainer}>
           <View style={{}}>
             <Text
               style={{
-                color: 'red',
+                color: 'white',
                 textAlign: 'center',
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -228,11 +258,11 @@ const ChatProfileScreen = () => {
                 shadowColor: 'black',
                 shadowOpacity: 10,
               }}>
-              Log Out
+              Edit Group
             </Text>
           </View>
         </TouchableOpacity>
-      </ScrollView>
+
 
       <Modal
         animationType="slide"
@@ -289,6 +319,57 @@ const ChatProfileScreen = () => {
                 </TouchableOpacity>
               </View>
             )}
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={editModal}
+        onRequestClose={() => setEditModal(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.input}
+              placeholder="Group Name"
+              value={groupName}
+              onChangeText={setGroupName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Group Description"
+              value={groupDescription}
+              onChangeText={setGroupDescription}
+            />
+             <Text style={styles.label}>Select Friends:</Text>
+             <View style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5}}>
+             <FlatList
+              data={friends}
+              renderItem={({ item }) => (
+                <TouchableOpacity style={styles.friendItem} onPress={() => handleSelection(item._id)}>
+                  <View style={styles.pressableContainer}>
+                    <Image source={{ uri: item.image }} style={styles.image} />
+                    <View style={styles.textContainer}>
+                      <Text style={styles.textName}>{item.name}</Text>
+                      <Text style={styles.textLast}>{item.email}</Text>
+                    </View>
+                    <View style={styles.checkbox}>
+                      {selectedFriends.includes(item._id) && <View style={styles.checkedCircle} /> }
+                    </View>
+                    <View />
+                  </View>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item._id}
+            />
+            </View>
+            <TouchableOpacity style={styles.modalButton} onPress={()=>handleEditGroup()}>
+              <Text style={styles.modalButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={() => setEditModal(false)}>
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -401,13 +482,15 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: 'black',
     shadowOpacity: 10,
-    borderWidth: 2,
+    borderWidth: 1,
     padding: 10,
     width: 330,
     height: 50,
     borderColor: 'white',
-    backgroundColor: 'white',
+    backgroundColor: '#D77702',
     borderRadius: 20,
+    bottom:height * 0.1,
+    alignSelf:"center"
   },
   modalContainer: {
     flex: 1,
@@ -416,7 +499,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    width: 300,
+    width: width * 0.9,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
@@ -454,7 +537,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    color: 'white',
+    color: 'gray',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -474,7 +557,7 @@ const styles = StyleSheet.create({
   },
   groupNameContainer: {
     position: 'absolute',
-    top: height * 0.015,
+    top: -height * 0.01,
     left: 55,
   },
   desc: {
@@ -507,5 +590,102 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     color:"silver"
 
-  }
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
+  buttonContainer: {
+    borderBottomWidth:1,
+    justifyContent: 'center',
+    alignSelf:"center",
+    borderColor:"silver",
+    padding: 15,
+
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginBottom: 0,
+    flexDirection: 'row',
+    width: width,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: 'silver',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+    width: '100%',
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  friendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
+    borderWidth: 1,
+    margin:5,
+    borderRadius:10,
+    height:60,
+    borderColor:"gray",
+    elevation:2,
+    backgroundColor:"white",
+    shadowColor:"black",
+    shadowOpacity:20
+
+  },
+  checkbox: {
+    height: 24,
+    width: 24,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkedCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'gray',
+  },
+  pressableContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderWidth: 0.9,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
+    borderColor: '#D0D0D0',
+    padding: 5,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  textName: {
+    fontWeight: '500',
+    fontSize: 15,
+    color: 'black',
+  },
+  textLast: {
+    color: 'gray',
+    fontWeight: '500',
+  },
+  textTime: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#585858',
+  },
+  image: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    resizeMode: 'cover',
+  },
+
 });

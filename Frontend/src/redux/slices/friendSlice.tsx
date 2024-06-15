@@ -9,7 +9,7 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"ZK4iuhuyf65er8K1qqq")
+      console.log(BASE_URL,"ZrtgrK4iuewdwhr8Kefwe1qqq")
       const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch friends payment status');
@@ -27,7 +27,7 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"DXrfiydrd5dce22x")
+      console.log(BASE_URL,"DergrtfweXrceefrtgwe22x")
       const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`);
       return response.data;
     } catch (error) {
@@ -42,7 +42,7 @@ export const acceptFriendRequest = createAsyncThunk(
   async ({friendRequestId,userId}, {  rejectWithValue }) => {
     
    console.log(friendRequestId,userId,"ZHH")
-   console.log(BASE_URL,"ZJdcdytg6fiy22J")
+   console.log(BASE_URL,"ZJefcdytg6fidrgryfewy22J")
     try {
       const d={
         senderId: friendRequestId,
@@ -74,13 +74,13 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"<MK!!i43uhg6yr2eded:>")
+      console.log(BASE_URL,"<MK!etyhyrtyrrry2edfsdefeefeed:>")
       const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
         selectedUserId
       });
 
-      console.log(response,"::::{{{{{{{")
+  
 
     
      
@@ -97,7 +97,7 @@ export const checkFriendRequest = createAsyncThunk(
   async ({userId,item}, { rejectWithValue }) => {
     try {
 
-      console.log(BASE_URL,":{dgfdtrrfu4jeoiL:{")
+      console.log(BASE_URL,":{dgfwrfyrrtytryfreiL:{")
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
     
       const req=response.data.sentFriendRequests.includes(item._id)

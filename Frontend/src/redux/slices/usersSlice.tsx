@@ -6,7 +6,7 @@ export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"4ut764ydd*")
+      console.log(BASE_URL,"gtfg4htrydd*")
       const response = await axios.get(`${BASE_URL}/user/users/${userId}`);
       return response.data; // Assuming the API response structure is correct
     } catch (error) {
@@ -20,7 +20,7 @@ export const fetchUserDetails = createAsyncThunk(
     'profile/fetchUserDetails',
     async (userId, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"M<<xxr4gfdrdxxxm")
+        console.log(BASE_URL,"M<fehtrwef<xxr4mewfdwe")
         const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
         return response.data;
       } catch (error) {

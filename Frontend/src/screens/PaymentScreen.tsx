@@ -1,5 +1,5 @@
 import { Alert, Button, Linking, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import HeaderBar from '../components/HeaderBar'
 import { PlatformPay, PlatformPayButton, confirmPlatformPayPayment, useStripe } from '@stripe/stripe-react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -80,7 +80,6 @@ const [url,setUrl]=useState('')
 //   }
 //   // 4. If payment ok -> create the order
 // };
-
 
 
 const onCheckout = async () => {

@@ -4,9 +4,15 @@ const Expense=require('../models/expense')
 
 const createGroup = async (req, res) => {
   try {
-    const { name, description, members, image } = req.body;
+    console.log("HELLO")
+    const { name, description, members, image,adminId } = req.body;
 
   
+    const adminUser = await User.findById(adminId);
+    if (!adminUser) {
+      return res.status(400).json({ message: "Admin user not found" });
+    }
+    console.log(adminId,adminUser)
 
     const memberIds = [];
 
@@ -18,6 +24,13 @@ const createGroup = async (req, res) => {
       }
 
       memberIds.push(user._id);
+    }
+    console.log(memberIds,"{{{{{{{{{{{{{{{{{{{{{{{{{{{))))))))))))00000000",adminUser._id)
+    console.log((memberIds.includes(adminUser._id)))
+    if ((memberIds.includes(adminUser._id))) {
+  
+   
+      memberIds.push(adminUser._id);
     }
  
 
@@ -50,6 +63,7 @@ const createGroup = async (req, res) => {
     const group = new Group({
       name,
       description,
+      admin: adminUser._id,
       members: memberIds,
       image,
     });
@@ -132,7 +146,7 @@ const fetchGroupPaymentStatus = async (req, res) => {
         iOweGroup,
       });
     }
-    console.log(groupsWithPendingPayments,"??..")
+
     res.status(200).json(groupsWithPendingPayments);
   } catch (error) {
     console.log("Error in internal server", error);
@@ -167,9 +181,71 @@ const uploadGroupImage = async (req, res) => {
   }
 };
 
+
+
+
+const editGroupDetails = async (req, res) => {
+  try {
+    console.log("ff")
+    const { groupId } = req.params;
+    console.log(groupId,"PI")
+    const { name, description, members, image, adminId } = req.body;
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    // Check if the requesting user is the admin
+    if (group.admin.toString() !== adminId) {
+      return res.status(403).json({ message: "Only the admin can edit the group details" });
+    }
+
+    if (name) group.name = name;
+    if (description) group.description = description;
+    if (image) group.image = image;
+
+    if (members) {
+      const memberIds = [];
+
+      for (const memberId of members) {
+        const user = await User.findById(memberId);
+
+        if (!user) {
+          return res.status(400).json({ message: "User not found" });
+        }
+
+        memberIds.push(user._id);
+      }
+
+      // Ensure admin is always in the members list
+      if (!memberIds.includes(group.admin.toString())) {
+        memberIds.push(group.admin);
+      }
+
+      group.members = memberIds;
+
+      await User.updateMany(
+        { _id: { $in: memberIds } },
+        { $addToSet: { groups: group._id } }
+      );
+    }
+
+    const updatedGroup = await group.save();
+
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   createGroup,
   getAllGroups,
   fetchGroupPaymentStatus,
-  uploadGroupImage
+  uploadGroupImage,
+  editGroupDetails
 };

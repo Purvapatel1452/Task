@@ -127,6 +127,7 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
       name: groupName,
       description: groupDescription,
       members: [...selectedFriends, userId],
+      adminId:userId
     
 
     };
@@ -727,7 +728,13 @@ console.log(source)
                     <Image source={{uri: item.image}} style={styles.image} />
                     <View style={styles.textContainer}>
                       <Text style={styles.textName}>{item.name}</Text>
-                      <Text style={styles.textLast}>{item.email}</Text>
+                      {
+                        isGroup ?
+                        <></>
+                        :
+                        <Text style={styles.textLast}>{item.email}</Text>
+                      }
+          
                     </View>
 
                     {isGroup ? (
@@ -896,7 +903,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderWidth: 1,
     margin:5,
     borderRadius:10,
@@ -954,7 +961,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderTopWidth: 0,
     borderColor: "#D0D0D0",
-    padding: 10,
+    padding: 5,
   },
   image: {
     height: 40,

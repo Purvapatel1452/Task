@@ -29,7 +29,7 @@ const User: React.FC<UserProps> = ({ item }) => {
 
     if (userId) {
       dispatch(checkFriendRequest({ userId, item }));
-      console.log(requestSent, '::::::::;', item.name);
+
     }
   }, [dispatch, item, userId]);
 

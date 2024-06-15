@@ -48,13 +48,13 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if(userId){
-      console.log(":::::::::::")
+   
       dispatch(fetchUsers(userId))
       console.log(users,":>>>>>>")
     
     }
     
-    console.log(users,"::::::::::::::;")
+   
        
         
       },[dispatch,userId]);
