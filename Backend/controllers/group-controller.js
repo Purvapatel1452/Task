@@ -12,7 +12,7 @@ const createGroup = async (req, res) => {
     if (!adminUser) {
       return res.status(400).json({ message: "Admin user not found" });
     }
-    console.log(adminId,adminUser)
+
 
     const memberIds = [];
 
@@ -25,8 +25,7 @@ const createGroup = async (req, res) => {
 
       memberIds.push(user._id);
     }
-    console.log(memberIds,"{{{{{{{{{{{{{{{{{{{{{{{{{{{))))))))))))00000000",adminUser._id)
-    console.log((memberIds.includes(adminUser._id)))
+   
     if ((memberIds.includes(adminUser._id))) {
   
    
@@ -125,17 +124,27 @@ const fetchGroupPaymentStatus = async (req, res) => {
         expense.payments.forEach((payment) => {
           if (
             payment.participant._id.toString() === userId &&
-            expense.payerId.toString() !== userId &&
-            !payment.paid
+            expense.payerId._id.toString() !== userId &&
+            payment.paid===false
           ) {
             iOweGroup += payment.amount;
-          } else if (
+
+          } 
+     
+           if (
             payment.participant._id.toString() !== userId &&
-            expense.payerId.toString() === userId &&
-            !payment.paid
+            expense.payerId._id.toString() === userId &&
+            payment.paid===false
           ) {
             groupOwesMe += payment.amount;
+    
           }
+          console.log(">>>>")
+          console.log(expense.description)
+          console.log(payment.participant._id.toString()=== userId,payment.participant._id.toString(),':::::',userId)
+          console.log( expense.payerId._id.toString()=== userId,expense.payerId._id.toString(),":::::::", userId )
+          console.log(   payment.paid===false,":::::",payment.paid )     
+          console.log(">>>>")     
         });
       });
 
@@ -145,6 +154,7 @@ const fetchGroupPaymentStatus = async (req, res) => {
         groupOwesMe,
         iOweGroup,
       });
+      // console.log(groupExpenses[1].payments[1],"::,,")
     }
 
     res.status(200).json(groupsWithPendingPayments);
@@ -190,12 +200,13 @@ const editGroupDetails = async (req, res) => {
     const { groupId } = req.params;
     console.log(groupId,"PI")
     const { name, description, members, image, adminId } = req.body;
-
+    console.log(name, description, members, image, adminId,"PI")
     const group = await Group.findById(groupId);
 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
+    console.log(group.admin)
 
     // Check if the requesting user is the admin
     if (group.admin.toString() !== adminId) {
@@ -220,7 +231,7 @@ const editGroupDetails = async (req, res) => {
       }
 
       // Ensure admin is always in the members list
-      if (!memberIds.includes(group.admin.toString())) {
+      if (memberIds.includes(group.admin.toString())) {
         memberIds.push(group.admin);
       }
 

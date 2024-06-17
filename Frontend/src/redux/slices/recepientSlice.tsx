@@ -7,8 +7,8 @@ export const fetchRecepientData = createAsyncThunk(
   'recepient/fetchRecepientData',
   async (recepientId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"Z#dettfewrefwed#")
-      console.log(recepientId,"???????")
+      console.log(BASE_URL,"Z#rgtrdhguyettfewergd#")
+    
       const response = await axios.get(`${BASE_URL}/message/user/${recepientId}`);
       return response.data;
     } catch (error) {
@@ -22,7 +22,7 @@ export const fetchUserExpenses = createAsyncThunk(
     'expenses/fetchUserExpenses',
     async ({ userId, recepientId }, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"{iodhtehrtfyf6^")
+        console.log(BASE_URL,"{ikfdgguodherfgte6^")
 
         const response = await axios.get(`${BASE_URL}/expense/userExpenses/${userId}/${recepientId}`);
        

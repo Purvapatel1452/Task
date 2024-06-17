@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   Alert,
   Dimensions,
   FlatList,
@@ -21,21 +20,17 @@ import HeaderBar from '../components/HeaderBar';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {clearUser} from '../redux/slices/authSlice';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import * as Progress from 'react-native-progress';
-import FastImage from 'react-native-fast-image';
-import {fetchUserDetails} from '../redux/slices/usersSlice';
+
 import {BASE_URL} from '@env';
 import {editGroup, fetchGroupData} from '../redux/slices/groupSlice';
 import UserChat from '../components/UserChat';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const ChatProfileScreen = () => {
   const [image, setImage] = useState(null);
@@ -64,7 +59,7 @@ const ChatProfileScreen = () => {
   
   useEffect(() => {
     dispatch(fetchGroupData(groupId));
-  }, [dispatch, groupId, ur]);
+  }, [dispatch, groupId, ur,editModal]);
 
   useEffect(() => {
     if (groupData) {
@@ -90,7 +85,7 @@ const ChatProfileScreen = () => {
     console.log(updatedGroupData,"Lllll")
     dispatch(editGroup({ groupId, groupData: updatedGroupData, userId })).then(() => {
       Alert.alert('Group updated successfully!');
-      setModalVisible(false);
+      setEditModal(false);
     }).catch((error) => {
       Alert.alert('Failed to update group:', error.message);
     });
@@ -228,7 +223,7 @@ const ChatProfileScreen = () => {
             <Text style={styles.memberLength}>{groupData.members.length} members</Text>
           </View>
 
-          <ScrollView style={{height:height*0.5,width:width*1,top:-height*0.087}}>
+          <ScrollView style={{height:height*0.6,marginBottom:70,width:width*1,top:height*0.02}}>
           
         <Pressable>
           {groupData.members.map((item, index) => (
@@ -237,6 +232,7 @@ const ChatProfileScreen = () => {
             }}/>
           ))}
         </Pressable>
+        
        
       </ScrollView>
  
@@ -244,7 +240,9 @@ const ChatProfileScreen = () => {
           
         </View>
 
-        <TouchableOpacity
+        {
+          groupData.admin==userId ?
+          <TouchableOpacity
           onPress={()=>setEditModal(true)}
           style={styles.logOutContainer}>
           <View style={{}}>
@@ -262,6 +260,12 @@ const ChatProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
+        :
+      <></>
+
+        }
+
+       
 
 
       <Modal
@@ -388,7 +392,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: height * 0.001,
+    marginTop: height*0.079 ,
     
   },
   add: {
@@ -400,8 +404,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: 'black',
     backgroundColor: 'white',
-    left: height * 0.21,
-    top: -height * 0.065,
+    left: height * 0.22,
+    top: height * 0.05,
     marginTop: height * 0.04,
   },
   profileImage: {
@@ -490,7 +494,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#D77702',
     borderRadius: 20,
     bottom:height * 0.1,
-    alignSelf:"center"
+    alignSelf:"center",
+    position:"absolute"
   },
   modalContainer: {
     flex: 1,
@@ -581,8 +586,8 @@ const styles = StyleSheet.create({
   },
   lengthContainer:{
     alignSelf:"flex-start",
-    left:width * 0.05,
-    top:-height * 0.05,
+    left:width * 0.045,
+    top:height * 0.045,
     position:"absolute"
   },
   memberLength:{

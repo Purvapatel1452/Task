@@ -29,10 +29,30 @@ const HeaderChatBar = ({ title, id }) => {
     } else if (title === 'ChatMessageScreen') {
       dispatch(fetchRecepientData(id));
     }
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => setIsLoading(false), 800);
   }, [dispatch, id, title]);
 
   const truncateText = (text, limit) => text.length <= limit ? text : `${text.substring(0, limit)}...`;
+  
+  const concatenateMemberNames = (members, limit) => {
+    let concatenated = '';
+    let totalLength = 0;
+
+    for (let member of members) {
+      const nameLength = member.name.length;
+
+      if (totalLength + nameLength + 2 > limit) { // +2 accounts for ', ' between names
+        concatenated += '...';
+        break;
+      }
+      
+      concatenated += (totalLength === 0 ? '' : ', ') + member.name;
+      totalLength += nameLength + 2; // +2 for ', '
+    }
+
+    return concatenated;
+  };
+  
 
   const renderIcon = () => {
     if (title === 'GroupChatScreen' && groupData) {
@@ -62,11 +82,17 @@ const HeaderChatBar = ({ title, id }) => {
               </Text>
               <View style={styles.listContainer}>
                 <View style={styles.container}>
-                  {groupData.members.map(member => (
+
+                <Text style={styles.desc}>
+                    {concatenateMemberNames(groupData.members, 45)}
+                  </Text>
+
+                  
+                  {/* {groupData.members.map(member => (
                     <Text key={member._id} style={styles.desc}>
                       {member.name},{' '}
                     </Text>
-                  ))}
+                  ))} */}
                 </View>
               </View>
             </View>

@@ -17,7 +17,7 @@ const HeaderBar = ({title}) => {
   useEffect(()=>{
     dispatch(fetchGroupData(userId))
   },[dispatch,])
-console.log(groupData,"<<<<<,")
+
   const renderIcon = () => {
     switch (title) {
       case 'TabScreen':

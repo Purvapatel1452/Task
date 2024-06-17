@@ -180,7 +180,7 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
 
       dispatch(fetchFriends(userId))
         .then((response)=>{
-          console.log(response,"success")
+          console.log("success")
         })
       }
       catch(error){
@@ -358,7 +358,7 @@ const handleAddExpense = async () => {
         cropping: true,
       });
       const source = { uri: image.path };
-console.log(source)
+
       setImage(source);
       
     } catch (error) {
@@ -374,7 +374,7 @@ console.log(source)
 
       dispatch(fetchFriends(userId))
         .then((response)=>{
-          console.log(response,"success")
+          console.log("success")
         })
       }
       catch(error){
@@ -439,11 +439,12 @@ console.log(source)
   useEffect(() => {
   
       dispatch(fetchGroups(userId));
-      console.log("NNNOOWOW")
+
       dispatch(fetchFriends(userId))
       dispatch(fetchFriendsPaymentStatus(userId))
       dispatch(fetchGroupPaymentStatus(userId));
-      console.log("SJJJJJJJJJJJJJ")
+
+
   
   }, [dispatch, userId]);
 
@@ -534,6 +535,7 @@ console.log(source)
   // };
   const combineData = () => {
     return groups.map(group => {
+      console.log(groupPaymentStatus,"::::::::::")
       const paymentStatusForGroup = groupPaymentStatus.find(
         status => status.groupId === group._id,
       );
@@ -550,7 +552,7 @@ console.log(source)
   }
 
   const combinedData = combineData();
-  console.log(combinedData[0])
+  console.log(combinedData[0],"((((((((((")
 
 
 

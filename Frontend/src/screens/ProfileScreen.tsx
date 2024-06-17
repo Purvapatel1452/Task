@@ -180,10 +180,9 @@ const ProfileScreen = () => {
             </View>
           ) : (
             <View style={styles.imageContainer}>
-              <IonIcons
-                name="person-outline"
-                size={140}
-                style={styles.profileImage1}
+              <FastImage
+                source={{uri: "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg"}}
+                style={styles.profileImage}
               />
             </View>
           )}
@@ -342,7 +341,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     height: height*0.2,
-    width: width*0.4,
+    width: width*0.37,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'gray',
@@ -367,7 +366,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: height*0.2,
     width: height*0.2,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: 'silver',
     marginTop: -10,
   },
   name: {

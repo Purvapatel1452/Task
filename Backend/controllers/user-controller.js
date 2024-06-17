@@ -264,7 +264,7 @@ const friendRequest = async (req, res) => {
     await User.findByIdAndUpdate(currentUserId, {
       $push: { sentFriendRequests: selectedUserId },
     });
-    console.log(currentUser, ":::::", selectedUserId);
+  
 
     res.sendStatus(200);
   } catch (err) {
@@ -284,11 +284,10 @@ const friendRequestList = async (req, res) => {
       .populate("friendRequests", "name email image")
       .lean();
 
-    console.log("USERRR:", user);
+
 
     const friendRequests = user.friendRequests;
 
-    console.log(friendRequests);
     res.status(200).json(friendRequests);
   } catch (err) {
     console.log("ERROR HANDLING", err);
@@ -379,7 +378,7 @@ const friendsPaymentStatus = async (req, res) => {
       let iOweFriend = 0;
 
       expenses.forEach((expense) => {
-        console.log(expense,"??")
+     
         expense.payments.forEach((payment) => {
         
           if (

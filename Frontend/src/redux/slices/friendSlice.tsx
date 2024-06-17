@@ -9,7 +9,7 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"ZrtgrK4iuewdwhr8Kefwe1qqq")
+      console.log(BASE_URL,"ZrtggrrhfyK4iuewfwe1freyqqq")
       const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch friends payment status');
@@ -27,7 +27,7 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"DergrtfweXrceefrtgwe22x")
+      console.log(BASE_URL,"Derrrethjhgugrtfkjtgtrugwe22x")
       const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`);
       return response.data;
     } catch (error) {
@@ -41,8 +41,8 @@ export const acceptFriendRequest = createAsyncThunk(
   'friendRequest/acceptFriendRequest',
   async ({friendRequestId,userId}, {  rejectWithValue }) => {
     
-   console.log(friendRequestId,userId,"ZHH")
-   console.log(BASE_URL,"ZJefcdytg6fidrgryfewy22J")
+
+   console.log(BASE_URL,"Z6figrdrgrhkuyfewygrerh22J")
     try {
       const d={
         senderId: friendRequestId,
@@ -74,7 +74,7 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"<MK!etyhyrtyrrry2edfsdefeefeed:>")
+      console.log(BASE_URL,"<MKth!etykhiuhyrtyfbhrrry2edeed:>")
       const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
         selectedUserId
@@ -97,7 +97,7 @@ export const checkFriendRequest = createAsyncThunk(
   async ({userId,item}, { rejectWithValue }) => {
     try {
 
-      console.log(BASE_URL,":{dgfwrfyrrtytryfreiL:{")
+      console.log(BASE_URL,":{dgftyygrgwrjhgufyrrtgtehytrL:{")
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
     
       const req=response.data.sentFriendRequests.includes(item._id)
@@ -188,7 +188,7 @@ const friendSlice = createSlice({
       .addCase(checkFriendRequest.fulfilled, (state, action) => {
         state.loading = false;
        state.requestSent=action.payload
-       console.log(state.requestSent,"<<>>")
+    
         // state.requestSent = action.payload.sentFriendRequests.includes(action.meta.arg);
       })
       .addCase(checkFriendRequest.rejected, (state, action) => {
