@@ -143,7 +143,6 @@ const loginUser = async (req, res) => {
   console.log("hii");
   const { email, password } = req.body;
 
-
   if (!email || !password) {
     return res
       .status(404)
@@ -155,6 +154,10 @@ const loginUser = async (req, res) => {
       if (!user) {
         console.log("ERR");
         return res.status(404).json({ message: "User not Found !!!" });
+      }
+
+      if (user.deletedAt) {
+        return res.status(401).json({ message: "Account is soft deleted" });
       }
 
       if (await bcrypt.compare(password, user.password)) {
@@ -241,8 +244,6 @@ const getUsers = async (req, res) => {
 const friendRequest = async (req, res) => {
   const { currentUserId, selectedUserId } = req.body;
 
-  console.log("curr", currentUserId);
-  console.log("select", selectedUserId);
 
   try {
     const currentUser = await User.findById(currentUserId);
@@ -387,13 +388,13 @@ const friendsPaymentStatus = async (req, res) => {
             !payment.paid
           ) {
             friendOwesMe += payment.amount;
-            console.log("ffffffffffff");
+         
           } else if (
             payment.participant._id.toString() === userId &&
             expense.payerId._id.toString() === friend._id.toString() &&
             !payment.paid
           ) {
-            console.log("IIIIIII");
+           
             iOweFriend += payment.amount;
           }
         });
@@ -413,6 +414,148 @@ const friendsPaymentStatus = async (req, res) => {
   }
 };
 
+
+
+
+// Update user profile
+const editProfile= async (req, res) => {
+  const { userId, name, mobile } = req.body;
+  
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.name = name || user.name;
+    user.mobile = mobile || user.mobile;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Profile updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+}
+
+
+
+const softDeleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.markAsDeleted();
+    await user.save();
+
+    res.status(200).json({ message: 'User account has been soft deleted' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Recover user account
+// const recoverUser = async (req, res) => {
+//   try {
+//     console.log("RECOVR")
+//     const { email,password} = req.body;
+//     console.log(email,password,"DD")
+//     const user = await User.findById({email});
+//     console.log(user,"++")
+//     if (!user || !user.isDeleted) {
+//       return res.status(404).json({ message: 'User not found or not deleted' });
+//     }
+
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       return res.status(401).json({ message: 'Invalid credentials' });
+//     }
+    
+//     console.log(isPasswordValid,"PPAAD")
+
+//     const deletionDate = new Date(user.deletedAt);
+//     const currentDate = new Date();
+//     const daysDifference = Math.floor((currentDate - deletionDate) / (1000 * 60 * 60 * 24));
+//     console.log(daysDifference,"PwerPAAD")
+//     if (daysDifference > 30) {
+//       return res.status(400).json({ message: 'Recovery period has expired' });
+//     }
+
+//     user.recover();
+//     await user.save();
+
+//     res.status(200).json({ message: 'User account has been recovered' });
+//   } catch (error) {
+
+//     console.log(error,"EROROR")
+    
+//     res.status(500).json({ message: 'Server error', error });
+//   }
+// };
+
+const recoverUser = async (req, res) => {
+  try {
+    console.log("RECOVER");
+    const { email, password } = req.body;
+    console.log(email, password, "DD");
+    const user = await User.findOne({ email });
+    console.log(user, "++");
+
+    if (!user || !user.isDeleted) {
+      return res.status(404).json({ message: 'User not found or not deleted' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    
+    console.log(isPasswordValid, "PASSWORD VALID");
+
+    const deletionDate = new Date(user.deletedAt);
+    const currentDate = new Date();
+    const daysDifference = Math.floor((currentDate - deletionDate) / (1000 * 60 * 60 * 24));
+    console.log(daysDifference, "PASSWORD VALID");
+
+    if (daysDifference > 30) {
+      return res.status(400).json({ message: 'Recovery period has expired' });
+    }
+
+    user.recover();
+    await user.save();
+
+    res.status(200).json({ message: 'User account has been recovered' });
+  } catch (error) {
+    console.log(error, "ERROR");
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
+// Permanently delete users past recovery period
+const deleteExpiredUsers = async () => {
+  try {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() - 30);
+
+    await User.deleteMany({
+      isDeleted: true,
+      deletedAt: { $lt: expirationDate },
+    });
+
+    console.log('Expired users have been permanently deleted');
+  } catch (error) {
+    console.error('Error deleting expired users:', error);
+  }
+};
+
+
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -426,4 +569,8 @@ module.exports = {
   sendOtp,
   verifyOtp,
   uploadImage,
+  editProfile,
+  softDeleteUser,
+  recoverUser,
+  deleteExpiredUsers,
 };

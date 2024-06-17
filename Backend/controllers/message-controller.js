@@ -13,7 +13,6 @@ const messagess = async (req, res) => {
       imageUrl,
     } = req.body;
 
-    console.log(req.body, "????????????????????", senderId);
 
     const newMessage = new Message({
       senderId,
@@ -38,7 +37,7 @@ const messagess = async (req, res) => {
 const userDetails = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log("user", userId);
+  
 
     const user = await User.findById(userId);
 
@@ -55,11 +54,10 @@ const userDetails = async (req, res) => {
 const groupDetails = async (req, res) => {
   try {
     const { groupId } = req.params;
-    console.log("user", groupId);
+
 
     const group = await Group.findById(groupId).populate('members');
 
-    console.log("GOrup", group);
 
     res.json(group);
   } catch (err) {
@@ -75,7 +73,7 @@ const chatMessages = async (req, res) => {
   try {
     console.log("qq");
     const { senderId, recepientId, groupId } = req.body;
-    console.log(senderId, recepientId, groupId);
+
 
     let messages;
 
@@ -103,9 +101,9 @@ const chatMessages = async (req, res) => {
         });
     }
 
-    console.log("ff", messages);
+
     res.json(messages);
-    console.log("s", messages);
+
   } catch (err) {
     console.log("error in retrieving messages", err);
 

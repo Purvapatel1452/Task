@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { decode } from 'base-64';
+import { Alert } from 'react-native';
 
 // Define interfaces for the state and the async thunk payload
 interface AuthState {
@@ -28,10 +29,12 @@ export const login = createAsyncThunk<LoginResponse, UserData, { rejectValue: st
   async (userData, { rejectWithValue }) => {
     try {
       console.log('LOGI');
-      console.log(BASE_URL,';;;hgfyerfrtf;yguhfdhiyl');
+      console.log(BASE_URL,';;;fdgg;yguhfdhiyl');
    
       const response = await axios.post(`${BASE_URL}/user/login`, userData);
+     
       const token = response.data.data;
+
 
       console.log(token, 'token');
 
@@ -46,6 +49,8 @@ export const login = createAsyncThunk<LoginResponse, UserData, { rejectValue: st
         return { userId, token };
       }
     } catch (error: any) {
+      console.log(error.response.data.message,"///////")
+      Alert.alert("Login Error !!!",error.response.data.message.toString())
       return rejectWithValue(error.response.data.message);
     }
   }

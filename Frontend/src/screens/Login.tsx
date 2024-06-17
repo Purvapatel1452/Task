@@ -15,11 +15,16 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 
 
 import { login } from '../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store/store';
+import Icon from 'react-native-vector-icons/Feather';
+import { BASE_URL } from '@env';
+import axios from 'axios';
+import { fetchUserDetails } from '../redux/slices/usersSlice';
 
 interface LoginProps {}
 
@@ -43,6 +48,20 @@ const Login: React.FC<LoginProps> = (props) => {
     }
   };
 
+  const handleRecoverAccount = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/users/recover`,{email,password});
+      if (response.status === 200) {
+        Alert.alert('Account recovered successfully!');
+        dispatch(fetchUserDetails(userId));
+      } else {
+        Alert.alert('Failed to recover account');
+      }
+    } catch (error) {
+      console.log('Error recovering account:', error);
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={styles.mainContainer} behavior="padding">
       <StatusBar backgroundColor={'#D77702'} />
@@ -58,7 +77,7 @@ const Login: React.FC<LoginProps> = (props) => {
                 style={styles.smallIcon}
               />
               <TextInput
-                placeholder="Mobile or Email"
+                placeholder="Enter Your Email"
                 style={styles.textInput}
                 onChangeText={(e) => setEmail(e)}
                 placeholderTextColor={'gray'}
@@ -155,6 +174,28 @@ const Login: React.FC<LoginProps> = (props) => {
                   />
                 </TouchableHighlight>
                 <Text style={styles.bottomText}>Sign Up</Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop:18
+                }}
+              >
+                <TouchableHighlight
+                  style={styles.inBut2}
+                  onPress={() =>navigation.navigate('Recover')}
+                >
+                  <IonIcons
+                    name="arrow-undo-outline"
+                    color="white"
+                    style={styles.smallIcon2}
+                  />
+                </TouchableHighlight>
+                <Text  style={styles.bottomText}>
+                <Text>Recover</Text>{'\n'}
+                <Text>Account</Text>
+                </Text>
               </View>
             </View>
           </View>
@@ -264,10 +305,12 @@ const styles = StyleSheet.create({
   },
   bottomButton: {
     marginTop: 10,
-    width: '100%',
+    width: '45%',
     justifyContent: 'space-between',
     elevation: 4,
     shadowColor: 'black',
+    flexDirection:"row",
+    
   },
   smallIcon2: {
     fontSize: 40,

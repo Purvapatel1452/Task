@@ -25,10 +25,11 @@ const User: React.FC<UserProps> = ({ item }) => {
     setTimeout(() => {
       setLoad(false);
       console.log(requestSent, item.name);
-    }, 3000);
+    }, 1000);
 
     if (userId) {
       dispatch(checkFriendRequest({ userId, item }));
+
 
     }
   }, [dispatch, item, userId]);
@@ -67,7 +68,7 @@ const User: React.FC<UserProps> = ({ item }) => {
         <Pressable
           style={styles.pressAddFrnd}
           onPress={() => {
-            console.log('request sent', userId);
+            console.log('request send', userId);
             sendFriendRequests();
           }}>
           <Text style={styles.textAdd}>Add Friend</Text>

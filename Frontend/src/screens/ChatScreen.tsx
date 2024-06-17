@@ -17,14 +17,14 @@ import {
 
 import UserChat from '../components/UserChat';
 import HeaderBar from '../components/HeaderBar';
-import {useNavigation,useFocusEffect} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchFriends, fetchGroups } from '../redux/slices/groupSlice';
-import { addExpense } from '../redux/slices/expensesSlice';
-import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchFriends, fetchGroups} from '../redux/slices/groupSlice';
+import {addExpense} from '../redux/slices/expensesSlice';
+import {fetchFriendsPaymentStatus} from '../redux/slices/friendSlice';
 
 const ChatScreen = () => {
   // const [acceptedFriends, setAcceptedfriends] = useState([]);
@@ -36,17 +36,25 @@ const ChatScreen = () => {
   const [isGroup, setIsGroup] = useState(false);
   const [selectGroup, setSelectGroup] = useState('');
   const [select, setSelect] = useState([]);
-  const [type,setType]=useState([])
+  const [type, setType] = useState([]);
   // const [paymentStatus,setPaymentStatus]=useState([])
 
-
-
-  const {userId}=useSelector(state=>state.auth)
-  const { groups, loading: groupLoading, error: groupError } = useSelector(state => state.group);
-  const { friends, loading: friendLoading, error: friendError } = useSelector(state => state.group);
-  const { loading: expenseLoading, error: expenseError } = useSelector(state => state.expense);
-  const { paymentStatus, loading, error } = useSelector(state => state.friend);
-  const dispatch=useDispatch();
+  const {userId} = useSelector(state => state.auth);
+  const {
+    groups,
+    loading: groupLoading,
+    error: groupError,
+  } = useSelector(state => state.group);
+  const {
+    friends,
+    loading: friendLoading,
+    error: friendError,
+  } = useSelector(state => state.group);
+  const {loading: expenseLoading, error: expenseError} = useSelector(
+    state => state.expense,
+  );
+  const {paymentStatus, loading, error} = useSelector(state => state.friend);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   const [refresh, setRefresh] = useState(false);
@@ -55,19 +63,16 @@ const ChatScreen = () => {
     setSelect([]);
     setSelectedFriends([]);
     setIsGroup(false);
-    dispatch(fetchFriends(userId))
-      .then((response)=>{
-        console.log(response,"success")
-      })
+    dispatch(fetchFriends(userId)).then(response => {
+      console.log(response, 'success');
+    });
   };
 
   const handleGroups = async () => {
     setSelectedFriends([]);
     setSelectGroup('');
     setIsGroup(true);
-    dispatch(fetchGroups(userId))
-
-   
+    dispatch(fetchGroups(userId));
   };
 
   const handleAddExpense = async () => {
@@ -79,7 +84,7 @@ const ChatScreen = () => {
         payerId: userId,
         payeeId: selectedFriends,
         groupId: selectGroup,
-        type:type
+        type: type,
       };
     } else {
       data = {
@@ -90,88 +95,89 @@ const ChatScreen = () => {
         type: type,
       };
     }
-  
-    dispatch(addExpense(data)).then((response) => {
+
+    dispatch(addExpense(data)).then(response => {
       if (response.meta.requestStatus === 'fulfilled') {
         Alert.alert('Expense Added !!!');
         setShowModal(false);
         setDecription('');
         setAmount('');
         setSelectedFriends([]);
+        setSelect([]);
       } else {
         Alert.alert('Error in adding expense');
       }
     });
+    dispatch(fetchFriendsPaymentStatus(userId));
   };
 
-//   const handleAddExpense = async () => {
-   
+  //   const handleAddExpense = async () => {
 
-//     try {
-//       setDecription('');
-//       setAmount('');
-//       setSelectedFriends([]);
-//       let data={}
-// if(isGroup){
-//         data = {
-//         description: description,
-//         amount: amount,
-//         payerId: userId,
-//         payeeId: selectedFriends,
-//         groupId: selectGroup,
-//         type:type
-//       };
-//     }
-//     else{
-//         data = {
-//         description: description,
-//         amount: amount,
-//         payerId: userId,
-//         payeeId: selectedFriends,
-//         type:type
-//       };
+  //     try {
+  //       setDecription('');
+  //       setAmount('');
+  //       setSelectedFriends([]);
+  //       let data={}
+  // if(isGroup){
+  //         data = {
+  //         description: description,
+  //         amount: amount,
+  //         payerId: userId,
+  //         payeeId: selectedFriends,
+  //         groupId: selectGroup,
+  //         type:type
+  //       };
+  //     }
+  //     else{
+  //         data = {
+  //         description: description,
+  //         amount: amount,
+  //         payerId: userId,
+  //         payeeId: selectedFriends,
+  //         type:type
+  //       };
 
-//     }
-  
-//       const response = await fetch(
-//         'http://10.0.2.2:8000/chat/expense/addExpense',
-//         {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify(data),
-//         },
-//       );
+  //     }
 
-//       const expense = await response.json();
-      
+  //       const response = await fetch(
+  //         'http://10.0.2.2:8000/chat/expense/addExpense',
+  //         {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify(data),
+  //         },
+  //       );
 
-//       if (response.ok) {
-//         Alert.alert('Expense Added !!!');
-//         setShowModal(false);
-//         setDecription('');
-//         setAmount('');
-//         setSelectedFriends([]);
-//       }
-//     } catch (error) {
-//       console.log('Error in adding expense', error);
-//     }
-//   };
+  //       const expense = await response.json();
+
+  //       if (response.ok) {
+  //         Alert.alert('Expense Added !!!');
+  //         setShowModal(false);
+  //         setDecription('');
+  //         setAmount('');
+  //         setSelectedFriends([]);
+  //       }
+  //     } catch (error) {
+  //       console.log('Error in adding expense', error);
+  //     }
+  //   };
 
   const handleModel = async () => {
     console.log('MODALVIEWW');
 
     setShowModal(true);
+    setSelectedFriends([]);
+    setSelectGroup('');
+    setSelect([]);
   };
 
   const handleSelection = item => {
- 
     if (isGroup) {
       setSelectedFriends(item.members);
       setSelectGroup(item._id);
-      setType('group')
-
+      setType('group');
     } else {
       if (selectedFriends.includes(item._id)) {
         setSelectedFriends(selectedFriends.filter(id => id !== item._id));
@@ -180,35 +186,30 @@ const ChatScreen = () => {
         setSelectedFriends([...selectedFriends, item._id]);
         setSelect([...selectedFriends, item._id]);
       }
-      setType('non-group')
+      setType('non-group');
     }
   };
 
-
   const acceptedFriendsList = useCallback(async () => {
     try {
-     
-     
-      dispatch(fetchFriends(userId))
-        .then((response)=>{
-          console.log(response,"success")
-        })
-
+      dispatch(fetchFriends(userId)).then(response => {
+        console.log(response, 'success');
+      });
     } catch (err) {
       console.log('Error in frontend', err);
     }
-  },[userId])
+  }, [userId]);
 
   // const fetchFriendsPaymentStatus =useCallback(async () => {
   //   try {
   //     console.log("*******************",userId)
   //     const response = await fetch(`http://10.0.2.2:8000/chat/user/friendsPaymentStatus/${userId}`);
   //     const friendsPaymentStatus = await response.json();
-  
+
   //     if (response.ok) {
   //       console.log(friendsPaymentStatus, "--");
   //       // Assuming setFriendsPaymentStatus is a state setter function
-  //       setPaymentStatus(friendsPaymentStatus); 
+  //       setPaymentStatus(friendsPaymentStatus);
   //     } else {
   //       console.error('Failed to fetch friends payment status');
   //     }
@@ -220,8 +221,8 @@ const ChatScreen = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchAllData = async () => {
-        dispatch(fetchFriends(userId))
-        dispatch(fetchFriendsPaymentStatus(userId))
+        dispatch(fetchFriends(userId));
+        dispatch(fetchFriendsPaymentStatus(userId));
       };
       fetchAllData();
       const unsubscribe = navigation.addListener('tabPress', e => {
@@ -232,20 +233,16 @@ const ChatScreen = () => {
       return () => {
         unsubscribe();
       };
-    }, [refresh, fetchFriends, fetchFriendsPaymentStatus])
+    }, [refresh, fetchFriends, fetchFriendsPaymentStatus]),
   );
 
   useEffect(() => {
-
-    const fetchAllData=async()=>{
-      
-    dispatch(fetchFriendsPaymentStatus(userId))
-    dispatch(fetchFriends(userId))
-
+    const fetchAllData = async () => {
+      dispatch(fetchFriendsPaymentStatus(userId));
+      dispatch(fetchFriends(userId));
     };
     fetchAllData();
-  
-  }, [refresh,fetchFriendsPaymentStatus,fetchFriends]);
+  }, [refresh, fetchFriendsPaymentStatus, fetchFriends]);
 
   const combineData = () => {
     return friends.map(friend => {
@@ -262,25 +259,24 @@ const ChatScreen = () => {
           : 0,
       };
     });
-  }
+  };
 
-  const combinedData=combineData();
-
-
-
-
+  const combinedData = combineData();
 
   return (
     <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
-        
-        <StatusBar backgroundColor={'#D77702'} />
+      <StatusBar backgroundColor={'#D77702'} />
       <HeaderBar title={'ChatScreen'} />
       <ScrollView>
         <Pressable>
           {combinedData.map((item, index) => (
-            <UserChat key={index} item={item} navigateMessages={()=>{      
-              navigation.navigate('Messages',{recepientId:item._id})
-            }}/>
+            <UserChat
+              key={index}
+              item={item}
+              navigateMessages={() => {
+                navigation.navigate('Messages', {recepientId: item._id});
+              }}
+            />
           ))}
         </Pressable>
         <View style={styles.container}>
@@ -293,7 +289,6 @@ const ChatScreen = () => {
         </View>
       </ScrollView>
 
-     
       <TouchableOpacity style={{position: 'relative'}} onPress={handleModel}>
         <View style={styles.buttonContainer1}>
           <MaterialIcons name="notes" size={22} color={'white'} />
@@ -348,55 +343,68 @@ const ChatScreen = () => {
             <Text style={styles.label}>Select Participants/Groups :</Text>
             <View style={styles.inputContainer1}>
               <TouchableOpacity
-                style={[styles.saveButton1,{  backgroundColor: !isGroup ? '#D77702' : 'silver'}]}
+                style={[
+                  styles.saveButton1,
+                  {backgroundColor: !isGroup ? '#D77702' : 'silver'},
+                ]}
                 onPress={() => handleFriends()}>
                 <Text style={styles.saveButtonText}>Friends</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.saveButton1,{  backgroundColor: isGroup ? '#D77702' : 'silver'}]}
+                style={[
+                  styles.saveButton1,
+                  {backgroundColor: isGroup ? '#D77702' : 'silver'},
+                ]}
                 onPress={() => handleGroups()}>
                 <Text style={styles.saveButtonText}>Groups</Text>
               </TouchableOpacity>
             </View>
-            <View style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5}}>
-            <FlatList
-              data={isGroup ? groups : friends}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.friendItem}
-                  onPress={() => handleSelection(item)}>
-                  <View style={styles.pressableContainer}>
-                    <Image source={{uri: item.image}} style={styles.image} />
-                    <View style={styles.textContainer}>
-                      <Text style={styles.textName}>{item.name}</Text>
-                      {
-                        isGroup ?
-                        <></>
-                        : <Text style={styles.textLast}>{item.email}</Text>
+            <View
+              style={{
+                height: 220,
+                borderWidth: 2,
+                borderColor: 'gray',
+                borderRadius: 20,
+                elevation: 2,
+                backgroundColor: 'white',
+                padding: 5,
+              }}>
+              <FlatList
+                data={isGroup ? groups : friends}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.friendItem}
+                    onPress={() => handleSelection(item)}>
+                    <View style={styles.pressableContainer}>
+                      <Image source={{uri: item.image}} style={styles.image} />
+                      <View style={styles.textContainer}>
+                        <Text style={styles.textName}>{item.name}</Text>
+                        {isGroup ? (
+                          <></>
+                        ) : (
+                          <Text style={styles.textLast}>{item.email}</Text>
+                        )}
+                      </View>
 
-                      }
-                  
+                      {isGroup ? (
+                        <View style={styles.checkbox}>
+                          {selectGroup.includes(item._id) && (
+                            <View style={styles.checkedCircle} />
+                          )}
+                        </View>
+                      ) : (
+                        <View style={styles.checkbox}>
+                          {select.includes(item._id) && (
+                            <View style={styles.checkedCircle} />
+                          )}
+                        </View>
+                      )}
+                      <View />
                     </View>
-
-                    {isGroup ? (
-                      <View style={styles.checkbox}>
-                        {selectGroup.includes(item._id) && (
-                          <View style={styles.checkedCircle} />
-                        )}
-                      </View>
-                    ) : (
-                      <View style={styles.checkbox}>
-                        {select.includes(item._id) && (
-                          <View style={styles.checkedCircle} />
-                        )}
-                      </View>
-                    )}
-                    <View />
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={item => item._id}
-            />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={item => item._id}
+              />
             </View>
 
             <TouchableOpacity
@@ -459,7 +467,7 @@ const styles = StyleSheet.create({
   buttonContainer2: {
     position: 'absolute',
     bottom: 80,
-    left:20,
+    left: 20,
     backgroundColor: '#D77702',
     paddingVertical: 15,
     paddingHorizontal: 15,
@@ -470,7 +478,6 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     elevation: 8,
-
   },
   buttonText1: {
     fontSize: 16,
@@ -496,12 +503,11 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    marginVertical:10
-
+    marginVertical: 10,
   },
   inputContainer1: {
     flexDirection: 'row',
-    marginVertical:10
+    marginVertical: 10,
   },
   input: {
     borderBottomWidth: 1,
@@ -526,14 +532,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 5,
     borderWidth: 1,
-    margin:5,
-    borderRadius:10,
-    height:60,
-    borderColor:"gray",
-    elevation:2,
-    backgroundColor:"white",
-    shadowColor:"black",
-    shadowOpacity:20
+    margin: 5,
+    borderRadius: 10,
+    height: 60,
+    borderColor: 'gray',
+    elevation: 2,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOpacity: 20,
   },
   checkbox: {
     height: 24,

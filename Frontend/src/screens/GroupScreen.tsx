@@ -1,6 +1,6 @@
 
 import { ActivityIndicator, Alert, FlatList, Image, Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 
 import GroupBox from '../components/GroupBox'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -24,6 +24,7 @@ import FastImage from 'react-native-fast-image'
 import storage from '@react-native-firebase/storage';
 // import firestore from '@react-native-firebase/firestore';
 import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice'
+import { useFocusEffect} from '@react-navigation/native'
 
 
 interface GroupScreenProps {
@@ -67,6 +68,7 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const [expenseSelectGroup,setExpenseSelectGroup]=useState('')
   const [type,setType]=useState('')
   const [image,setImage]=useState(null)
+  const [refresh, setRefresh] = useState(false);
 
 
 
@@ -305,16 +307,22 @@ const handleAddExpense = async () => {
       setExpenseDescription('');
       setAmount('');
       setExpenseSelectedFrnds([]);
+      
     } else {
       Alert.alert('Error in adding expense');
     }
   });
+  dispatch(fetchGroupPaymentStatus(userId))
 };
   
   const handleExpenseModal = async () => {
     console.log('MODALVIEWW');
 
     setShowExpenseModal(true);
+    setExpenseSelect([])
+      setExpenseSelectGroup('')
+      setExpenseSelect([])
+    
   };
 
 
@@ -380,9 +388,6 @@ const handleAddExpense = async () => {
       catch(error){
         console.log("internal server error",error)
       }
-
-   
-   
   };
 
   const handleSelection = (friendId) => {
@@ -436,17 +441,45 @@ const handleAddExpense = async () => {
   //   console.log('use')
   // }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+     
+const fetchAllData=async()=>{    
+  dispatch(fetchGroups(userId));
+
+    dispatch(fetchFriends(userId))
+    dispatch(fetchFriendsPaymentStatus(userId))
+    dispatch(fetchGroupPaymentStatus(userId));
+};
+fetchAllData();
+      const unsubscribe = navigation.addListener('tabPress', e => {
+        e.preventDefault();
+        setRefresh(!refresh);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }, [refresh,userId,fetchGroupPaymentStatus,fetchGroups]),
+  );
+
+
+
+
   useEffect(() => {
+
   
-      dispatch(fetchGroups(userId));
+const fetchAllData=async()=>{    
+    dispatch(fetchGroups(userId));
 
       dispatch(fetchFriends(userId))
       dispatch(fetchFriendsPaymentStatus(userId))
       dispatch(fetchGroupPaymentStatus(userId));
-
+};
+fetchAllData();
 
   
-  }, [dispatch, userId]);
+  }, [refresh,userId,fetchGroupPaymentStatus,fetchGroups]);
 
 
   // const combineData = () => {
@@ -552,7 +585,7 @@ const handleAddExpense = async () => {
   }
 
   const combinedData = combineData();
-  console.log(combinedData[0],"((((((((((")
+
 
 
 
@@ -572,11 +605,6 @@ const handleAddExpense = async () => {
   
      <ScrollView style={styles.scrollContainer}>
      
-     {groupLoading ? (
-        <ActivityIndicator />
-      ) : groupError ? (
-        <Text>Error: {groupError}</Text>
-      ) : (
        <Pressable>
          {combinedData.map((item, index) =>
            <GroupBox key={index} item={item} 
@@ -584,7 +612,7 @@ const handleAddExpense = async () => {
            
            )}
        </Pressable>
-         )}
+         
        <View style={styles.container}>
          <TouchableOpacity style={styles.buttonContainer} onPress={handleModel}>
            <AntDesign name='addusergroup' size={22} color={'#D77702'} />

@@ -6,7 +6,7 @@ export const addExpense = createAsyncThunk(
   'expense/addExpense',
   async (expenseData, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"N3rrfrtbfytgr8fewvgrdr>>")
+      console.log(BASE_URL,"N3rgrthrfrtbfytgr8fewhtrvgrdr>>")
       const response = await axios.post(`${BASE_URL}/expense/addExpense`, expenseData);
       return response.data;
     } catch (error) {
@@ -20,7 +20,7 @@ export const fetchExpenses = createAsyncThunk(
     'expense/fetchExpenses',
     async ({ userId, expenseType,type }, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"??frtwgtrfytrhsttag9t4")
+        console.log(BASE_URL,"??bgtbtgrtfv")
         if(type!==undefined){
           expenseType=''
 
