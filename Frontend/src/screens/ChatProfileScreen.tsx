@@ -31,7 +31,6 @@ import {BASE_URL} from '@env';
 import {editGroup, fetchGroupData} from '../redux/slices/groupSlice';
 import UserChat from '../components/UserChat';
 
-
 const ChatProfileScreen = () => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -43,55 +42,51 @@ const ChatProfileScreen = () => {
   const [groupName, setGroupName] = useState('');
   const [groupDescription, setGroupDescription] = useState('');
   const [members, setMembers] = useState([]);
-  const [editModal,setEditModal]=useState(false)
+  const [editModal, setEditModal] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
 
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
   const {userId} = useSelector(state => state.auth);
-  const {groupData, friends, loading, error} = useSelector(state => state.group);
-
+  const {groupData, friends, loading, error} = useSelector(
+    state => state.group,
+  );
 
   const route = useRoute();
   const {groupId} = route.params;
 
-  
   useEffect(() => {
     dispatch(fetchGroupData(groupId));
-  }, [dispatch, groupId, ur,editModal]);
+  }, [dispatch, groupId, ur, editModal]);
 
   useEffect(() => {
     if (groupData) {
       setGroupName(groupData.name);
       setGroupDescription(groupData.description);
-      setMembers(groupData.members.map((member) => member._id));
-      setSelectedFriends(groupData.members.map((member) => member._id))
+      setMembers(groupData.members.map(member => member._id));
+      setSelectedFriends(groupData.members.map(member => member._id));
     }
   }, [groupData]);
 
-
-
   const handleEditGroup = () => {
-
-
-    console.log("UPDATED")
+    console.log('UPDATED');
     const updatedGroupData = {
       name: groupName,
       description: groupDescription,
-      members:selectedFriends,
+      members: selectedFriends,
       image: groupData.image,
     };
-    console.log(updatedGroupData,"Lllll")
-    dispatch(editGroup({ groupId, groupData: updatedGroupData, userId })).then(() => {
-      Alert.alert('Group updated successfully!');
-      setEditModal(false);
-    }).catch((error) => {
-      Alert.alert('Failed to update group:', error.message);
-    });
+    console.log(updatedGroupData, 'Lllll');
+    dispatch(editGroup({groupId, groupData: updatedGroupData, userId}))
+      .then(() => {
+        Alert.alert('Group updated successfully!');
+        setEditModal(false);
+      })
+      .catch(error => {
+        Alert.alert('Failed to update group:', error.message);
+      });
   };
-
-
 
   const selectImage = async () => {
     try {
@@ -165,12 +160,9 @@ const ChatProfileScreen = () => {
     }
   };
 
-
-
-
-  const handleSelection = (friendId) => {
+  const handleSelection = friendId => {
     if (selectedFriends.includes(friendId)) {
-      setSelectedFriends(selectedFriends.filter((id) => id !== friendId));
+      setSelectedFriends(selectedFriends.filter(id => id !== friendId));
     } else {
       setSelectedFriends([...selectedFriends, friendId]);
     }
@@ -180,70 +172,75 @@ const ChatProfileScreen = () => {
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={'#D77702'} />
 
-        <View
-          style={{
-            flex: 1,
-            position: 'relative',
-            borderBottomWidth: 1,
-            elevation: 5,
-            backgroundColor: 'white',
-            shadowColor: 'black',
-          }}>
-          <ImageBackground
-            source={{uri: groupData.image}}
-            style={{height: height * 0.328, width: width}}>
-            <View style={styles.overlay} />
-            <IonIcons
-              name="arrow-back-sharp"
-              size={28}
-              color={'white'}
-              style={styles.icon}
-              onPress={() => navigation.goBack()}
+      <View
+        style={{
+          flex: 1,
+          position: 'relative',
+          borderBottomWidth: 1,
+          elevation: 5,
+          backgroundColor: 'white',
+          shadowColor: 'black',
+        }}>
+        <ImageBackground
+          source={{uri: groupData.image}}
+          style={{height: height * 0.328, width: width}}>
+          <View style={styles.overlay} />
+          <IonIcons
+            name="arrow-back-sharp"
+            size={28}
+            color={'white'}
+            style={styles.icon}
+            onPress={() => navigation.goBack()}
+          />
+        </ImageBackground>
+        <View style={{position: 'relative', top: -height * 0.3}}>
+          <View style={styles.groupNameContainer}>
+            <Text style={styles.headerText}>{groupData.name}</Text>
+            <Text style={styles.desc}>{groupData.description}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.contentContainer}>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <View style={styles.add}>
+            <MaterialIcons
+              name="add-a-photo"
+              size={20}
+              style={{padding: 8, color: 'black'}}
             />
-          </ImageBackground>
-          <View style={{position: 'relative', top: -height * 0.3}}>
-            <View style={styles.groupNameContainer}>
-              <Text style={styles.headerText}>{groupData.name}</Text>
-              <Text style={styles.desc}>{groupData.description}</Text>
-            </View>
           </View>
+        </TouchableOpacity>
+
+        <View style={styles.lengthContainer}>
+          <Text style={styles.memberLength}>
+            {groupData.members.length} members
+          </Text>
         </View>
-        <View style={styles.contentContainer}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <View style={styles.add}>
-              <MaterialIcons
-                name="add-a-photo"
-                size={20}
-                style={{padding: 8, color: 'black'}}
+
+        <ScrollView
+          style={{
+            height: height * 0.6,
+            marginBottom: 70,
+            width: width * 1,
+            top: height * 0.02,
+          }}>
+          <Pressable>
+            {groupData.members.map((item, index) => (
+              <UserChat
+                key={index}
+                item={item}
+                navigateMessages={() => {
+                  navigation.navigate('Messages', {recepientId: item._id});
+                }}
               />
-            </View>
-          </TouchableOpacity>
+            ))}
+          </Pressable>
+        </ScrollView>
+      </View>
 
-          <View style={styles.lengthContainer}>
-            <Text style={styles.memberLength}>{groupData.members.length} members</Text>
-          </View>
-
-          <ScrollView style={{height:height*0.6,marginBottom:70,width:width*1,top:height*0.02}}>
-          
-        <Pressable>
-          {groupData.members.map((item, index) => (
-            <UserChat key={index} item={item} navigateMessages={()=>{      
-              navigation.navigate('Messages',{recepientId:item._id})
-            }}/>
-          ))}
-        </Pressable>
-        
-       
-      </ScrollView>
- 
-
-          
-        </View>
-
-        {
-          groupData.admin==userId ?
-          <TouchableOpacity
-          onPress={()=>setEditModal(true)}
+      {groupData.admin == userId ? (
+        <TouchableOpacity
+          onPress={() => setEditModal(true)}
           style={styles.logOutContainer}>
           <View style={{}}>
             <Text
@@ -260,13 +257,9 @@ const ChatProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        :
-      <></>
-
-        }
-
-       
-
+      ) : (
+        <></>
+      )}
 
       <Modal
         animationType="slide"
@@ -346,32 +339,49 @@ const ChatProfileScreen = () => {
               value={groupDescription}
               onChangeText={setGroupDescription}
             />
-             <Text style={styles.label}>Select Friends:</Text>
-             <View style={{height:220,borderWidth:2,borderColor:'gray',borderRadius:20,elevation:2,backgroundColor:"white",padding:5}}>
-             <FlatList
-              data={friends}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.friendItem} onPress={() => handleSelection(item._id)}>
-                  <View style={styles.pressableContainer}>
-                    <Image source={{ uri: item.image }} style={styles.image} />
-                    <View style={styles.textContainer}>
-                      <Text style={styles.textName}>{item.name}</Text>
-                      <Text style={styles.textLast}>{item.email}</Text>
+            <Text style={styles.label}>Select Friends:</Text>
+            <View
+              style={{
+                height: 220,
+                borderWidth: 2,
+                borderColor: 'gray',
+                borderRadius: 20,
+                elevation: 2,
+                backgroundColor: 'white',
+                padding: 5,
+              }}>
+              <FlatList
+                data={friends}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.friendItem}
+                    onPress={() => handleSelection(item._id)}>
+                    <View style={styles.pressableContainer}>
+                      <Image source={{uri: item.image}} style={styles.image} />
+                      <View style={styles.textContainer}>
+                        <Text style={styles.textName}>{item.name}</Text>
+                        <Text style={styles.textLast}>{item.email}</Text>
+                      </View>
+                      <View style={styles.checkbox}>
+                        {selectedFriends.includes(item._id) && (
+                          <View style={styles.checkedCircle} />
+                        )}
+                      </View>
+                      <View />
                     </View>
-                    <View style={styles.checkbox}>
-                      {selectedFriends.includes(item._id) && <View style={styles.checkedCircle} /> }
-                    </View>
-                    <View />
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item._id}
-            />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={item => item._id}
+              />
             </View>
-            <TouchableOpacity style={styles.modalButton} onPress={()=>handleEditGroup()}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleEditGroup()}>
               <Text style={styles.modalButtonText}>Save Changes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={() => setEditModal(false)}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setEditModal(false)}>
               <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -392,8 +402,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: height*0.079 ,
-    
+    marginTop: height * 0.079,
   },
   add: {
     borderWidth: 1,
@@ -404,8 +413,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: 'black',
     backgroundColor: 'white',
-    left: height * 0.22,
-    top: height * 0.05,
+    left: width * 0.43,
+    top: height * 0.033,
     marginTop: height * 0.04,
   },
   profileImage: {
@@ -493,9 +502,9 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#D77702',
     borderRadius: 20,
-    bottom:height * 0.1,
-    alignSelf:"center",
-    position:"absolute"
+    bottom: height * 0.1,
+    alignSelf: 'center',
+    position: 'absolute',
   },
   modalContainer: {
     flex: 1,
@@ -584,28 +593,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: -8,
   },
-  lengthContainer:{
-    alignSelf:"flex-start",
-    left:width * 0.045,
-    top:height * 0.045,
-    position:"absolute"
+  lengthContainer: {
+    alignSelf: 'flex-start',
+    left: width * 0.045,
+    top: height * 0.045,
+    position: 'absolute',
   },
-  memberLength:{
-    fontSize:20,
-    fontWeight:"bold",
-    color:"silver"
-
+  memberLength: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'silver',
   },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
   buttonContainer: {
-    borderBottomWidth:1,
+    borderBottomWidth: 1,
     justifyContent: 'center',
-    alignSelf:"center",
-    borderColor:"silver",
+    alignSelf: 'center',
+    borderColor: 'silver',
     padding: 15,
 
     paddingHorizontal: 15,
@@ -633,15 +640,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 5,
     borderWidth: 1,
-    margin:5,
-    borderRadius:10,
-    height:60,
-    borderColor:"gray",
-    elevation:2,
-    backgroundColor:"white",
-    shadowColor:"black",
-    shadowOpacity:20
-
+    margin: 5,
+    borderRadius: 10,
+    height: 60,
+    borderColor: 'gray',
+    elevation: 2,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOpacity: 20,
   },
   checkbox: {
     height: 24,
@@ -692,5 +698,4 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     resizeMode: 'cover',
   },
-
 });

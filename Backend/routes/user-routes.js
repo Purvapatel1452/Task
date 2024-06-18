@@ -1,5 +1,6 @@
 // routes/router.js
 const express = require("express");
+const cron = require('node-cron');
 const {
   registerUser,
   loginUser,
@@ -13,6 +14,10 @@ const {
   friendsPaymentStatus,
   getUserDetails,
   uploadImage,
+  editProfile,
+  softDeleteUser,
+  recoverUser,
+  deleteExpiredUsers,
   getUserSubscription,
   setSubscription,
 } = require("../controllers/user-controller");
@@ -35,6 +40,16 @@ router.get("/friend-request/:userId", authMiddleware, friendRequestList);
 router.post("/friend-request/accept", authMiddleware, acceptFriendRequest);
 router.get("/accepted-friends/:userId", authMiddleware, friends);
 router.get("/friendsPaymentStatus/:userId", authMiddleware, friendsPaymentStatus);
+
+router.post('/editProfile', editProfile);
+
+router.delete('/deleteUser/:userId', softDeleteUser);
+
+router.post('/recoverUser',recoverUser);
+
+cron.schedule('0 0 * * *', async () => {
+  await deleteExpiredUsers();
+});
 router.get('/getSubscription/:userId', authMiddleware, getUserSubscription);
 router.post('/setSubscription', authMiddleware, setSubscription);
 

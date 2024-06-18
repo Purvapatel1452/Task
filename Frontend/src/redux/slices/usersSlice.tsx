@@ -6,7 +6,7 @@ export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"gtwer34fgjgu43454ht*")
+      console.log(BASE_URL,"gtwerhyt34fgjghtbftu43454ht*")
       const response = await axios.get(`${BASE_URL}/user/users/${userId}`);
       return response.data; // Assuming the API response structure is correct
     } catch (error) {
@@ -20,8 +20,54 @@ export const fetchUserDetails = createAsyncThunk(
     'profile/fetchUserDetails',
     async (userId, { rejectWithValue }) => {
       try {
-        console.log(BASE_URL,"Mthgyufrwef<rg5xxdwe")
+        console.log(BASE_URL,"Mthgthbfhttyufrwtgthef<rg5xxdwe")
         const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
+
+
+  export const updateUserProfile = createAsyncThunk(
+    'user/updateProfile',
+    async ({ userId, name, mobile }, { rejectWithValue }) => {
+      try {
+        console.log(BASE_URL,"LDK")
+        const response = await axios.post(`${BASE_URL}/user/editProfile`, {
+          userId,
+          name,
+          mobile,
+        });
+        return response.data.user;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
+
+  export const deleteUserAccount = createAsyncThunk(
+    'users/deleteUserAccount',
+    async ({ userId }, { rejectWithValue }) => {
+      try {
+        console.log(BASE_URL,"CDSFWdscw")
+        const response = await axios.delete(`${BASE_URL}/user/deleteUser/${userId}`);
+        console.log(response.data,":::")
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
+  
+  // Thunk for recovering user account
+  export const recoverUserAccount = createAsyncThunk(
+    'users/recoverUserAccount',
+    async ({ email,password }, { rejectWithValue }) => {
+      try {
+        console.log(BASE_URL,"CDfvjkfhuif")
+        const response = await axios.post(`${BASE_URL}/recoverUser`,{email,password});
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -61,6 +107,18 @@ const usersSlice = createSlice({
         state.details = action.payload;
       })
       .addCase(fetchUserDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.details = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

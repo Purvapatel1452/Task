@@ -9,7 +9,7 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"ZrtggrrhfyK4iuewfwe1freyqqq")
+      console.log(BASE_URL,"ZrtgdgrtggrrhfyK4iuewfwe1fdfgrtgreyqqq")
       const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch friends payment status');
@@ -27,7 +27,7 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"Derrrethjhgugrtfkjtgtrugwe22x")
+      console.log(BASE_URL,"Derrretbrtghjhgugrtfkjtgtbtgrgtrugwe22x")
       const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`);
       return response.data;
     } catch (error) {
@@ -42,7 +42,7 @@ export const acceptFriendRequest = createAsyncThunk(
   async ({friendRequestId,userId}, {  rejectWithValue }) => {
     
 
-   console.log(BASE_URL,"Z6figrdrgrhkuyfewygrerh22J")
+   console.log(BASE_URL,"Z6fifgbhrtgrdrgrhkuyfewygrerh22Jtgbt")
     try {
       const d={
         senderId: friendRequestId,
@@ -74,7 +74,7 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"<MKth!etykhiuhyrtyfbhrrry2edeed:>")
+      console.log(BASE_URL,"<MKth!bthetykhiuhyrtyfbhrrry2ehthnfgrdeed:>")
       const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
         selectedUserId
@@ -97,10 +97,13 @@ export const checkFriendRequest = createAsyncThunk(
   async ({userId,item}, { rejectWithValue }) => {
     try {
 
-      console.log(BASE_URL,":{dgftyygrgwrjhgufyrrtgtehytrL:{")
+      console.log(BASE_URL,":{dggbrtftyygrgwrjhgufyrrgtbgbtgtehytrL:{")
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`);
+      console.log(response.data,"it is requested data")
     
-      const req=response.data.sentFriendRequests.includes(item._id)
+      const req=(response.data.sentFriendRequests.includes(item._id))
+      console.log(response.data.sentFriendRequests,"++++",item._id,"::::indcludes",response.data.sentFriendRequests.includes(item._id))
+      console.log(req,"REQQQQ")
      
   
       return req;

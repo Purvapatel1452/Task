@@ -169,24 +169,26 @@ const UserProfileScreen = () => {
           </View>
         </View>
         <View style={styles.contentContainer}>
+        <View style={styles.imageContainer}>
           {loading ? (
             <ActivityIndicator size={30} style={{height: 190}} />
           ) : recepientDatas.image ? (
-            <View style={styles.imageContainer}>
+        
               <FastImage
                 source={{uri: recepientDatas.image}}
                 style={styles.profileImage}
               />
-            </View>
+         
           ) : (
-            <View style={styles.imageContainer}>
+      
               <IonIcons
                 name="person-outline"
                 size={140}
                 style={styles.profileImage1}
               />
-            </View>
+          
           )}
+             </View>
 
           <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
             <View style={styles.nameContainer}>
@@ -245,8 +247,8 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    height: height * 0.2,
-    width: width * 0.37,
+    height: height * 0.18,
+    width: height * 0.18,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'gray',
@@ -268,10 +270,10 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     borderWidth: 0.5,
     borderColor: 'silver',
-    height: height * 0.199,
-    width: height * 0.195,
+    height: height * 0.18,
+    width: height * 0.18,
     backgroundColor: '#F2F2F2',
-    marginTop: -10,
+    marginTop: height*0.001,
   },
   name: {
     color: 'black',

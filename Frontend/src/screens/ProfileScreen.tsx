@@ -9,6 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -28,7 +29,7 @@ import storage from '@react-native-firebase/storage';
 // import firestore from '@react-native-firebase/firestore';
 import * as Progress from 'react-native-progress';
 import FastImage from 'react-native-fast-image';
-import {fetchUserDetails} from '../redux/slices/usersSlice';
+import {deleteUserAccount, fetchUserDetails, updateUserProfile} from '../redux/slices/usersSlice';
 import {BASE_URL} from '@env';
 
 const ProfileScreen = () => {
@@ -39,6 +40,10 @@ const ProfileScreen = () => {
   const [ur, setUr] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [load, setLoad] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
 
   const navigation = useNavigation();
 
@@ -49,9 +54,34 @@ const ProfileScreen = () => {
   const route = useRoute();
   const {data} = route.params;
 
+  useEffect(() => {
+    if (details) {
+      setName(details.name);
+      setEmail(details.email);
+      setMobile(details.mobile);
+    }
+  }, [details]);
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem('authToken');
     dispatch(clearUser());
+  };
+
+  const handleEditProfile = async () => {
+    try {
+      const resultAction = await dispatch(
+        updateUserProfile({userId, name, mobile}),
+      );
+      if (updateUserProfile.fulfilled.match(resultAction)) {
+        Alert.alert('Profile updated successfully!');
+        setEditModalVisible(false);
+      } else {
+        Alert.alert('Failed to update profile!', resultAction.payload.message);
+      }
+      setEditModalVisible(false);
+    } catch (error) {
+      console.log('Error updating profile:', error);
+    }
   };
 
   useEffect(() => {
@@ -117,7 +147,6 @@ const ProfileScreen = () => {
 
       if (response) {
         setUr(url);
-     
 
         setUploading(false);
         setModalVisible(false);
@@ -130,62 +159,98 @@ const ProfileScreen = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account? This action can be undone within 30 days.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const resultAction = await dispatch(deleteUserAccount({userId}));
+              if (deleteUserAccount.fulfilled.match(resultAction)) {
+                Alert.alert(
+                  'Account has been soft deleted. You can recover it within 30 days.',
+                );
+                await AsyncStorage.removeItem('authToken');
+                dispatch(clearUser());
+                navigation.navigate('Login');
+              } else {
+                Alert.alert(
+                  'Failed to delete account!',
+                  resultAction.payload.message,
+                );
+              }
+            } catch (error) {
+              console.log('Error deleting account:', error);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleRecoverAccount = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/users/recover`,{email,password});
+      if (response.status === 200) {
+        Alert.alert('Account recovered successfully!');
+        dispatch(fetchUserDetails(userId));
+      } else {
+        Alert.alert('Failed to recover account');
+      }
+    } catch (error) {
+      console.log('Error recovering account:', error);
+    }
+  };
+
   return (
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={'#D77702'} />
 
       <View style={{alignItems: 'center'}}>
-        {/* <View style={{flex:1,position:"absolute"}}>
-          <View     style={{position:"relative",marginTop:10,backgroundColor:"rgba(0, 0, 0, 0.37)"}}>
-        <IonIcons
-              name="arrow-back-sharp"
-              size={28}
-              color={'black'}
-          
-
-              onPress={() => navigation.goBack()}
-            />
-            </View>
-       
-          <ImageBackground source={{uri:'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp'}} style={{height:height*0.25,width:width,position: "relative",}} >
-          <View style={styles.overlay} />
-          </ImageBackground>
-        </View> */}
-         <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, position: "relative" }}>
-        <ImageBackground
-          source={{ uri: 'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp' }}
-          style={{ height: height * 0.24, width: width }}
-        >
-          <View style={styles.overlay} />
-          <IonIcons
-            name="arrow-back-sharp"
-            size={28}
-            color={'white'}
-            style={styles.icon}
-            onPress={() => navigation.goBack()}
-          />
-        </ImageBackground>
-      </View>
-    </View>
+        <View style={{flex: 1}}>
+          <View style={{flex: 1, position: 'relative'}}>
+            <ImageBackground
+              source={{
+                uri: 'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp',
+              }}
+              style={{height: height * 0.24, width: width}}>
+              <View style={styles.overlay} />
+              <IonIcons
+                name="arrow-back-sharp"
+                size={28}
+                color={'white'}
+                style={styles.icon}
+                onPress={() => navigation.goBack()}
+              />
+            </ImageBackground>
+          </View>
+        </View>
         <View style={styles.contentContainer}>
-          {loading ? (
-            <ActivityIndicator size={30} style={{height: 190}} />
-          ) : details.image ? (
-            <View style={styles.imageContainer}>
+          <View style={styles.imageContainer}>
+            {loading ? (
+              <ActivityIndicator size={30} style={{height: 190}} />
+            ) : details.image ? (
               <FastImage
                 source={{uri: details.image}}
                 style={styles.profileImage}
               />
-            </View>
-          ) : (
-            <View style={styles.imageContainer}>
+            ) : (
               <FastImage
-                source={{uri: "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg"}}
+                source={{
+                  uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+                }}
                 style={styles.profileImage}
               />
-            </View>
-          )}
+            )}
+          </View>
 
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={styles.add}>
@@ -197,8 +262,7 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
 
-        
-          <View style={{flexDirection: 'row', gap: 10,alignItems:"center"}}>
+          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
             <MaterialIcons
               name="person"
               color="black"
@@ -210,7 +274,7 @@ const ProfileScreen = () => {
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', gap: 10,alignItems:'center'}}>
+          <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
             <MaterialCommunityIcons
               name="email"
               color="black"
@@ -234,14 +298,53 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
+        <View style={{flex: 1, flexDirection: 'row', gap: 12}}>
+          <TouchableOpacity
+            onPress={() => setEditModalVisible(true)}
+            style={styles.editContainer}>
+            <View style={{}}>
+              <Text
+                style={{
+                  color: 'red',
+                  textAlign: 'center',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  elevation: 2,
+                  shadowColor: 'black',
+                  shadowOpacity: 10,
+                }}>
+                Edit Profile
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleLogout()}
+            style={styles.editContainer}>
+            <View style={{}}>
+              <Text
+                style={{
+                  color: 'red',
+                  textAlign: 'center',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  elevation: 2,
+                  shadowColor: 'black',
+                  shadowOpacity: 10,
+                }}>
+                Log Out
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
-          onPress={() => handleLogout()}
+          onPress={() => handleDeleteAccount()}
           style={styles.logOutContainer}>
           <View style={{}}>
             <Text
               style={{
-                color: 'red',
+                color: 'white',
                 textAlign: 'center',
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -249,7 +352,7 @@ const ProfileScreen = () => {
                 shadowColor: 'black',
                 shadowOpacity: 10,
               }}>
-              Log Out
+              Delete Account
             </Text>
           </View>
         </TouchableOpacity>
@@ -313,11 +416,44 @@ const ProfileScreen = () => {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => setEditModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={name}
+              onChangeText={text => setName(text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Mobile"
+              value={mobile}
+              onChangeText={text => setMobile(text)}
+            />
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleEditProfile()}>
+              <Text style={styles.modalButtonText}>Update Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setEditModalVisible(false)}>
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
-const { width,height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 export default ProfileScreen;
 
@@ -328,7 +464,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:height*0.15
+    marginTop: height * 0.15,
   },
   add: {
     borderWidth: 1,
@@ -340,15 +476,15 @@ const styles = StyleSheet.create({
     marginTop: -34,
   },
   profileImage: {
-    height: height*0.2,
-    width: width*0.37,
+    height: height * 0.18,
+    width: height * 0.18,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'gray',
   },
   profileImage1: {
-    height: height*0.2,
-    width: height*0.2,
+    height: height * 0.2,
+    width: height * 0.2,
     borderRadius: 100,
     color: 'gray',
     justifyContent: 'center',
@@ -357,17 +493,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imageContainer: {
-    
     elevation: 9,
     borderRadius: 100,
     shadowOpacity: 10,
     shadowColor: 'black',
     borderColor: 'silver',
-    borderWidth: 1,
-    height: height*0.2,
-    width: height*0.2,
+    borderWidth: 0.5,
+    height: height * 0.18,
+    width: height * 0.18,
     backgroundColor: 'silver',
-    marginTop: -10,
+    marginTop: height * 0.001,
   },
   name: {
     color: 'black',
@@ -382,45 +517,66 @@ const styles = StyleSheet.create({
   nameLogo: {
     color: 'black',
     fontSize: 25,
-    marginTop: height*0.03,
+    marginTop: height * 0.03,
     marginLeft: width * 0.04,
     fontWeight: 'bold',
   },
   mobileLogo: {
     color: 'black',
     fontSize: 30,
-    marginTop: height*0.034,
+    marginTop: height * 0.034,
     marginRight: 6,
-  
+
     fontWeight: 'bold',
     marginLeft: width * 0.06,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    width: 250,
   },
   nameContainer: {
     borderBottomWidth: 1,
     borderRadius: 10,
     borderColor: 'orange',
-  
+
     shadowColor: 'black',
     backgroundColor: 'white',
     width: 100,
     marginTop: 20,
-    height: height*0.05,
+    height: height * 0.05,
     justifyContent: 'center',
     alignItems: 'flex-start',
-    paddingLeft:10,
-    paddingTop:5,
-   
-    flex:1,
+    paddingLeft: 10,
+    paddingTop: 5,
+
+    flex: 1,
     marginRight: width * 0.09,
   },
   logOutContainer: {
-    marginTop:20,
+    marginTop: 100,
     elevation: 2,
     shadowColor: 'black',
     shadowOpacity: 10,
     borderWidth: 2,
     padding: 10,
-    width: 330,
+    width: width * 0.88,
+    height: 50,
+    borderColor: 'white',
+    backgroundColor: 'red',
+    borderRadius: 20,
+  },
+  editContainer: {
+    marginTop: 20,
+    elevation: 2,
+    shadowColor: 'black',
+    shadowOpacity: 10,
+    borderWidth: 2,
+    padding: 10,
+    width: width * 0.42,
     height: 50,
     borderColor: 'white',
     backgroundColor: 'white',

@@ -5,6 +5,7 @@ import { RootState } from '../../redux/store'; // assuming you have a root reduc
 import { useSelector } from 'react-redux';
 import Login from '../../screens/Login';
 import SignUp from '../../screens/SignUp';
+import RecoverScreen from '../../screens/RecoverScreen';
 
 interface AuthStackProps {}
 
@@ -21,6 +22,11 @@ const AuthStack: React.FC<AuthStackProps> = () => {
       <Stack.Screen
         name="SignUp"
         component={SignUp}
+        options={{ headerShown: false }}
+      />
+       <Stack.Screen
+        name="Recover"
+        component={RecoverScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

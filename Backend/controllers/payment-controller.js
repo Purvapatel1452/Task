@@ -11,7 +11,7 @@ const paymentIntent = async (req, res) => {
       amount: 1099,
       currency: "usd",
     });
-    console.log("2md", res);
+
 
     res.status(200).json(paymentIntent);
   } catch (error) {
@@ -34,7 +34,7 @@ const stripeIntent = async (req, res) => {
         enabled: true,
       },
     });
-    console.log("@");
+
 
     res.json({ paymentIntent: paymentIntent.client_secret });
   } catch (e) {
@@ -48,15 +48,15 @@ const stripeIntent = async (req, res) => {
 const stripWebhook = async (req, res) => {
   console.log("WEBHOOK");
   const event = req.body;
-  console.log(event.type);
+  // console.log(event.type);
   let responsePayload = "";
-  console.log("RR", event.data.object);
+  // console.log("RR", event.data.object);
 
   // Handle the payment_intent.succeeded event
   if (event.type === "payment_intent.succeeded") {
-    console.log("IF");
+
     const paymentIntent = event.data.object;
-    console.log("RRee", event.data.object);
+    // console.log("RRee", event.data.object);
 
     console.log("PaymentIntent was successful", paymentIntent);
   }

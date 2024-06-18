@@ -53,10 +53,30 @@ const userSchema = new mongoose.Schema({
       ref: "Expense",
     },
   ],
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
   balance: {
     type: Number,
     default: 0,
   },
+});
+
+
+userSchema.methods.markAsDeleted = function() {
+  this.isDeleted = true;
+  this.deletedAt = new Date();
+};
+
+userSchema.methods.recover = function() {
+  this.isDeleted = false;
+  this.deletedAt = null;
+};
   subscriptionType: {
     type: String,
     enum: ['monthly', 'quarterly', 'yearly'],
