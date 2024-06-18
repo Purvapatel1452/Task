@@ -30,6 +30,7 @@ import * as Progress from 'react-native-progress';
 import {BASE_URL} from '@env';
 import {editGroup, fetchGroupData} from '../redux/slices/groupSlice';
 import UserChat from '../components/UserChat';
+import FastImage from 'react-native-fast-image';
 
 const ChatProfileScreen = () => {
   const [image, setImage] = useState(null);
@@ -270,7 +271,7 @@ const ChatProfileScreen = () => {
           <View style={styles.modalView}>
             {image && (
               <View>
-                <Image source={{uri: image.uri}} style={styles.imageBox} />
+                <FastImage source={{uri: image.uri}} style={styles.imageBox} />
               </View>
             )}
             {uploading ? (
@@ -357,7 +358,7 @@ const ChatProfileScreen = () => {
                     style={styles.friendItem}
                     onPress={() => handleSelection(item._id)}>
                     <View style={styles.pressableContainer}>
-                      <Image source={{uri: item.image}} style={styles.image} />
+                      <FastImage source={{uri: item.image}} style={styles.image} />
                       <View style={styles.textContainer}>
                         <Text style={styles.textName}>{item.name}</Text>
                         <Text style={styles.textLast}>{item.email}</Text>
@@ -551,7 +552,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    color: 'gray',
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, Image } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 interface User {
   _id: string;
@@ -34,7 +35,19 @@ const UserChat: React.FC<UserChatProps> = ({ item, navigateMessages }) => {
 
   return (
     <Pressable onPress={navigateMessages} style={styles.pressableContainer}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      {
+        item.image ?
+        <FastImage source={{ uri: item.image }} style={styles.image} />
+
+        :
+        <FastImage
+        source={{
+          uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+        }}
+        style={styles.image}
+      />
+      }
+   
       <View style={styles.textContainer}>
         <Text style={styles.textName}>{item.name}</Text>
         <Text style={styles.textLast}>Last chat comes here . . . </Text>

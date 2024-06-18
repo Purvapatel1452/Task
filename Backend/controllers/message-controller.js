@@ -13,7 +13,6 @@ const messagess = async (req, res) => {
       imageUrl,
     } = req.body;
 
-
     const newMessage = new Message({
       senderId,
       recepientId,
@@ -37,7 +36,6 @@ const messagess = async (req, res) => {
 const userDetails = async (req, res) => {
   try {
     const { userId } = req.params;
-  
 
     const user = await User.findById(userId);
 
@@ -55,9 +53,7 @@ const groupDetails = async (req, res) => {
   try {
     const { groupId } = req.params;
 
-
-    const group = await Group.findById(groupId).populate('members');
-
+    const group = await Group.findById(groupId).populate("members");
 
     res.json(group);
   } catch (err) {
@@ -73,7 +69,6 @@ const chatMessages = async (req, res) => {
   try {
     console.log("qq");
     const { senderId, recepientId, groupId } = req.body;
-
 
     let messages;
 
@@ -93,17 +88,12 @@ const chatMessages = async (req, res) => {
         ],
       }).populate("senderId", "_id name");
     } else {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Either groupId or senderId and recepientId must be provided",
-        });
+      return res.status(400).json({
+        message: "Either groupId or senderId and recepientId must be provided",
+      });
     }
 
-
     res.json(messages);
-
   } catch (err) {
     console.log("error in retrieving messages", err);
 

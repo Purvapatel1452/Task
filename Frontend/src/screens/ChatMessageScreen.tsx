@@ -39,6 +39,7 @@ import {
 import storage from '@react-native-firebase/storage';
 import Modal from 'react-native-modal';
 import HeaderChatBar from '../components/HeaderChatBar';
+import FastImage from 'react-native-fast-image';
 
 
 
@@ -542,7 +543,7 @@ const ChatMessageScreen = ({navigation}: any) => {
                           },
                     ]}>
                     <View>
-                      <Image
+                      <FastImage
                         source={{uri: source}}
                         style={{width: 200, height: 200, borderRadius: 7}}
                       />

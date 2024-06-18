@@ -25,6 +25,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchFriends, fetchGroups} from '../redux/slices/groupSlice';
 import {addExpense} from '../redux/slices/expensesSlice';
 import {fetchFriendsPaymentStatus} from '../redux/slices/friendSlice';
+import FastImage from 'react-native-fast-image';
 
 const ChatScreen = () => {
   // const [acceptedFriends, setAcceptedfriends] = useState([]);
@@ -376,7 +377,7 @@ const ChatScreen = () => {
                     style={styles.friendItem}
                     onPress={() => handleSelection(item)}>
                     <View style={styles.pressableContainer}>
-                      <Image source={{uri: item.image}} style={styles.image} />
+                      <FastImage source={{uri: item.image}} style={styles.image} />
                       <View style={styles.textContainer}>
                         <Text style={styles.textName}>{item.name}</Text>
                         {isGroup ? (

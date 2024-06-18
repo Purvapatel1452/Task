@@ -15,6 +15,7 @@ import {
 } from '../redux/slices/friendSlice';
 import { fetchFriends } from '../redux/slices/groupSlice';
 import { RootState } from '../redux/store'; 
+import FastImage from 'react-native-fast-image';
 
 interface FriendRequestProps {
   item: {
@@ -47,10 +48,21 @@ const FriendRequest: React.FC<FriendRequestProps> = ({
 
   return (
     <Pressable style={styles.pressableContainer}>
-      <Image
+      {
+        item.image ?
+        <FastImage
         source={{ uri: item.image }}
         style={{ width: 50, height: 50, borderRadius: 25 }}
-      />
+        />
+        :
+         <FastImage
+         source={{
+           uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+         }}
+         style={{ width: 50, height: 50, borderRadius: 25 }}
+       />
+      }
+    
       <Text style={styles.text}>{item.name} sent you a Friend Request</Text>
 
       <Pressable

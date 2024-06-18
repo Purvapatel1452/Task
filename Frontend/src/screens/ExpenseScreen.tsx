@@ -16,6 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchExpense, updatePaymentStatus } from '../redux/slices/expenseSlice';
+import FastImage from 'react-native-fast-image';
 
 const ExpenseScreen = ({navigation}: any) => {
   const route = useRoute();
@@ -209,7 +210,19 @@ const fetchExpenseDetails = async () => {
           </View>
 
           <View style={{flex: 1, flexDirection: 'row', gap: 20, marginTop: 20}}>
-            <Image source={{uri: expens.payerId.image}} style={styles.image} />
+            {
+              expens.payerId.image ?
+              <FastImage source={{uri: expens.payerId.image}} style={styles.image} />
+
+              :
+              <FastImage
+              source={{
+                uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+              }}
+              style={styles.image}
+            />
+            }
+            
 
             <Text style={styles.paid}>
               {

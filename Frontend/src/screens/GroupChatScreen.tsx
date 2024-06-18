@@ -33,6 +33,7 @@ import Modal from 'react-native-modal';
 import { BASE_URL } from '@env';
 import HeaderChatBar from '../components/HeaderChatBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import FastImage from 'react-native-fast-image';
 
 const GroupChatScreen = ({navigation}: any) => {
   console.log(BASE_URL)
@@ -656,7 +657,7 @@ if (messageType == 'image') {
               <View>
                 {     item.senderId._id == userId ?
                 <>
-                     <Image
+                     <FastImage
                      source={{uri: source}}
                      style={{width: 200, height: 200, borderRadius: 7}}
                    />
@@ -678,7 +679,7 @@ if (messageType == 'image') {
                    <Text style={styles.senderName}>
                   {item.senderId.name}
                    </Text>
-                     <Image
+                     <FastImage
                      source={{uri: source}}
                      style={{width: 200, height: 200, borderRadius: 7}}
                    />

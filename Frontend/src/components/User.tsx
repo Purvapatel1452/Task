@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View, Image, Alert, ActivityIndicator } fr
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store'; // assuming you have a root reducer defined in store.ts
 import { checkFriendRequest, sendFriendRequest } from '../redux/slices/friendSlice';
+import FastImage from 'react-native-fast-image';
 
 interface UserProps {
   item: {
@@ -18,17 +19,21 @@ const User: React.FC<UserProps> = ({ item }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<any>>();
   const { userId } = useSelector((state: RootState) => state.auth);
-  const { requestSent, loading, error } = useSelector((state: RootState) => state.friend);
+  const { requestSent, loading, error } = useSelector(state => state.friend);
   const [load, setLoad] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoad(false);
-      console.log(requestSent, item.name);
-    }, 1000);
+      console.log(requestSent,"DLEAYED",item.name)
+   
+      
+    }, 2000);
 
     if (userId) {
+      // console.log(userId,item)
       dispatch(checkFriendRequest({ userId, item }));
+      console.log(requestSent, item.name);
 
 
     }
@@ -46,20 +51,32 @@ const User: React.FC<UserProps> = ({ item }) => {
   return (
     <Pressable style={styles.pressableContainer}>
       <View>
-        <Image style={styles.image} source={{ uri: item.image }} />
+        {
+          item.image ?
+          <FastImage style={styles.image} source={{ uri: item.image }} />
+
+          :
+          <FastImage
+          source={{
+            uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+          }}
+          style={styles.image}
+        />
+        }
+      
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.textName}>{item?.name}</Text>
         <Text style={styles.textEmail}>{item?.email}</Text>
       </View>
 
-      {loading ? (
+      {load ? (
         <ActivityIndicator />
       ) : requestSent ? (
         <Pressable
           style={styles.pressAddFrnd1}
           onPress={() => {
-            console.log('request sent', userId);
+            console.log('request sent', item._id);
             Alert.alert('Request Already Sent !!!');
           }}>
           <Text style={styles.textAdd1}>Request Sent</Text>
@@ -68,7 +85,7 @@ const User: React.FC<UserProps> = ({ item }) => {
         <Pressable
           style={styles.pressAddFrnd}
           onPress={() => {
-            console.log('request send', userId);
+            console.log('request send', item._id);
             sendFriendRequests();
           }}>
           <Text style={styles.textAdd}>Add Friend</Text>

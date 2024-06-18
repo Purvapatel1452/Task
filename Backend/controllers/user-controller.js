@@ -46,7 +46,6 @@ const createToken = (userId) => {
 
   const token = jwt.sign(payload, "Purv@ p@tel", { expiresIn: "1h" });
 
-
   return token;
 };
 
@@ -87,8 +86,6 @@ const registerUser = async (req, res) => {
 //verify Mobile no through OTP
 
 const sendOtp = async (req, res) => {
-
-
   const { email } = req.body;
 
   const existingOtpData = await OTPData.findOne({ email });
@@ -244,7 +241,6 @@ const getUsers = async (req, res) => {
 const friendRequest = async (req, res) => {
   const { currentUserId, selectedUserId } = req.body;
 
-
   try {
     const currentUser = await User.findById(currentUserId);
 
@@ -265,7 +261,6 @@ const friendRequest = async (req, res) => {
     await User.findByIdAndUpdate(currentUserId, {
       $push: { sentFriendRequests: selectedUserId },
     });
-  
 
     res.sendStatus(200);
   } catch (err) {
@@ -285,8 +280,6 @@ const friendRequestList = async (req, res) => {
       .populate("friendRequests", "name email image")
       .lean();
 
-
-
     const friendRequests = user.friendRequests;
 
     res.status(200).json(friendRequests);
@@ -305,7 +298,7 @@ const acceptFriendRequest = async (req, res) => {
     const { senderId, recepientId } = req.body;
     const sender = await User.findById(senderId);
     const recepient = await User.findById(recepientId);
-  
+
     sender.friends.push(recepientId);
     recepient.friends.push(senderId);
 
@@ -352,7 +345,6 @@ const friends = async (req, res) => {
 const friendsPaymentStatus = async (req, res) => {
   try {
     const { userId } = req.params;
-  
 
     const user = await User.findById(userId).populate("friends");
 
@@ -379,22 +371,18 @@ const friendsPaymentStatus = async (req, res) => {
       let iOweFriend = 0;
 
       expenses.forEach((expense) => {
-     
         expense.payments.forEach((payment) => {
-        
           if (
             payment.participant._id.toString() === friend._id.toString() &&
             expense.payerId._id.toString() === userId &&
             !payment.paid
           ) {
             friendOwesMe += payment.amount;
-         
           } else if (
             payment.participant._id.toString() === userId &&
             expense.payerId._id.toString() === friend._id.toString() &&
             !payment.paid
           ) {
-           
             iOweFriend += payment.amount;
           }
         });
@@ -414,17 +402,14 @@ const friendsPaymentStatus = async (req, res) => {
   }
 };
 
-
-
-
 // Update user profile
-const editProfile= async (req, res) => {
+const editProfile = async (req, res) => {
   const { userId, name, mobile } = req.body;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     user.name = name || user.name;
@@ -432,13 +417,11 @@ const editProfile= async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Profile updated successfully', user });
+    res.status(200).json({ message: "Profile updated successfully", user });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
-}
-
-
+};
 
 const softDeleteUser = async (req, res) => {
   try {
@@ -446,56 +429,17 @@ const softDeleteUser = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     user.markAsDeleted();
     await user.save();
 
-    res.status(200).json({ message: 'User account has been soft deleted' });
+    res.status(200).json({ message: "User account has been soft deleted" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
-
-// Recover user account
-// const recoverUser = async (req, res) => {
-//   try {
-//     console.log("RECOVR")
-//     const { email,password} = req.body;
-//     console.log(email,password,"DD")
-//     const user = await User.findById({email});
-//     console.log(user,"++")
-//     if (!user || !user.isDeleted) {
-//       return res.status(404).json({ message: 'User not found or not deleted' });
-//     }
-
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//       return res.status(401).json({ message: 'Invalid credentials' });
-//     }
-    
-//     console.log(isPasswordValid,"PPAAD")
-
-//     const deletionDate = new Date(user.deletedAt);
-//     const currentDate = new Date();
-//     const daysDifference = Math.floor((currentDate - deletionDate) / (1000 * 60 * 60 * 24));
-//     console.log(daysDifference,"PwerPAAD")
-//     if (daysDifference > 30) {
-//       return res.status(400).json({ message: 'Recovery period has expired' });
-//     }
-
-//     user.recover();
-//     await user.save();
-
-//     res.status(200).json({ message: 'User account has been recovered' });
-//   } catch (error) {
-
-//     console.log(error,"EROROR")
-    
-//     res.status(500).json({ message: 'Server error', error });
-//   }
-// };
 
 const recoverUser = async (req, res) => {
   try {
@@ -506,35 +450,36 @@ const recoverUser = async (req, res) => {
     console.log(user, "++");
 
     if (!user || !user.isDeleted) {
-      return res.status(404).json({ message: 'User not found or not deleted' });
+      return res.status(404).json({ message: "User not found or not deleted" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
-    
+
     console.log(isPasswordValid, "PASSWORD VALID");
 
     const deletionDate = new Date(user.deletedAt);
     const currentDate = new Date();
-    const daysDifference = Math.floor((currentDate - deletionDate) / (1000 * 60 * 60 * 24));
+    const daysDifference = Math.floor(
+      (currentDate - deletionDate) / (1000 * 60 * 60 * 24)
+    );
     console.log(daysDifference, "PASSWORD VALID");
 
     if (daysDifference > 30) {
-      return res.status(400).json({ message: 'Recovery period has expired' });
+      return res.status(400).json({ message: "Recovery period has expired" });
     }
 
     user.recover();
     await user.save();
 
-    res.status(200).json({ message: 'User account has been recovered' });
+    res.status(200).json({ message: "User account has been recovered" });
   } catch (error) {
     console.log(error, "ERROR");
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 // Permanently delete users past recovery period
 const deleteExpiredUsers = async () => {
@@ -547,71 +492,68 @@ const deleteExpiredUsers = async () => {
       deletedAt: { $lt: expirationDate },
     });
 
-    console.log('Expired users have been permanently deleted');
+    console.log("Expired users have been permanently deleted");
   } catch (error) {
-    console.error('Error deleting expired users:', error);
+    console.error("Error deleting expired users:", error);
   }
 };
 
-
-
-
-
 const getUserSubscription = async (req, res) => {
   try {
+    console.log("getsub");
     const user = await User.findById(req.params.userId);
+    console.log(user, "USER");
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const setSubscription = async (req, res) => {
   try {
-    console.log("SSSUBBBB")
+    console.log("SSSUBBBB");
     const { userId, subscriptionType } = req.body;
-    console.log(userId,subscriptionType)
+    console.log(userId, subscriptionType);
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const today = new Date();
     let endDate;
 
-    console.log(today)
+    console.log(today, "TODAT");
 
     switch (subscriptionType) {
-      case 'Monthly':
+      case "Monthly":
         endDate = new Date(today.setMonth(today.getMonth() + 1));
         break;
-      case 'Quarterly':
+      case "Quarterly":
         endDate = new Date(today.setMonth(today.getMonth() + 3));
         break;
-      case 'Yearly':
+      case "Yearly":
         endDate = new Date(today.setFullYear(today.getFullYear() + 1));
         break;
       default:
-        return res.status(400).json({ message: 'Invalid subscription type' });
+        return res.status(400).json({ message: "Invalid subscription type" });
     }
-    console.log(user,":::::::")
+    console.log(user, ":::::::");
 
     user.subscriptionType = subscriptionType;
     user.subscriptionStartDate = new Date();
     user.subscriptionEndDate = endDate;
-    console.log(user,"LLLLLLLLLLLLL")
+    console.log(user, "LLLLLLLLLLLLL");
 
     await user.save();
 
-    res.json({ message: 'Subscription updated successfully', user });
+    res.json({ message: "Subscription updated successfully", user });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
-
 
 module.exports = {
   registerUser,
@@ -631,5 +573,5 @@ module.exports = {
   recoverUser,
   deleteExpiredUsers,
   getUserSubscription,
-  setSubscription
+  setSubscription,
 };

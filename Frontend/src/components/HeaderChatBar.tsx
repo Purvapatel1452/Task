@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGroupData } from '../redux/slices/groupSlice';
 import { fetchRecepientData } from '../redux/slices/recepientSlice';
+import FastImage from 'react-native-fast-image';
 
 const HeaderChatBar = ({ title, id }) => {
   const navigation = useNavigation();
@@ -66,7 +67,7 @@ const HeaderChatBar = ({ title, id }) => {
                 navigation.navigate('GroupChatProfile', { groupId: id })
               }>
               <View style={styles.imageContainer}>
-                <Image
+                <FastImage
                   source={{ uri: groupData.image }}
                   style={styles.image}
                 />
@@ -111,10 +112,21 @@ const HeaderChatBar = ({ title, id }) => {
                 navigation.navigate('UserProfile', { recepientId: id })
               }>
               <View style={styles.imageContainer}>
-                <Image
+                {
+                  recepientDatas.image ?
+                  <FastImage
                   source={{ uri: recepientDatas.image }}
                   style={styles.image}
                 />
+                  :
+                  <FastImage
+                  source={{
+                    uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+                  }}
+                  style={styles.image}
+                />
+                }
+               
               </View>
             </TouchableOpacity>
           )}

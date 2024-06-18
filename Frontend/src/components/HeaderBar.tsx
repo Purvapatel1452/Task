@@ -1,22 +1,22 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import ProfilePic from './ProfilePic';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchGroupData } from '../redux/slices/groupSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchGroupData} from '../redux/slices/groupSlice';
+import FastImage from 'react-native-fast-image';
 
 const HeaderBar = ({title}) => {
   const navigation = useNavigation();
 
-  const dispatch=useDispatch()
-  const {userId}=useSelector((state)=>state.auth)
-  const {groupData,loading,error}=useSelector((state)=>state.group)
+  const dispatch = useDispatch();
+  const {userId} = useSelector(state => state.auth);
+  const {groupData, loading, error} = useSelector(state => state.group);
 
-
-  useEffect(()=>{
-    dispatch(fetchGroupData(userId))
-  },[dispatch,])
+  useEffect(() => {
+    dispatch(fetchGroupData(userId));
+  }, [dispatch]);
 
   const renderIcon = () => {
     switch (title) {
@@ -24,7 +24,6 @@ const HeaderBar = ({title}) => {
         return (
           <View style={styles.headerContainer}>
             <Text></Text>
-           
           </View>
         );
       case 'ChatScreen':
@@ -44,13 +43,27 @@ const HeaderBar = ({title}) => {
               color={'white'}
               onPress={() => navigation.goBack()}
             />
-            <TouchableOpacity onPress={() => navigation.navigate('ChatProfile', { data: groupData })}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: groupData.image }} style={styles.image} />
-      </View>
-    </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ChatProfile', {data: groupData})
+              }>
+              <View style={styles.imageContainer}>
+                {groupData.image ? (
+                  <FastImage
+                    source={{uri: groupData.image}}
+                    style={styles.image}
+                  />
+                ) : (
+                  <FastImage
+                    source={{
+                      uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+                    }}
+                    style={styles.image}
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
             <Text style={styles.headerText}>Expense</Text>
-          
           </View>
         );
       case 'Expense':
@@ -88,14 +101,6 @@ const HeaderBar = ({title}) => {
             <ProfilePic />
           </View>
         );
-        case 'Subscription':
-          return (
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Subscription</Text>
-  
-              <ProfilePic />
-            </View>
-          );
       case 'ExpensesScreen':
         return (
           <View style={styles.headerContainer}>
@@ -134,6 +139,12 @@ const HeaderBar = ({title}) => {
             </Text>
           </View>
         );
+      case 'Subscription':
+        return (
+          <View style={styles.headerContainerSub}>
+            <Text style={styles.headerText}>Subscription</Text>
+          </View>
+        );
     }
   };
   return renderIcon();
@@ -144,7 +155,7 @@ export default HeaderBar;
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: '#D77702',
-position:"relative",
+    position: 'relative',
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -157,9 +168,24 @@ position:"relative",
     shadowOpacity: 2,
     elevation: 10,
   },
+  headerContainerSub: {
+    backgroundColor: '#D77702',
+    position: 'relative',
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomStartRadius: 1,
+    borderBottomEndRadius: 1,
+    borderColor: 'silver',
+    shadowColor: 'black',
+    shadowOpacity: 2,
+    elevation: 10,
+  },
   headerContainerGroup: {
     backgroundColor: '#D77702',
-position:"relative",
+    position: 'relative',
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -171,7 +197,7 @@ position:"relative",
     shadowColor: 'black',
     shadowOpacity: 2,
     elevation: 10,
-    gap:10
+    gap: 10,
   },
 
   headerContainer1: {

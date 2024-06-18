@@ -136,20 +136,7 @@ const UserProfileScreen = () => {
       <StatusBar backgroundColor={'#D77702'} />
 
       <View style={{alignItems: 'center'}}>
-        {/* <View style={{flex:1,position:"absolute"}}>
-            <View     style={{position:"relative",marginTop:10,backgroundColor:"rgba(0, 0, 0, 0.37)"}}>
-          <IonIcons
-                name="arrow-back-sharp"
-                size={28}
-                color={'black'}
-                onPress={() => navigation.goBack()}
-              />
-              </View>
-         
-            <ImageBackground source={{uri:'https://logowik.com/content/uploads/images/hive6576.logowik.com.webp'}} style={{height:height*0.25,width:width,position: "relative",}} >
-            <View style={styles.overlay} />
-            </ImageBackground>
-          </View> */}
+      
         <View style={{flex: 1}}>
           <View style={{flex: 1, position: 'relative'}}>
             <ImageBackground

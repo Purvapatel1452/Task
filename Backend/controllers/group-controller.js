@@ -1,18 +1,16 @@
 const Group = require("../models/group");
 const User = require("../models/user");
-const Expense=require('../models/expense')
+const Expense = require("../models/expense");
 
 const createGroup = async (req, res) => {
   try {
-    console.log("HELLO")
-    const { name, description, members, image,adminId } = req.body;
+    console.log("HELLO");
+    const { name, description, members, image, adminId } = req.body;
 
-  
     const adminUser = await User.findById(adminId);
     if (!adminUser) {
       return res.status(400).json({ message: "Admin user not found" });
     }
-
 
     const memberIds = [];
 
@@ -25,13 +23,10 @@ const createGroup = async (req, res) => {
 
       memberIds.push(user._id);
     }
-   
-    if ((memberIds.includes(adminUser._id))) {
-  
-   
+
+    if (memberIds.includes(adminUser._id)) {
       memberIds.push(adminUser._id);
     }
- 
 
     const existingGroup = await Group.aggregate([
       {
@@ -84,7 +79,6 @@ const createGroup = async (req, res) => {
 const getAllGroups = async (req, res) => {
   try {
     const userId = req.params.userId;
-   
 
     const user = await User.findById(userId).populate("groups");
 
@@ -94,9 +88,6 @@ const getAllGroups = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
 
 const fetchGroupPaymentStatus = async (req, res) => {
   try {
@@ -110,36 +101,29 @@ const fetchGroupPaymentStatus = async (req, res) => {
     for (const group of userGroups) {
       const groupExpenses = await Expense.find({
         groupId: group._id,
-        $or: [
-          { payerId: userId },
-          { "payments.participant": userId }
-        ],
+        $or: [{ payerId: userId }, { "payments.participant": userId }],
       }).populate("payments.participant");
 
       let groupOwesMe = 0;
       let iOweGroup = 0;
 
       groupExpenses.forEach((expense) => {
-      
         expense.payments.forEach((payment) => {
           if (
             payment.participant._id.toString() === userId &&
             expense.payerId._id.toString() !== userId &&
-            payment.paid===false
+            payment.paid === false
           ) {
             iOweGroup += payment.amount;
+          }
 
-          } 
-     
-           if (
+          if (
             payment.participant._id.toString() !== userId &&
             expense.payerId._id.toString() === userId &&
-            payment.paid===false
+            payment.paid === false
           ) {
             groupOwesMe += payment.amount;
-    
           }
-         
         });
       });
 
@@ -149,7 +133,6 @@ const fetchGroupPaymentStatus = async (req, res) => {
         groupOwesMe,
         iOweGroup,
       });
-
     }
 
     res.status(200).json(groupsWithPendingPayments);
@@ -158,7 +141,6 @@ const fetchGroupPaymentStatus = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 const uploadGroupImage = async (req, res) => {
   const { groupId, imageUrl } = req.body;
@@ -186,14 +168,11 @@ const uploadGroupImage = async (req, res) => {
   }
 };
 
-
-
-
 const editGroupDetails = async (req, res) => {
   try {
-    console.log("ff")
+    console.log("ff");
     const { groupId } = req.params;
-    console.log(groupId,"PI")
+    console.log(groupId, "PI");
     const { name, description, members, image, adminId } = req.body;
 
     const group = await Group.findById(groupId);
@@ -202,10 +181,11 @@ const editGroupDetails = async (req, res) => {
       return res.status(404).json({ message: "Group not found" });
     }
 
-
     // Check if the requesting user is the admin
     if (group.admin.toString() !== adminId) {
-      return res.status(403).json({ message: "Only the admin can edit the group details" });
+      return res
+        .status(403)
+        .json({ message: "Only the admin can edit the group details" });
     }
 
     if (name) group.name = name;
@@ -247,11 +227,10 @@ const editGroupDetails = async (req, res) => {
   }
 };
 
-
 module.exports = {
   createGroup,
   getAllGroups,
   fetchGroupPaymentStatus,
   uploadGroupImage,
-  editGroupDetails
+  editGroupDetails,
 };

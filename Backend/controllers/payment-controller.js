@@ -2,30 +2,12 @@ const stripe = require("stripe")(
   "sk_test_51P6pcYSCdNlkqtTKEbkko3R7u9AU05pNEw9TKpeAtiEze3NmZlsWaun94sEQehiPPdlUouvIJ5d2thhp2527uaaJ00WSnKy45N"
 );
 
-const paymentIntent = async (req, res) => {
-  try {
-    console.log("payyy");
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      payment_method_types: ["card"],
-      amount: 1099,
-      currency: "usd",
-    });
-
-
-    res.status(200).json(paymentIntent);
-  } catch (error) {
-    res.status(505).send(JSON.stringify(error));
-  }
-};
-
 const stripeIntent = async (req, res) => {
   console.log("patyment");
-  
 
   try {
     const { amount } = req.body;
-    console.log(amount,"PP");
+    console.log(amount, "PP");
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "INR",
@@ -34,7 +16,7 @@ const stripeIntent = async (req, res) => {
         enabled: true,
       },
     });
-
+    console.log(paymentIntent, "PPAA");
 
     res.json({ paymentIntent: paymentIntent.client_secret });
   } catch (e) {
@@ -54,7 +36,6 @@ const stripWebhook = async (req, res) => {
 
   // Handle the payment_intent.succeeded event
   if (event.type === "payment_intent.succeeded") {
-
     const paymentIntent = event.data.object;
     // console.log("RRee", event.data.object);
 
@@ -84,7 +65,6 @@ const upiWebhook = async (req, res) => {
 };
 
 module.exports = {
-  paymentIntent,
   stripeIntent,
   stripWebhook,
   upiWebhook,

@@ -367,7 +367,7 @@ const ProfileScreen = () => {
           <View style={styles.modalView}>
             {image && (
               <View>
-                <Image source={{uri: image.uri}} style={styles.imageBox} />
+                <FastImage source={{uri: image.uri}} style={styles.imageBox} />
               </View>
             )}
             {uploading ? (

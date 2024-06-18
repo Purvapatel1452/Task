@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     require: true,
-    lowerCase:true,
+    lowerCase: true,
     unique: true,
   },
   password: {
@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: "ss",
+    default:
+      "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg",
   },
   friendRequests: [
     {
@@ -65,21 +66,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-});
-
-
-userSchema.methods.markAsDeleted = function() {
-  this.isDeleted = true;
-  this.deletedAt = new Date();
-};
-
-userSchema.methods.recover = function() {
-  this.isDeleted = false;
-  this.deletedAt = null;
-};
   subscriptionType: {
     type: String,
-    enum: ['monthly', 'quarterly', 'yearly'],
+    enum: ["Monthly", "Quarterly", "Yearly"],
     default: null,
   },
   subscriptionStartDate: {
@@ -89,10 +78,20 @@ userSchema.methods.recover = function() {
   subscriptionEndDate: {
     type: Date,
     default: null,
-  }
+  },
 });
 
-userSchema.methods.isSubscribed = function() {
+userSchema.methods.markAsDeleted = function () {
+  this.isDeleted = true;
+  this.deletedAt = new Date();
+};
+
+userSchema.methods.recover = function () {
+  this.isDeleted = false;
+  this.deletedAt = null;
+};
+
+userSchema.methods.isSubscribed = function () {
   const today = new Date();
   return this.subscriptionEndDate && this.subscriptionEndDate > today;
 };

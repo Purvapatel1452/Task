@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserDetails } from '../redux/slices/usersSlice';
 import { RootState } from '../redux/store'; // assuming you have a root reducer defined in store.ts
 import { BASE_URL } from '@env';
+import FastImage from 'react-native-fast-image';
 
 interface UserDetails {
   image: string;
@@ -32,7 +33,18 @@ const ProfilePic: React.FC = () => {
   return (
     <TouchableOpacity onPress={() => navigation.navigate('Profile', { data: details })}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: details.image }} style={styles.image} />
+       {
+        details.image ?
+        <FastImage source={{ uri: details.image }} style={styles.image} />
+
+        :
+        <FastImage
+        source={{
+          uri: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg',
+        }}
+        style={styles.image}
+      />
+       }
       </View>
     </TouchableOpacity>
   );

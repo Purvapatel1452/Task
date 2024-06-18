@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, Linking, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, Dimensions, Linking, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { PlatformPay, PlatformPayButton, confirmPlatformPayPayment, useStripe } from '@stripe/stripe-react-native';
 import HeaderBar from '../components/HeaderBar';
@@ -25,6 +25,7 @@ const PaymentScreen = () => {
   };
 
   const handleSubscription = async () => {
+    console.log(selectedPlan,"SELECTED")
     if (!selectedPlan) {
       Alert.alert('Error', 'Please select a subscription plan.');
       return;
@@ -137,12 +138,13 @@ const PaymentScreen = () => {
     </>
   );
 };
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#ff',
   },
   scrollView: {
     padding: 10,
@@ -152,27 +154,35 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#f5f5f5',
     borderRadius: 10,
-    borderColor: '#ccc',
-    borderWidth: 1,
+    borderColor: 'white',
+    borderWidth: 5,
+    width: width * 0.85,
+    height:height*0.15,
+    alignSelf:"center",
+    elevation:4,
+    shadowColor:"black",
+    shadowOpacity:20,
   },
   selectedSubscriptionCard: {
     backgroundColor: '#d5e8d4',
   },
   subscriptionCardType: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: 'bold',
+    color:"black"
   },
   subscriptionCardPrice: {
-    fontSize: 16,
-    color: '#888',
+    fontSize: 20,
+    color: 'black',
+    fontWeight:"bold"
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 20
   },
   platformPayButton: {
     width: '100%',
-    height: 50,
-    marginTop: 10,
+    height: 70,
+    marginTop: 10
   },
 });
 

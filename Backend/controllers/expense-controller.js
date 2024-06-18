@@ -11,7 +11,6 @@ const addExpense = async (req, res) => {
 
     const splitAmount = amount / uniqueParticipants.length;
 
-
     const payments = uniqueParticipants.map((participantId) => ({
       participant: participantId,
       amount: splitAmount,
@@ -28,7 +27,6 @@ const addExpense = async (req, res) => {
       payments,
     });
 
-  
     await newExpense.save();
 
     for (participantId of uniqueParticipants) {
@@ -120,9 +118,7 @@ const expense = async (req, res) => {
 
 const updatePaymentStatus = async (req, res) => {
   try {
- 
     const { expenseId, participantId, paid } = req.body;
-
 
     const expense = await Expense.findById(expenseId);
 
@@ -158,15 +154,11 @@ const getGroupExpenses = async (req, res) => {
 
 const userExpenses = async (req, res) => {
   try {
-  
-
     const { userId, friendId } = req.params;
-  
 
     const expenses = await Expense.find({
       participants: { $all: [userId, friendId] },
     });
-
 
     res.status(200).json(expenses);
   } catch (error) {
