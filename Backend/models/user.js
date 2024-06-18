@@ -57,7 +57,25 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  subscriptionType: {
+    type: String,
+    enum: ['monthly', 'quarterly', 'yearly'],
+    default: null,
+  },
+  subscriptionStartDate: {
+    type: Date,
+    default: null,
+  },
+  subscriptionEndDate: {
+    type: Date,
+    default: null,
+  }
 });
+
+userSchema.methods.isSubscribed = function() {
+  const today = new Date();
+  return this.subscriptionEndDate && this.subscriptionEndDate > today;
+};
 
 const User = mongoose.model("User", userSchema);
 

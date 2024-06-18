@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchPaymentIntent = createAsyncThunk(
   'payment/fetchPaymentIntent',
-  async (_, { rejectWithValue }) => {
+  async ({amount}, { rejectWithValue }) => {
     try {
       console.log(BASE_URL,"ZZgergjhuysrtgtrdsveydewuX")
       const response = await fetch(`${BASE_URL}/payments/intents`, {
@@ -11,7 +11,7 @@ export const fetchPaymentIntent = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: 100 }),
+        body: JSON.stringify({ amount}),
       });
 
       const data = await response.json();
@@ -29,7 +29,7 @@ export const fetchPaymentIntent = createAsyncThunk(
 
 export const createPaymentIntent = createAsyncThunk(
   'payment/createPaymentIntent',
-  async (_, { rejectWithValue }) => {
+  async ({amount}, { rejectWithValue }) => {
     try {
       console.log(BASE_URL,"VkjsdvergfyhrvdrgtFgeR")
       const response = await fetch(`${BASE_URL}/payments/create-payment-intent`, {
@@ -37,7 +37,7 @@ export const createPaymentIntent = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ currency: 'usd' }),
+        body: JSON.stringify({ amount }),
       });
 
       const { client_secret } = await response.json();

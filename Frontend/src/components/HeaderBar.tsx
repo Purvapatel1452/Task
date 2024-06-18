@@ -88,6 +88,14 @@ const HeaderBar = ({title}) => {
             <ProfilePic />
           </View>
         );
+        case 'Subscription':
+          return (
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>Subscription</Text>
+  
+              <ProfilePic />
+            </View>
+          );
       case 'ExpensesScreen':
         return (
           <View style={styles.headerContainer}>

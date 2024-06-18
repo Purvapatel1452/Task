@@ -413,6 +413,63 @@ const friendsPaymentStatus = async (req, res) => {
   }
 };
 
+
+const getUserSubscription = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const setSubscription = async (req, res) => {
+  try {
+    console.log("SSSUBBBB")
+    const { userId, subscriptionType } = req.body;
+    console.log(userId,subscriptionType)
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const today = new Date();
+    let endDate;
+
+    console.log(today)
+
+    switch (subscriptionType) {
+      case 'Monthly':
+        endDate = new Date(today.setMonth(today.getMonth() + 1));
+        break;
+      case 'Quarterly':
+        endDate = new Date(today.setMonth(today.getMonth() + 3));
+        break;
+      case 'Yearly':
+        endDate = new Date(today.setFullYear(today.getFullYear() + 1));
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid subscription type' });
+    }
+    console.log(user,":::::::")
+
+    user.subscriptionType = subscriptionType;
+    user.subscriptionStartDate = new Date();
+    user.subscriptionEndDate = endDate;
+    console.log(user,"LLLLLLLLLLLLL")
+
+    await user.save();
+
+    res.json({ message: 'Subscription updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -426,4 +483,6 @@ module.exports = {
   sendOtp,
   verifyOtp,
   uploadImage,
+  getUserSubscription,
+  setSubscription
 };

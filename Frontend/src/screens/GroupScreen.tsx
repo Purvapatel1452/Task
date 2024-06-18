@@ -24,6 +24,7 @@ import FastImage from 'react-native-fast-image'
 import storage from '@react-native-firebase/storage';
 // import firestore from '@react-native-firebase/firestore';
 import { fetchFriendsPaymentStatus } from '../redux/slices/friendSlice'
+import { fetchUserSubscription } from '../redux/slices/subscriptionSlice'
 
 
 interface GroupScreenProps {
@@ -54,7 +55,21 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const { loading: expenseLoading, error: expenseError } = useSelector(state => state.expense);
   const { paymentStatus, loading, error } = useSelector(state => state.friend);
 
+  const { subscription, loading: subscriptionLoading, error: subscriptionError } = useSelector(state => state.sub);
 
+useEffect(() => {
+  dispatch(fetchUserSubscription(userId));
+}, [dispatch, userId]);
+
+
+const checkSubscription = async () => {
+  if (subscription && subscription.status === 'active') {
+    return true;
+  } else {
+    setShowSubscriptionModal(true); 
+    return false;
+  }
+};
 
   const [showExpenseModal,setShowExpenseModal]=useState(false)
   const [expenseDescription,setExpenseDescription]=useState('')
@@ -63,6 +78,7 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
   const [expenseSelectedFrnds,setExpenseSelectedFrnds]=useState([])
   const [isGroup,setIsGroup]=useState(false)
   const [isModalVisible,setModalVisible]=useState(false)
+  const [showSubscriptionModal,setShowSubscriptionModal]=useState(false)
 
   const [expenseSelectGroup,setExpenseSelectGroup]=useState('')
   const [type,setType]=useState('')
@@ -118,6 +134,8 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
 
 
   const handleCreateGroup = async () => {
+
+
     if (!groupName || selectedFriends.length < 1) {
       return Alert.alert('Please enter Mandatory details !!!');
     }
@@ -278,6 +296,9 @@ const GroupScreen:React.FC<GroupScreenProps> = ({navigation}) => {
 
 
 const handleAddExpense = async () => {
+
+
+
   let data = {};
   if (isGroup) {
     data = {
@@ -312,6 +333,8 @@ const handleAddExpense = async () => {
 };
   
   const handleExpenseModal = async () => {
+    const isSubscribed = await checkSubscription();
+    if (!isSubscribed) return;
     console.log('MODALVIEWW');
 
     setShowExpenseModal(true);
@@ -368,6 +391,10 @@ const handleAddExpense = async () => {
 
 
   const handleModel = async () => {
+
+    
+    const isSubscribed = await checkSubscription();
+    if (!isSubscribed) return;
 
     setShowModal(true);
     try {
@@ -586,7 +613,7 @@ const handleAddExpense = async () => {
        </Pressable>
          )}
        <View style={styles.container}>
-         <TouchableOpacity style={styles.buttonContainer} onPress={handleModel}>
+         <TouchableOpacity style={styles.buttonContainer} onPress={()=>handleModel()}>
            <AntDesign name='addusergroup' size={22} color={'#D77702'} />
            <Text style={styles.buttonText}>Create new group</Text>
          </TouchableOpacity>
@@ -773,6 +800,20 @@ const handleAddExpense = async () => {
           </View>
         </View>
       </Modal>
+
+      <Modal animationType="fade" transparent={true} visible={showSubscriptionModal}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>You need to subscribe to access this feature.</Text>
+          <TouchableOpacity style={styles.subscribeButton} onPress={()=>navigation.navigate('Payment')}>
+            <Text style={styles.subscribeButtonText}>Subscribe Now</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setShowSubscriptionModal(false)}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
         
     </View>
   
@@ -1016,8 +1057,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'silver',
     borderRadius: 50,
     padding: 15,
-    
-  
+  },
+  modalText: {
+    marginBottom: 20,
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  subscribeButton: {
+    backgroundColor: '#D77702',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  subscribeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

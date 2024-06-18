@@ -21,12 +21,13 @@ const paymentIntent = async (req, res) => {
 
 const stripeIntent = async (req, res) => {
   console.log("patyment");
+  
 
   try {
     const { amount } = req.body;
-    console.log(amount);
+    console.log(amount,"PP");
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 16522,
+      amount: amount,
       currency: "INR",
       // payment_method:'pm_card_visa',
       automatic_payment_methods: {
