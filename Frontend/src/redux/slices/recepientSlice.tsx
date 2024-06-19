@@ -12,6 +12,7 @@ export const fetchRecepientData = createAsyncThunk(
   'recepient/fetchRecepientData',
   async (recepientId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"KKbhihjgytg")
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/message/user/${recepientId}`, {
         headers: {

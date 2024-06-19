@@ -40,7 +40,7 @@ export const createPaymentIntent = createAsyncThunk(
   async ({ amount }, { rejectWithValue }) => {
     try {
       const token = await getToken();
-      const response = await fetch(`${BASE_URL}/payments/create-payment-intent`, {
+      const response = await fetch(`${BASE_URL}/payments/intents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

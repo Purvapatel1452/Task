@@ -94,6 +94,7 @@ const HeaderChatBar = ({ title, id }) => {
                       {member.name},{' '}
                     </Text>
                   ))} */}
+                  
                 </View>
               </View>
             </View>
