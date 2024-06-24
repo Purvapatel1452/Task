@@ -11,6 +11,7 @@ const getToken = async () => {
 // Thunk for fetching expense details
 export const fetchExpense = createAsyncThunk('expense/fetchExpense', async (expenseId, { rejectWithValue }) => {
   try {
+    console.log(BASE_URL, 'gg;kio;N');
     const token = await getToken();
     const response = await axios.get(`${BASE_URL}/expense/expense/${expenseId}`, {
       headers: {
@@ -36,6 +37,7 @@ export const fetchExpense = createAsyncThunk('expense/fetchExpense', async (expe
 // Thunk for updating payment status
 export const updatePaymentStatus = createAsyncThunk('expense/updatePaymentStatus', async ({ expenseId, participantId, paid }, { rejectWithValue }) => {
   try {
+    console.log(BASE_URL, 'gg;gjuiktgfg;ljihg;N');
     const token = await getToken();
     await axios.post(`${BASE_URL}/expense/paymentStatus`, { expenseId, participantId, paid }, {
       headers: {

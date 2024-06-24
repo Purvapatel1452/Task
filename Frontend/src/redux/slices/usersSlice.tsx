@@ -11,7 +11,7 @@ export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"{djyuggewd")
+      console.log(BASE_URL,"{djjym8ofsyuggefesdwd")
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/user/users/${userId}`, {
         headers: {
@@ -29,7 +29,7 @@ export const fetchUserDetails = createAsyncThunk(
   'profile/fetchUserDetails',
   async (userId, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"{djgegwuy8d")
+      console.log(BASE_URL,"{grgdhntyhu56jgegwrfuy8d")
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`, {
         headers: {
@@ -47,7 +47,7 @@ export const updateUserProfile = createAsyncThunk(
   'user/updateProfile',
   async ({ userId, name, mobile }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"{kjhwd")
+      console.log(BASE_URL,"{hntkjedcdshwgfdfd")
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/user/editProfile`, {
         userId,
@@ -69,7 +69,7 @@ export const deleteUserAccount = createAsyncThunk(
   'users/deleteUserAccount',
   async ({ userId }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"{djgewkjghd")
+      console.log(BASE_URL,"{ bnfyhry")
       const token = await getToken();
       const response = await axios.delete(`${BASE_URL}/user/deleteUser/${userId}`, {
         headers: {
@@ -87,7 +87,7 @@ export const recoverUserAccount = createAsyncThunk(
   'users/recoverUserAccount',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"{ddiuy8")
+      console.log(BASE_URL,"{drfuhytgdiuyrg8")
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/recoverUser`, { email, password }, {
         headers: {

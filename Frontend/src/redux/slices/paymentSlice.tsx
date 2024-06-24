@@ -11,6 +11,8 @@ export const fetchPaymentIntent = createAsyncThunk(
   'payment/fetchPaymentIntent',
   async ({ amount }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"stehrtyhyhg")
+
       console.log(amount,"AMM")
       const token = await getToken();
       const response = await fetch(`${BASE_URL}/payments/intents`, {
@@ -39,6 +41,8 @@ export const createPaymentIntent = createAsyncThunk(
   'payment/createPaymentIntent',
   async ({ amount }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cddbghjgsuewtyv")
+
       const token = await getToken();
       const response = await fetch(`${BASE_URL}/payments/intents`, {
         method: 'POST',

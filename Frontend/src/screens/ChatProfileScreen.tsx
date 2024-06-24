@@ -184,7 +184,7 @@ const ChatProfileScreen = () => {
         }}>
         <ImageBackground
           source={{uri: groupData.image}}
-          style={{height: height * 0.328, width: width}}>
+          style={{height: height * 0.324, width: width}}>
           <View style={styles.overlay} />
           <IonIcons
             name="arrow-back-sharp"
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
   lengthContainer: {
     alignSelf: 'flex-start',
     left: width * 0.045,
-    top: height * 0.045,
+    top: height * 0.048,
     position: 'absolute',
   },
   memberLength: {

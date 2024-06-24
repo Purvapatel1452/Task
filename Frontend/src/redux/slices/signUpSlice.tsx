@@ -7,7 +7,7 @@ import axios from "axios";
 export const sendOtp= createAsyncThunk('signUp/sendOtp',async(email,{rejectWithValue})=>{
     try{
 
-      console.log(BASE_URL,"Zjfkgbgtrjhgutgbwetgtgrtdt@")
+      console.log(BASE_URL,"Zjfkgrfhnbvtrfdgtrjhgutgbwetgtgrtdt@")
         const response=await axios.post(`${BASE_URL}/user/send-otp`,{email});
         console.log("*******",response)
         return response.data
@@ -22,7 +22,7 @@ export const sendOtp= createAsyncThunk('signUp/sendOtp',async(email,{rejectWithV
 
 export const verifyOtp=createAsyncThunk('signUp/verifyOtp',async({email,otp},{rejectWithValue})=>{
     try{
-      console.log(BASE_URL,"!@jdrgtfbhthbghgyurrterggfhrdei~")
+      console.log(BASE_URL,"!@jdrgtgrgrgrfbhtvfghhbghgyurrtgbtrhberrggfhrdei~")
         const response=await axios.post(`${BASE_URL}/user/verify-otp`,{email,otp});
         return response.data;
 
@@ -35,7 +35,7 @@ export const verifyOtp=createAsyncThunk('signUp/verifyOtp',async({email,otp},{re
 
 export const registerUser = createAsyncThunk('signUp/registerUser', async (userData, { rejectWithValue }) => {
     try {
-      console.log(BASE_URL,"hgtgbthefgfjthgfhyt%$")
+      console.log(BASE_URL,"hgtgggbgfhgbbggrgfhyt%$")
       const response = await axios.post(`${BASE_URL}/user/register`, userData);
       return response.data;
     } catch (error) {

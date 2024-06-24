@@ -13,6 +13,7 @@ export const fetchFriendsPaymentStatus = createAsyncThunk(
   'chat/fetchFriendsPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;gjuiktgfgg;kjh8uN');
       const token = await getToken();
       const response = await fetch(`${BASE_URL}/user/friendsPaymentStatus/${userId}`, {
         headers: {
@@ -35,6 +36,7 @@ export const fetchFriendRequests = createAsyncThunk(
   'friendRequests/fetchFriendRequests',
   async (userId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;gjuiktgfg;lklljug;N');
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/user/friend-request/${userId}`, {
         headers: {
@@ -53,6 +55,7 @@ export const acceptFriendRequest = createAsyncThunk(
   'friendRequest/acceptFriendRequest',
   async ({ friendRequestId, userId }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;gjui;lj98iktgfgg;N');
       const token = await getToken();
       const response = await fetch(`${BASE_URL}/user/friend-request/accept`, {
         method: "POST",
@@ -82,6 +85,7 @@ export const sendFriendRequest = createAsyncThunk(
   'friendRequest/sendFriendRequest',
   async ({ currentUserId, selectedUserId }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;lkj0uio;gjuiktgfgg;N');
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/user/friend-request`, {
         currentUserId,
@@ -103,6 +107,7 @@ export const checkFriendRequest = createAsyncThunk(
   'friendRequest/checkFriendRequest',
   async ({ userId, item }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gkj897yh8;gjuiktgfgg;N');
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/user/userDetails/${userId}`, {
         headers: {

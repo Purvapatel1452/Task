@@ -13,6 +13,8 @@ export const fetchUserSubscription = createAsyncThunk(
   'user/fetchSubscription',
   async (userId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cdgrhgfbnfgbnbdvsuyv")
+
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/user/getSubscription/${userId}`, {
         headers: {
@@ -32,6 +34,8 @@ export const updateUserSubscription = createAsyncThunk(
   'user/updateSubscription',
   async ({ userId, subscriptionType }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cdhfgsbtyuuyrtgv")
+
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/user/setSubscription`, {
         userId,

@@ -12,6 +12,7 @@ export const addExpense = createAsyncThunk(
   'expense/addExpense',
   async (expenseData, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;gjuiktgflkj9y8gg;N');
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/expense/addExpense`, expenseData, {
         headers: {
@@ -29,6 +30,7 @@ export const fetchExpenses = createAsyncThunk(
   'expense/fetchExpenses',
   async ({ userId, expenseType, type }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL, 'gg;gjuiktgfg5hfgg;N');
       const token = await getToken();
       console.log(BASE_URL, "??bgtbtgrtfv");
       if (type !== undefined) {

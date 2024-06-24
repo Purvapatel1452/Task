@@ -11,6 +11,7 @@ export const fetchGroups = createAsyncThunk(
   'group/fetchGroups',
   async (userId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"fjhngfhkiujktdvi")
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/group/groups/${userId}`, {
         headers: {
@@ -28,6 +29,7 @@ export const createGroup = createAsyncThunk(
   'group/createGroup',
   async (groupData, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"jyjkulfgd")
       const token = await getToken();
       const response = await axios.post(`${BASE_URL}/group/createGroup`, groupData, {
         headers: {
@@ -43,6 +45,7 @@ export const createGroup = createAsyncThunk(
 
 export const fetchFriends = createAsyncThunk('groups/fetchFriends', async (userId, { rejectWithValue }) => {
   try {
+    console.log(BASE_URL,"dkhjmguivhse8")
     const token = await getToken();
     const response = await axios.get(`${BASE_URL}/user/accepted-friends/${userId}`, {
       headers: {
@@ -59,6 +62,7 @@ export const fetchGroupExpenses = createAsyncThunk(
   'expense/fetchGroupExpenses',
   async (groupId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cdjmuilsuyv")
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/expense/groupExpenses/${groupId}`, {
         headers: {
@@ -76,6 +80,8 @@ export const fetchGroupData = createAsyncThunk(
   'group/fetchGroupData',
   async (groupId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cdsgjuhmrtyhjm,kl.rtuyv")
+
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/message/group/${groupId}`, {
         headers: {
@@ -93,6 +99,8 @@ export const fetchGroupPaymentStatus = createAsyncThunk(
   'group/fetchGroupPaymentStatus',
   async (userId, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"cdsjmhvkikmufdy5yvh")
+
       const token = await getToken();
       const response = await axios.get(`${BASE_URL}/group/groupPaymentStatus/${userId}`, {
         headers: {
@@ -110,6 +118,8 @@ export const editGroup = createAsyncThunk(
   'group/editGroup',
   async ({ groupId, groupData, userId }, { rejectWithValue }) => {
     try {
+      console.log(BASE_URL,"jmhmmkkliuh")
+
       const token = await getToken();
       const response = await axios.put(`${BASE_URL}/group/editGroup/${groupId}`, {
         ...groupData,

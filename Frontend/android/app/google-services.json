@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "390396720228",
-    "project_id": "expense-hive",
-    "storage_bucket": "expense-hive.appspot.com"
+    "project_number": "243588125513",
+    "project_id": "expense-hive-bbca0",
+    "storage_bucket": "expense-hive-bbca0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:390396720228:android:2a21414a2c67b2dc1d1b71",
+        "mobilesdk_app_id": "1:243588125513:android:6dd3521b78e5e263c34098",
         "android_client_info": {
           "package_name": "com.chat"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAPxD1ennIR9miXa01a7aIxzBYV_Toh1S8"
+          "current_key": "AIzaSyAPVcds8hSMM3D7NFeN4XgLwhW9T2ZPb9k"
         }
       ],
       "services": {
