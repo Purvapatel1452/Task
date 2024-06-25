@@ -34,6 +34,7 @@ import { BASE_URL } from '@env';
 import HeaderChatBar from '../components/HeaderChatBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
+import firebase from '../firebase/firebaseConfig';
 
 const GroupChatScreen = ({navigation}: any) => {
   console.log(BASE_URL)
@@ -50,12 +51,13 @@ const GroupChatScreen = ({navigation}: any) => {
   const [isExpense,setIsExpense]=useState(true)
   const [expenseList,setExpenseList]=useState([])
 
+  const [load,setLoad]=useState(false)
 
   const dispatch=useDispatch();
   const {userId}=useSelector(state=>state.auth)
   const {messages,loading,error}=useSelector((state)=>state.chat)
   const {groupExpenses,groupData,loading:expenseLoading,error:expenseError}=useSelector((state)=>state.group)
-  
+ 
 
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
@@ -164,12 +166,46 @@ const GroupChatScreen = ({navigation}: any) => {
   //   }
   // };
 
+let mem=[]
 
+
+if(groupData){
+
+  
+  groupData.members.map((member)=>{
+
+   mem.push({id:member._id,name:member.name})
+  }
+
+  )
+  console.log("GGRR",mem)
+}
 
   useEffect(() => {
-    dispatch(fetchMessages({userId,groupId}));
+    dispatch(fetchMessages({userId,groupId:groupId}));
+
+    const messagesRef = firebase.database().ref(`chats/${groupId}`);
+
+    const handleNewMessage = (snapshot) => {
+      const newMessage = snapshot.val();
+      dispatch(fetchMessages({ userId, groupId:groupId }));
+scrollToBottom()
+     
+    };
+
+    messagesRef.on('child_added', handleNewMessage);
+
+  
+
     dispatch(fetchGroupExpenses(groupId))
     dispatch(fetchGroupData(groupId))
+
+   
+
+    return () => {
+      messagesRef.off('child_added', handleNewMessage);
+    };
+
   }, [dispatch,userId,groupId]);
 
   // useEffect(() => {
@@ -260,7 +296,7 @@ const scrollToBottom = () => {
  
      scrollViewRef.current?.scrollToEnd({ animated: true });
  
-    },800)
+    },1000)
  
    }
 
@@ -350,12 +386,7 @@ const handleSend = async (messageType: any, imageUri: any) => {
   try {
     console.log("SENNDD")
   
- 
-
-
-
-    //check msg type image or text
-    let formData={}
+   
     if (messageType == 'image') {
       const {uri}=imageUri
 
@@ -373,19 +404,11 @@ const handleSend = async (messageType: any, imageUri: any) => {
         const url = await storage().ref(`chat/${filename}`).getDownloadURL();
         console.log(url)
 
-  console.log(url,"URLRLRL")
-  formData={
-    senderId:userId,
-    groupId:groupId,
-    messageType:messageType,
-    messageText:message,
-    imageUrl:url
-  }
-
-  console.log("IIIOOPPP",formData)
+  
+        dispatch(sendMessage({ userId, groupId:groupId,messageType:messageType, imageUrl:url }));
+ 
        
   
-      
       } catch (e) {
         console.error(e);
       }
@@ -393,49 +416,25 @@ const handleSend = async (messageType: any, imageUri: any) => {
    
 
     } else {
-      console.log("1111",)
-      formData={
-        senderId:userId,
-        groupId:groupId,
-        messageType:messageType,
-        messageText:message,
-        imageUrl:null
-      }
-    }
-
-    console.log({formData})
+      dispatch(sendMessage({ userId, groupId:groupId,messageType:messageType, message }));
    
-   dispatch(sendMessage({formData}))
-    .then((response)=>{
-
-      console.log(response,"))))))")
-
-})
+    }
+   
 
 
-if (messageType == 'image') {
-
-  setTimeout(() => {
-    dispatch(fetchMessages({userId,groupId:groupId}))
-    
-  }, 2000);
-
-}else{
-  setTimeout(() => {
-    dispatch(fetchMessages({userId,groupId:groupId}))
-    
-  }, 1000);
-
-}
 
    
       setMessage('');
       setSelectedImage('');
 
-        
+      scrollViewRef.current?.scrollToEnd({ animated: true });
       scrollToBottom()
-
-  } catch (err) {
+      setLoad(true)
+      setTimeout(()=>{
+      setLoad(false)
+      },2000)
+      } 
+      catch (err) {
     console.log('error in sending msg', err);
   }
 };
@@ -525,7 +524,10 @@ if (messageType == 'image') {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+ 
+  const sortedMessages = [...messages].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  console.log(mem,"MOO")
+  
   return (<SafeAreaView style={{flex:1}}>
     <HeaderChatBar title={'GroupChatScreen'} id={groupId} />
 
@@ -561,14 +563,14 @@ if (messageType == 'image') {
   
     <ScrollView ref={scrollViewRef}>
      {
-      messages.map((item: any, index) => {
+      sortedMessages.map((item: any, index) => {
        
         if (item.messageType == 'text') {
           return (
             <Pressable
               key={index}
               style={[
-                !item.senderId._id ?
+                !item.senderId ?
                 {
                   alignSelf: 'flex-end',
                   backgroundColor: '#DCF8C6',
@@ -578,7 +580,7 @@ if (messageType == 'image') {
                   margin: 10,
                 }
                 :
-                item.senderId._id == userId
+                item.senderId == userId
                   ? {
                       alignSelf: 'flex-end',
                       backgroundColor: '#DCF8C6',
@@ -597,20 +599,44 @@ if (messageType == 'image') {
                     },
               ]}>
                 {
-                   item.senderId._id == userId
+                   item.senderId == userId
                    ?  <>
+                    <Text style={styles.senderName}>
+                  { 
+
+                    mem.map((m)=>{
+                      if(item.senderId===m.id){
+                        return('You')
+                      }
+                    })
+                    
+                  }
+                                       </Text>
+
+                
                    <Text style={styles.textMessage}>{item.message}</Text>
                    <Text style={styles.textMsgTime}>
-                     {formatTime(item.timeStamp)}
+                     {formatTime(item.timestamp)}
                    </Text>
                    </>
                 :<>
-                 <Text style={styles.senderName}>
-                  {item.senderId.name}
-                </Text>
+                  <Text style={styles.senderName}>
+                  { 
+
+                    mem.map((m)=>{
+                      if(item.senderId===m.id){
+                        return(m.name)
+                      }
+                    })
+                    
+                  }
+                                       </Text>
+
+             
+             
                 <Text style={styles.textMessage}>{item.message}</Text>
                 <Text style={styles.textMsgTime}>
-                  {formatTime(item.timeStamp)}
+                  {formatTime(item.timestamp)}
                 </Text>
                 </>
         }
@@ -626,7 +652,7 @@ if (messageType == 'image') {
             <Pressable
               key={index}
               style={[
-                !item.senderId._id ?
+                !item.senderId ?
                 {
                   alignSelf: 'flex-end',
                   backgroundColor: '#DCF8C6',
@@ -636,7 +662,7 @@ if (messageType == 'image') {
                   margin: 10,
                 }
                 :
-                item.senderId._id == userId
+                item.senderId == userId
                   ? {
                       alignSelf: 'flex-end',
                       backgroundColor: '#DCF8C6',
@@ -655,7 +681,7 @@ if (messageType == 'image') {
                     },
               ]}>
               <View>
-                {     item.senderId._id == userId ?
+                {     item.senderId== userId ?
                 <>
                      <FastImage
                      source={{uri: source}}
@@ -671,7 +697,7 @@ if (messageType == 'image') {
                        color: 'white',
                        marginTop: 5,
                      }}>
-                     {formatTime(item?.timeStamp)}
+                     {formatTime(item?.timestamp)}
                    </Text>
                    </>
                    :
@@ -693,7 +719,7 @@ if (messageType == 'image') {
                        color: 'white',
                        marginTop: 5,
                      }}>
-                     {formatTime(item?.timeStamp)}
+                     {formatTime(item?.timestamp)}
                    </Text>
                    </>
                 }

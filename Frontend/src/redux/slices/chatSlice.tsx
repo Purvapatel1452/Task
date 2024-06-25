@@ -136,12 +136,24 @@ import firebase from '../../firebase/firebaseConfig';
 
 export const fetchMessages = createAsyncThunk(
   'chat/fetchMessages',
-  async ({ userId, recepientId }, { rejectWithValue }) => {
+  async ({ userId, recepientId,groupId }, { rejectWithValue }) => {
     try {
 
-      const chatId = userId > recepientId ? `${userId}_${recepientId}` : `${recepientId}_${userId}`;
-      const snapshot = await firebase.database().ref(`chats/${chatId}`).once('value');
-  
+      let snapshot
+
+      if(groupId){
+
+        snapshot = await firebase.database().ref(`chats/${groupId}`).once('value');
+    
+
+      }else{
+        const chatId = userId > recepientId ? `${userId}_${recepientId}` : `${recepientId}_${userId}`;
+        snapshot = await firebase.database().ref(`chats/${chatId}`).once('value');
+    
+
+      }
+
+
       const messages = snapshot.val() ? Object.values(snapshot.val()) : [];
     
       return messages;
@@ -153,35 +165,39 @@ export const fetchMessages = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
-  async ({ userId, recepientId,messageType, message,imageUrl }, { rejectWithValue }) => {
+  async ({ userId, recepientId, groupId, messageType, message,imageUrl }, { rejectWithValue }) => {
     try {
-
-      const chatId = userId > recepientId ? `${userId}_${recepientId}` : `${recepientId}_${userId}`;
-
-      const newMessageRef = firebase.database().ref(`chats/${chatId}`).push();
+      
+      let newMessageRef
       let newMessage
-    if(messageType=='text'){
-      newMessage = {
-        id: newMessageRef.key,
-        senderId: userId,
-        recepientId,
-        message,
-        messageType:messageType,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-      };
-    }
-    else{
 
-      newMessage = {
-        id: newMessageRef.key,
-        senderId: userId,
-        recepientId,
-        imageUrl,
-        messageType:messageType,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-      };
+      if(groupId){
+        newMessageRef = firebase.database().ref(`chats/${groupId}`).push();
+        newMessage = {
+          id: newMessageRef.key,
+          senderId: userId,
+          groupId,
+          recepientId,
+          message,
+          imageUrl,
+          messageType:messageType,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+      }
+      }
+      else{
+        const chatId = userId > recepientId ? `${userId}_${recepientId}` : `${recepientId}_${userId}`;
+        newMessageRef = firebase.database().ref(`chats/${chatId}`).push();
 
-    }
+        newMessage = {
+          id: newMessageRef.key,
+          senderId: userId,
+          recepientId,
+          message,
+          imageUrl,
+          messageType:messageType,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+      }
+      }
      
       await newMessageRef.set(newMessage);
       return newMessage;
